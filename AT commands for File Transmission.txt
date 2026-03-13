@@ -1,0 +1,118 @@
+--- PAGE 311 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 310 / 684
+Defined Values
+<filehandle> The handle of the file to be operated.
+Examples
+AT+FSCLOSE=1 //move file from root directory to the user directory
+OK
+--- PAGE 312 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 311 / 684
+AT Commands for File Transmission
+13.1 Overview of AT Commands for File Transmission
+Command Description
+AT+CFTRANRX Transfer a file to EFS
+AT+CFTRANTX Transfer a file from EFS to host
+AT+CFTRXBUF Sets the size of the buffer to transfer files to EFS
+Command Description Supported Project
+AT+CFTRXBUF A7600C1-XXXX(1601)
+A7678(1603)
+13.2 Detailed Description of AT Commands for File Transmission
+13.2.1 AT+CFTRANRX Transfer a file to EFS
+This command is used to transfer a file to EFS.Support "C:", "D:".
+AT+CFTRANRX Transfer a file to EFS
+Test Command
+AT+CFTRANRX=?
+Response
++CFTRANRX: [{non-ascii}]"FILEPATH"
+OK
+Write Command
+AT+CFTRANRX=<filepath>,<l
+en>[,<reserved>[,<location>]
+]
+Response
+1)If successfully:
+>
+OK
+2)If failed:
+>
+--- PAGE 313 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 312 / 684
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filepath> The path of the file on EFS
+<len> The length of the file data to send.
+Because of the system resources, The length could not set too large. If
+use the UART to send data, it may can set to 3Mb. If use USB to send
+data, it may just can set to 200Kb. If limit the send speed, it can set
+larger. The actual size could not ensure. Usually it is safer to set a
+smaller size.
+<reserved> The value is 100.
+<location> The position offset from the start of the file.
+Examples
+AT+CFTRANRX="c:/t1.txt",10
+>
+OK
+AT+CFTRANRX="d:/MyDir/t1.txt",10
+>
+OK
+AT+CFTRANRX="C:/ t2.txt",10,100,0
+>
+OK
+1. The <filepath> is the name of the file on EFS, make sure that the file name does not exist
+under the path.
+2.If sending file fails, increase the delay time between each 256 byte reach to 50ms, and then try to
+send file again.
+3. Only Cat4 modules and SD card support Non-ASCII characters in file path.
+4. The <reserved> is used by individual customers and if <location> is not default value,<reserved> will
+be considered invalid.
+5.The <location> exceed the file size, the command will return “ERROR”.
+NOTE
+--- PAGE 314 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 313 / 684
+6.When the <location> is less than the file size,it will write data from <location> .
+7. The <location> is just supported in ASR1603 standard branches , compatible SIM800 branches and
+ASR1803S standard branches.
+13.2.2 AT+CFTRANTX Transfer a file from EFS to host
+This command is used to transfer a file from EFS to host.
+AT+CFTRANTX Transfer a file from EFS to host
+Test Command
+AT+CFTRANTX=?
+Response
++CFTRANTX: [{non-ascii}]"FILEPATH"
+OK
+Write Command
+AT+CFTRANTX=<filepath>[,<
+location>][,<size>][,<transMo
+de>]
+Response
+1)If successfully:
+[+CFTRANTX: DATA,<len>
+…
++CFTRANTX: DATA,<len>]
++CFTRANTX: 0
+OK
+2)If <transMode> is 1 :
+>…
+OK
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filepath> The path of the file on EFS
+<len> The length of the following file data to output.
+<location> The beginning of the file data to output.
+<size> The length of the file data to output.
+<transMode> Whether there is no urc in data output
+0 normal mode
+1 data output directly without urc.

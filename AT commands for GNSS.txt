@@ -1,0 +1,744 @@
+--- PAGE 499 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 498 / 684
+508 Operation is aborted
+509 Operation not completed
+510 Too many retargeting times
+511 Unable to get data from SOCKET
+512 Error sending data via SOCKET
+513 Error receiving data via SOCKET
+514 Invalid SOCKET connection
+--- PAGE 500 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 499 / 684
+AT Commands for GNSS
+24.1 Overview of AT Commands for GNSS
+Command Description
+AT+CGNSSPWR GNSS power control and AP-Flash control
+AT+CGPSCOLD Cold start GPS
+AT+CGPSWARM Warm start GPS
+AT+CGPSHOT Hot start GPS
+AT+CGNSSIPR Configure the baud rate of UART3 and GPS module
+AT+CGNSSMODE Configure GNSS support mode
+AT+CGNSSNMEA Configure NMEA sentence type
+AT+CGPSNMEARATE Set NMEA output rate
+AT+CGPSFTM Start GPS test mode
+AT+CGPSINFO Get GPS fixed position information
+AT+CGNSSINFO Get GNSS fixed position information
+AT+CGNSSCMD Send command to GNSS
+AT+CGNSSTST Send data received from UART3 to NMEA port
+AT+CGNSSPORTSWITCH Select the output port for NMEA sentence
+AT+CAGPS Get AGPS data from the AGNSS server for assisted positioning
+AT+CGNSSPROD Get the production of GNSS
+24.2 Detailed Description of AT Commands for GNSS
+24.2.1 AT+CGNSSPWR GNSS power control, AP-Flash control and Dynamic Load
+control
+In ASR1603 and ASR1803, this command can control the GNSS module by pulling up/down the power pin,
+and it can also control whether the GNSS module can quickly hot start the AP-Flash. If you only want to
+enable/disable GNSS control, please execute AT+CGNSSPWR=1 or AT+CGNSSPWR=0. If you want to
+--- PAGE 501 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 500 / 684
+enable GNSS and want to use AP_Flash fast hot start mode, please execute AT+CGNSSPWR=1,1 or
+AT+CGNSSPWR=0,1.
+When using AP_Flash fast hot start mode, you need to execute AT+CGNSSPWR=0,1 to store the
+positioning data in the module after the GNSS is set to the upper position for the first time. When
+AT+CGNSSPWR=1,1 is executed next time, the positioning data will be loaded into GNSS again.
+.If you want to enable GNSS and want to use GNSS dynamic_load, please execute AT+CGNSSPWR=1,1,1
+or AT+CGNSSPWR=1,0,1,The third parameter defaults to 1 and it is optional
+In ASR1601, this command can only control the GNSS module by pulling up/down the power pin.
+AT+CGNSSPWR GNSS power control and AP-Flash control
+Test Command
+AT+CGNSSPWR=?
+Response
++CGNSSPWR:
+<GNSS_Power_status>,<AP_Flash_status>,<GNSS
+_dynamic_load>
+OK
+Read Command
+AT+CGNSSPWR?
+Response
++CGNSSPWR:
+<GNSS_Power_status>,<AP_Flash_status>,<GNSS
+_dynamic_load>
+OK
+Write Command
+AT+CGNSSPWR=<GNSS_Powe
+r_status>[,<AP_Flash_status>]
+[,<GNSS _dynamic_load>]
+Response
+1)If successfully:
+OK
+2)if GNSS can work properly:
++CGNSSPWR: READY!
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<GNSS_Power_status> 0 Close GNSS
+1 Active GNSS
+The function will take effect immediately.
+<AP_Flash_status> 0 Close GNSS AP_Flash fast hot start mode
+1 Active GNSS AP_Flash fast hot start mode
+The function will take effect immediately.
+<GNSS _dynamic_load> 0 Close GNSS _dynamic_load
+1 Active GNSS _dynamic_load
+The function will take effect immediately.
+--- PAGE 502 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 501 / 684
+1. In ASR1601, only the GNSS_Power_status field is supported.
+2. In ASR1603, GNSS will take about 9 seconds to updata the version of GNSS, please see
+"+CGNSSPWR: READY!" before controlling the GNSS.
+3. AP_Flash_status is supported after 27/9/21.
+4. "+CGNSSPWR: READY! " is supported after 27/9/21.
+5. A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+6. In 160X baseline, 1603 module whose GPS chip is ASR5311 only has one parameter of
+CGNSSPWR. The way to get GPS chip version is to send AT+CGNSSPROD.
+7. 1803S module whose GPS chip is ASR5311 has only one parameter which is used to control GNSS
+power.
+Examples
+AT+CGNSSPWR=?
++CGNSSPWR: (0,1),(0,1),(0,1)
+OK
+AT+CGNSSPWR?
++CGNSSPWR: 1,1,1
+OK
+AT+CGNSSPWR=1,1,1
+OK
++CGNSSPWR: READY!
+24.2.2 AT+CGNSSTST Send data received from UART3 to NMEA port
+AT+CGNSSTST is used to print raw GPS data to the NMEA port.
+AT+CGNSSTST Send data received from UART3 to NMEA port
+Test Command
+AT+CGNSSTST=?
+Response
++CGNSSTST: (0,1)
+OK
+Read Command
+AT+CGNSSTST?
+Response
++CGNSSTST: <on/off>
+NOTE
+--- PAGE 503 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 502 / 684
+OK
+Write Command
+AT+CGNSSTST=<on/off>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<on/off> 0 Stop sending data received from UART3 to NMEA port.
+1 Start sending data received from UART3 to NMEA port.
+The function will take effect immediately.
+If you want to get NMEA data by NMEA port, you should to excute
+AT+CGNSSTST=1 first.
+Examples
+AT+CGNSSTST=?
++CGNSSTST: (0,1)
+OK
+AT+CGNSSTST?
++CGNSSTST: 0
+OK
+AT+CGNSSTST=1
+OK
+24.2.3 AT+CGPSCOLD Cold start GPS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSCOLD Cold start GPS
+Execution Command
+AT+CGPSCOLD
+Response
+OK
+Parameter Saving Mode NO_SAVE
+--- PAGE 504 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 503 / 684
+Max Response Time 9000ms
+Reference -
+Examples
+AT+CGPSCOLD
+OK
+24.2.4 AT+CGPSWARM Warm start GPS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSCOLD Warm start GPS
+Execution Command
+AT+CGPSWARM
+Response
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+1.This command is valid on the ASR1603 projects and ASR1803S projects.
+2. A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+Examples
+AT+CGPSWARM
+OK
+24.2.5 AT+CGPSHOT Hot start GPS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSHOT Hot start GPS
+Execution Command Response
+NOTE
+--- PAGE 505 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 504 / 684
+AT+CGPSHOT OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Examples
+AT+CGPSHOT
+OK
+24.2.6 AT+CGNSSIPR Configure the baud rate of UART3 and GPS module
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSIPR Configure the baud rate of UART3 and GPS module
+Test Command
+AT+CGNSSIPR=?
+Response
++CGNSSIPR: (list of supported <baud-rate>s)
+OK
+Read Command
+AT+CGNSSIPR?
+Response
++CGNSSIPR: <baud-rate>
+OK
+Write Command
+AT+CGNSSIPR=<baud-rate>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Execution Command
+AT+CGNSSIPR
+Response
+Set default value
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<baud-rate> 9600
+115200
+--- PAGE 506 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 505 / 684
+230400
+The function will take effect immediately.
+1. The baud-rate is supported by the ASR1601 projects:
+4800,9600,19200,38400,57600,115200
+2. In the ASR1603 projects and ASR1803S project, the baud rate defaults to 115200 after GPS dynamic
+loading and upgrading the firmware, and 9600 without GPS dynamic loading.
+3. A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+4. 1803S module whose GPS chip is ASR 5311, only 115200 baud rates are supported.
+Examples
+AT+CGNSSIPR=?
++CGNSSIPR: (9600,115200,230400)
+OK
+AT+CGNSSIPR?
++CGNSSIPR: 9600
+OK
+AT+CGNSSIPR=9600
+OK
+24.2.7 AT+CGNSSMODE Configure GNSS support mode
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSMODE Configure GNSS support mode
+Test Command
+AT+CGNSSMODE=?
+Response
++CGNSSMODE: (1-7)
+OK
+Read Command
+AT+CGNSSMODE?
+Response
++CGNSSMODE: <mode>
+OK
+Write Command
+AT+CGNSSMODE=<mode>
+Response
+1)If successfully:
+NOTE
+--- PAGE 507 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 506 / 684
+OK
+2)If failed:
+ERROR
+Execution Command
+AT+CGNSSMODE
+Response
+Set default value 3
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<mode> 1 GPS L1 + BDS B1 + QZSS
+2 BDS B1
+3 GPS L1+QZSS
+The mode is supported in foreign module:
+1 GPS L1+SBAS+QZSS
+2 BDS B1
+3 GPS+GLONASS+GALILEO+SBAS+QZSS
+4 GPS+BDS+GALILEO
+The function will take effect immediately.
+1.The GPS mode configuration is different from different GPS chip, you can input AT+CGNSSPROD to
+get the information of GPS chip including UNIC and ASR 5311.
+2.The mode is supported by most A7670 projects in foreign module whose GPS chip is UNIC:
+1 GPS L1+SBAS+QZSS
+2 BDS B1
+3 GPS+GLONASS+GALILEO+SBAS+QZSS
+4 GPS+BDS+GALILEO+SBAS+QZSS
+3.The mode is supported in the A7680 project and 7673_V2.01_PCB and 7670_V2.01_PCB whose
+GPS chip is ASR 5311, and 1803S some projects also use 5311 GPS chip:
+1 GPS
+2 BDS
+3 GPS+BDS
+4 GLONASS
+5 GPS+GLONASS
+6 BDS+GLONASS
+7 GPS+BDS+GLONASS
+NOTE
+--- PAGE 508 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 507 / 684
+Examples
+AT+CGNSSMODE=?
++CGNSSMODE: (1-3)
+OK
+AT+CGNSSMODE?
++CGNSSMODE: 1
+OK
+AT+CGNSSMODE=1
+OK
+24.2.8 AT+CGNSSNMEA Configure NMEA sentence type
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSNMEA Configure NMEA sentence type
+Test Command
+AT+CGNSSNMEA=?
+Response
++CGNSSNMEA: (0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1)
+OK
+Read Command
+AT+CGNSSNMEA?
+Response
++CGNSSNMEA: 1,0,1,1,1,0,0,0
+OK
+Write Command
+AT+CGNSSNMEA=[nGGA,[nGL
+L,[nGSA,[nGSV,[nRMC,[nVTG,[
+nZDA,[nGST]]]]]]]]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+[nGGA,[nGLL,[nGSA,[nGSV,
+[nRMC,[nVTG,[nZDA,[nGST,
+]]]]]]]]
+The range of n is 0-1. It means that the sentence is output every n
+times, 0 means no output, null means to save the original
+configuration.
+--- PAGE 509 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 508 / 684
+nGGA GGA output rate,default is 1
+nGLL GLL output rate,default is 0
+nGSA GSA output rate,default is 1
+nGSV GSV output rate,default is 1
+nRMC RMC output rate,default is 1
+nVTG VTG output rate,default is 0
+nZDA ZDA output rate,default is 0
+nGST GST output rate,default is 0
+The function will take effect immediately.
+The NMEA fields are supported by the ASR1601 projects:
+nGGA GGA output rate,default is 1
+nGLL GLL output rate,default is 0
+nGSA GSA output rate,default is 1
+nGSV GSV output rate,default is 1
+nRMC RMC output rate,default is 1
+nVTG VTG output rate,default is 0
+nZDA ZDA output rate,default is 0
+nANT ANT output rate,default is 0
+nDHV DHV output rate,default is 0
+nLPS LPS output rate,default is 0(nonsupport)
+res1 reserved,default is 0
+res2 reserved,default is 0
+nUTC UTC output rate,default is 0(nonsupport)
+nGST GST output rate,default is 0
+A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+Examples
+AT+CGNSSNMEA=?
++CGNSSNMEA: (0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1)
+OK
+AT+CGNSSNMEA?
++CGNSSNMEA: 1,0,1,1,1,0,0,0
+OK
+AT+CGNSSNMEA=1,0,0,0,0,0,0,0
+OK
+NOTE
+--- PAGE 510 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 509 / 684
+The NMEA fields are supported by the ASR1603 projects and ASR1803S projects:
+The range of n is 0-5. It means that the sentence is output every n times, 0 means no output, null
+means to save the original configuration.
+nGGA GGA output rate,default is 1
+nGLL GLL output rate,default is 1
+nGSA GSA output rate,default is 1
+nGSV GSV output rate,default is 1
+nRMC RMC output rate,default is 1
+nVTG VTG output rate,default is 1
+nZDA ZDA output rate,default is 0
+nGST GST output rate,default is 0
+24.2.9 AT+CGPSNMEARATE Set NMEA output rate
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSNMEARATE Set NMEA output rate
+Test Command
+AT+CGPSNMEARATE=?
+Response
++CGPSNMEARATE: (1,2,4,5,10)
+OK
+Read Command
+AT+CGPSNMEARATE?
+Response
++CGPSNMEARATE: <rate>
+OK
+Write Command
+AT+CGPSNMEARATE=<rate>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Execution Command
+AT+CGPSNMEARATE
+Response
+Set default value 1
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+NOTE
+--- PAGE 511 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 510 / 684
+Defined Values
+<rate> 1 1Hz, one anchor point is output per second
+2 2Hz, two anchor points is output per second
+5 5Hz, five anchor points is output per second
+The function will take effect immediately.
+1. 1803S module whose GPS chip is ASR 5311, 1-5Hz is supported.
+Examples
+AT+CGPSNMEARATE=?
++CGPSNMEARATE: (1,2,5)
+OK
+AT+CGPSNMEARATE?
++CGPSNMEARATE: 1
+OK
+AT+CGPSNMEARATE=2
+OK
+24.2.10 AT+CGPSFTM Start GPS test mode
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSFTM Start GPS test mode
+Test Command
+AT+CGPSFTM=?
+Response
+OK
+Read Command
+AT+CGPSFTM?
+Response
++CGPSFTM: 0/1
+OK
+Write Command
+AT+CGPSFTM=<on/off>
+Response
+1)If successfully:
+OK
+NOTE
+--- PAGE 512 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 511 / 684
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<on/off> 0 Close test mode
+1 Start test mode
+The function will take effect immediately.
+1.GBGSV field will replace BDGSV field after dynamic loading is complete in ASR1603 and ASR1803
+Series projects.
+2. GAGSV field will supported by the ASR1603 and ASR1803 Series projects after dynamic loading is
+complete.
+3. GLGSV and GAGSV field will supported by the ASR1603 and ASR1803 Series projects in foreign
+modules after dynamic loading is complete.
+Examples
+AT+CGPSFTM?
++CGPSFTM: 0
+OK
+AT+CGPSFTM=1
+OK
++GLGSV,78,20.6,66,25.6,77,21.6,79,21.9,67,26.2,
+68,23.6
++GPGSV,10,36.3,12,33.5,14,26.5,15,27.0,18,30.6
+,20,29.4,21,14.9,24,32.8,25,30.6,31,29.1,32,27.0
++BDGSV,201,28.7,204,29.0,206,27.3,207,25.9,20
+9,25.0,210,18.5
+24.2.11 AT+CGPSINFO Get GPS fixed position information
+NOTE
+--- PAGE 513 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 512 / 684
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSINFO Get GPS fixed position information
+Test Command
+AT+CGPSINFO=?
+Response
++CGPSINFO: (0-255)
+OK
+Read Command
+AT+CGPSINFO?
+Response
++CGPSINFO: <time>
+OK
+Write Command
+AT+CGPSINFO=<time>
+Response
+1)If successfully:
+OK
++CGPSINFO: [<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC
+time>],[<alt>],[<speed>],[<course>]
+2)If <time>=0:
+OK
+3)If failed:
+ERROR
+Execution Command
+AT+CGPSINFO
+Response
++CGPSINFO: [<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC
+time>],[<alt>],[<speed>],[<course>]
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<time> The rang is 0-255, unit is second. after set <time> will report the GPS
+information every the seconds.
+The function will take effect immediately.
+<lat> Latitude of current position. Output format is ddmm.mmmmmm.
+<N/S> N/S Indicator, N=north or S=south.
+<log> Longitude of current position. Output format is dddmm.mmmmmm.
+<E/W> E/W Indicator, E=east or W=west.
+<date> Date. Output format is ddmmyy.
+<UTC time> UTC Time. Output format is hhmmss.ss.
+<alt> MSL Altitude. Unit is meters.
+<speed> Speed Over Ground. Unit is knots.
+<course> Course. Degrees.
+--- PAGE 514 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 513 / 684
+Examples
+AT+CGPSINFO=?
++CGPSINFO: (0-255)
+OK
+AT+CGPSINFO?
++CGPSINFO: 0
+OK
+AT+CGPSINFO
++CGPSINFO:3113.343286,N,12121.234064,E,250311,072809.33,44.1,0.0,0
+OK
+24.2.12 AT+CGNSSINFO Get GNSS fixed position information
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSINFO Get GNSS fixed position information
+Test Command
+AT+CGNSSINFO=?
+Response
++CGNSSINFO: (0-255)
+OK
+Read Command
+AT+CGNSSINFO?
+Response
++CGNSSINFO: <time>
+OK
+Write Command
+AT+CGNSSINFO=<time>
+Response
+1)If successfully:
+OK
++CGNSSINFO:
+[<mode>],[<GPS-SVs>],[BEIDOU-SVs],[<GLONASS-SVs>],[<
+GALILEO-SVs>],[<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UT
+C-time>],[<alt>],[<speed>],[<course>],[<PDOP>],[HDOP],[VD
+OP]
+2)If <time>=0:
+OK
+3)If failed:
+ERROR
+--- PAGE 515 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 514 / 684
+Execution Command
+AT+CGNSSINFO
+Response
++CGNSSINFO:
+[<mode>],[<GPS-SVs>],[BEIDOU-SVs],[<GLONASS-SVs>],[<
+GALILEO-SVs>],
+[<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC-time>],[<alt>],[
+<speed>],[<course>],[<PDOP>],[HDOP],[VDOP]
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<time> The rang is 0-255, unit is second. after set <time> will report the
+GNSS information every the seconds.
+The function will take effect immediately.
+<mode> Fix mode 2=2D fix 3=3D fix
+<GPS-SVs> GPS satellite visible numbers
+<BEIDOU-SVs> BEIDOU satellite visible numbers
+<GLONASS-SVs> GLONASS satellite visible numbers
+<GALILEO-SVs> GALILEO satellite visible numbers
+<lat> Latitude of current position.Output format is dd.ddddd
+<N/S> N/S Indicator, N=north or S=south.
+<log> Longitude of current position. Output format is ddd.ddddd
+<E/W> E/W Indicator, E=east or W=west.
+<date> Date. Output format is ddmmyy.
+<UTC-time> UTC Time. Output format is hhmmss.ss.
+<alt> MSL Altitude. Unit is meters.
+<speed> Speed Over Ground. Unit is knots.
+<course> Course. Degrees.
+<PDOP> Position Dilution Of Precision.
+<HDOP> Horizontal Dilution Of Precision.
+<VDOP> Vertical Dilution Of Precision.
+Examples
+AT+CGNSSINFO=?
++CGNSSINFO: (0-255)
+OK
+--- PAGE 516 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 515 / 684
+AT+CGNSSINFO?
++CGNSSINFO: 0
+OK
+AT+CGNSSINFO
++CGNSSINFO:
+2,09,05,00,3113.330650,N,12121.262554,E,131117,091918.00,32.9,0.0,255.0,1.1,0.8,0.7
+OK
+AT+CGNSSINFO (if not fix, will report null)
++CGNSSINFO:,,,,,,,,,,,,,,,
+OK
+In the ASR1603 and ASR1803S platforms, the domestic version of +CGNSSINFO reported information
+as follows: +CGNSSINFO:
+[<mode>],[<GPS-SVs>],[BEIDOU-SVs],[<lat>],[<N/S >],[<log>],[<E/W>],[<date>],[<UTC-time>],[<alt>],[
+<speed>],[<course>],[ <PDOP>],[HDOP],[VDOP]. [<valid-SVs>]
+The information reported by the foreign version of +CGNSSINFO is as follows: +CGNSSINFO:
+[<mode>],[<GPS-SVs>], [BEIDOU-SVs], [<GLONASS-SVs>], [<GALILEO-SVs>],[<
+lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC-time>],[<alt>],[<speed> ],[<course>],[<PDOP>],[HDOP],[
+VDOP].
+24.2.13 AT+CGNSSCMD Send command to GNSS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSCMD Send command to GNSS
+Test Command
+AT+CGNSSCMD=?
+Response
++CGNSSCMD: "CmdString"
+OK
+Write Command
+AT+CGNSSCMD=<CmdString>
+Response
+1)If send OK:
+OK
+2)If send false:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+NOTE
+--- PAGE 517 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 516 / 684
+Defined Values
+<CmdString> Command string, max length of string is 510 or 62 (seen in note)
+For example: if you want to send "$PCAS02,1000*2E<CR><LF>"
+command to GNSS.
+You can use:
+AT+CGNSSCMD="$PCAS02,1000*2E"
+Or:
+AT+CGNSSCMD="245043415330322C313030302A3245"
+Examples
+AT+CGNSSCMD=?
++CGNSSCMD: "CmdString"
+OK
+AT+CGNSSCMD="$PCAS02,1000*2E"
+OK
+The max length of command string is different from software baseline: 042 baseline is 510, above 110
+baseline is 62.
+24.2.14 AT+CGNSSPORTSWITCH Select the output port for NMEA sentence
+This command is valid after the URC reports “+CGNSSPWR: READY!”. AT+CGNSSTST=1 is used to
+output original NMEA data to USB NMEA port or UART port.
+AT+CGNSSPORTSWITCH Select the output port for NMEA sentence
+Test Command
+AT+CGNSSPORTSWITCH=?
+Response
++CGNSSPORTSWITCH: (0,1),(0,1)
+OK
+Read Command
+AT+CGNSSPORTSWITCH?
+Response
++CGNSSPORTSWITCH:
+<parse_data_port>,<nmea_data_port>
+NOTE
+--- PAGE 518 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 517 / 684
+OK
+Write Command
+AT+CGNSSPORTSWITCH=<par
+se_data_port>[,<nmea_data_po
+rt>]
+Response
+1)If send OK:
+OK
+2)If send false:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<parse_data_port> 0 output the parsed data of NMEA to USB AT port.
+1 output the parsed data of NMEA to UART port.
+<nmea_data_port> 0 output raw NMEA data to USB NMEA port.
+1 output raw NMEA data to UART port.
+Examples
+AT+CGNSSPORTSWITCH=?
++CGNSSPORTSWITCH: (0,1),(0,1)
+OK
+AT+CGNSSPORTSWITCH=0,1
+OK
+24.2.15 AT+CAGPS Get AGPS data from the AGNSS server for assisted
+positioning
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CAGPS Get AGPS data from the AGNSS server for assisted positioning
+Execution Command
+AT+CAGPS
+Response
+1)If successfully:
+OK
++AGPS: success.
+2)If failed:
+ERROR
+3)If failed:

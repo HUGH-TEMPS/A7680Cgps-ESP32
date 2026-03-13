@@ -1,0 +1,1974 @@
+--- PAGE 110 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 109 / 684
++CTZV: +32,08/12/09,17:00:00 (Report time and time zone)
++CTZV: +32,08/12/09,17:00:00,1 (Report time, time zone and
+daylight saving time)
+For more detailed informations about time and time zone, please refer
+3GPP TS 24.008.
+<tz> Local time zone received from network.
+<time> Universal time received from network, and the format is
+"yy/MM/dd,hh:mm:ss", where characters indicate year
+(two last digits), month, day, hour, minutes and seconds.
+<dst> Network daylight saving time, and if it is received from
+network, it indicates the value that has been used to
+adjust the local time zone. The values as following:
+0 No adjustment for Daylight Saving Time.
+1 +1 hour adjustment for Daylight Saving Time.
+2 +2 hours adjustment for Daylight Saving Time.
+NOTE: Herein,<time> is Universal Time or NITZ time, but not local
+time.
+Examples
+AT+CTZR=?
++CTZR: (0-1)
+OK
+AT+CTZR?
++CTZR: 0
+OK
+AT+CTZR=0
+OK
+AT+CTZR
+OK
+The time zone reporting is not affected by the Automatic Time and Time Zone command AT+CTZU.
+NOTE
+--- PAGE 111 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 110 / 684
+AT Commands for Packet Domain
+5.1 Overview of AT Commands for Packet Domain
+Command Description
+AT+CGERG Network registration status
+AT+CEREG EPS network registration status
+AT+CGATT Packet domain attach or detach
+AT+CGACT PDP context activate or deactivate
+AT+CGDCONT Define PDP context
+AT+CGDSCONT Define Secondary PDP Context
+AT+CGTFT Traffic Flow Template
+AT+CGQREQ Quality of service profile (requested)
+AT+CGEQREQ 3G quality of service profile (requested)
+AT+CGQMIN Quality of service profile (minimum acceptable)
+AT+CGEQMIN 3G quality of service profile (minimum acceptable)
+AT+CGDATA Enter data state
+AT+CGPADDR Show PDP address
+AT+CGCLASS GPRS mobile station class
+AT+CGEREP GPRS event reporting
+AT+CGAUTH Set type of authentication for PDP-IP connections of GPRS
+AT+CPING Ping destination address
+5.2 Detailed Description of AT Commands for Packet Domain
+5.2.1 AT+CGREG Network registration status
+This command controls the presentation of an unsolicited result code "+CGREG: <stat>" when <n>=1 and
+there is a change in the MT's GPRS network registration status.
+--- PAGE 112 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 111 / 684
+The read command returns the status of result code presentation and an integer <stat> which shows
+Whether the network has currently indicated the registration of the MT.
+AT+CGREG Network registration status
+Test Command
+AT+CGREG=?
+Response
++CGREG: (list of supported <n>s)
+OK
+Read Command
+AT+CGREG?
+Response
++CGREG: <n>,<stat>[,<lac>,<ci>]
+OK
+Write Command
+AT+CGREG=<n>
+Response
+OK
+Execution Command
+AT+CGREG
+Response
+Set default value:0
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<n> 0 disable network registration unsolicited result code
+1 enable network registration unsolicited result code +CGREG:
+<stat>
+2 there is a change in the ME network registration status or a change
+of the network cell:
++CGREG: <stat>[,<lac>,<ci>]
+<stat> 0 not registered, ME is not currently searching an operator to register
+to
+1 registered, home network
+2 not registered, but ME is currently trying to attach or searching an
+operator to register to
+3 registration denied
+4 unknown
+5 registered, roaming
+6 registered for "SMS only", home network(applicable only when
+E-UTRAN)
+11 attached for emergency bearer services only
+<lac> Two byte location area code in hexadecimal format(e.g."00C3" equals
+193 in decimal).
+<ci> Cell ID in hexadecimal format.
+GSM: Maximum is two byte.
+--- PAGE 113 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 112 / 684
+WCDMA: Maximum is four byte.
+Examples
+AT+CGREG=?
++CGREG: (0-2)
+OK
+AT+CGREG?
++CGREG: 0,1
+OK
+AT+CGREG=1
+OK
+AT+CGREG
+OK
+5.2.2 AT+CEREG EPS network registration status
+The set command controls the presentation of an unsolicited result code +CEREG: <stat> when <n>=1 and
+there is a change in the MT's EPS network registration status in E-UTRAN, or unsolicited result code
++CEREG: <stat>[,<tac>,<ci>[,<AcT>]] when <n>=2 and there is a change of the network cell in E-UTRAN;
+in this latest case <AcT>,<tac> and <ci> are sent only if available.
+The read command returns the status of result code presentation and an integer <stat> which shows
+whether the network has currently indicated the registration of the MT. Location information elements
+<tac>,<ci> and <AcT>, if available, are returned only when <n>=2 and MT is registered in the network.
+AT+CEREG EPS network registration status
+Test Command
+AT+CEREG=?
+Response
+1)
++CEREG: (range of supported <n>s)
+OK
+2)
+ERROR
+Read Command
+AT+CEREG?
+Response
+1)
++CEREG: <n>,<stat>[,<tac>,<ci>]
+OK
+--- PAGE 114 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 113 / 684
+2)
+ERROR
+Write Command
+AT+CEREG=<n>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CEREG
+Response
+1)
+Set default value(<n>=0):
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 24.008 [8]
+Defined Values
+<n> 0 disable network registration unsolicited result code
+1 enable network registration unsolicited result code +CEREG:
+<stat>
+2 enable network registration and location information unsolicited
+result code +CEREG: <stat>[,<tac>,<ci>[,<AcT>]]
+<stat> 0 not registered, MT is not currently searching an operator to register
+to
+1 registered, home network
+2 not registered, but MT is currently trying to attach or searching an
+operator to register to
+3 registration denied
+4 unknown (e.g. out of E-UTRAN coverage)
+5 registered, roaming
+6 registered for "SMS only", home network (not applicable)
+7 registered for "SMS only", roaming (not applicable)
+11 attached for emergency bearer services only
+<tac> string type; two byte tracking area code in hexadecimal format (e.g.
+"00C3" equals 195 in decimal)
+<ci> string type; four byte E-UTRAN cell identify in hexadecimal format
+<AcT> A numberic parameter that indicates the access technology of serving
+cell
+0 GSM (not applicable)
+1 GSM Compact (not applicable)
+--- PAGE 115 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 114 / 684
+2 UTRAN (not applicable)
+3 GSM w/EGPRS (see NOTE 3)(not applicable)
+4 UTRAN w/HSDPA (see NOTE 4)(not applicable)
+5 UTRAN w/HSUPA (see NOTE 4)(not applicable)
+6 UTRAN w/HSDPA and HSUPA (see NOTE 4)(not applicable)
+7 E-UTRAN
+Examples
+AT+CEREG=?
++CEREG: (0-2)
+OK
+AT+CEREG?
++CEREG: 0,1
+OK
+AT+CEREG=1
+OK
+AT+CEREG
+OK
+If the EPS MT in GERAN/UTRAN/E-UTRAN also supports circuit mode services and/or GPRS
+services, the +CREG command and +CREG: result codes and/or the +CGREG command and
++CGREG: result codes apply to the registration status and location information for those services.
+5.2.3 AT+CGATT Packet domain attach or detach
+The write command is used to attach the MT to, or detach the MT from, the Packet Domain service.
+The read command returns the current Packet Domain service state.
+AT+CGATT Packet domain attach or detach
+Test Command
+AT+CGATT=?
+Response
+1)
++CGATT: (list of supported <state>s)
+OK
+NOTE
+--- PAGE 116 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 115 / 684
+2)
+ERROR
+Read Command
+AT+CGATT?
+Response
+1)
++CGATT: <state>
+OK
+2)
+ERROR
+Write Command
+AT+CGATT=<state>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<state> Indicates the state of Packet Domain attachment:
+0 detached
+1 attached
+Examples
+AT+CGATT=?
++CGATT: (0-1)
+OK
+AT+CGATT?
++CGATT: 1
+OK
+AT+CGATT=1
+OK
+--- PAGE 117 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 116 / 684
+5.2.4 AT+CGACT PDP context activate or deactivate
+The write command is used to activate or deactivate the specified PDP context (s).
+AT+CGACT PDP context activate or deactivate
+Test Command
+AT+CGACT=?
+Response
++CGACT: (list of supported <state>s)
+OK
+Read Command
+AT+CGACT?
+Response
++CGACT: [<cid>,<state>[<CR><LF>
++CGACT: <cid>,<state>[<CR><LF>
+[..]]]
+OK
+Write Command
+AT+CGACT=<state>[,<cid>]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<state> Indicates the state of PDP context activation:
+0 deactivated
+1 activated
+<cid> A numeric parameter which specifies a particular PDP context
+definition (see AT+CGDCONT command).
+1…15
+NOTE: In LTE mode, it’s prohibited to active or deactive default bearer(cid 1) and dedicated beaeer(cid 8).
+Examples
+AT+CGACT=?
++CGACT: (0,1)
+OK
+AT+CGACT?
+--- PAGE 118 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 117 / 684
++CGACT: 1,1
+OK
+AT+CGACT=1,1
+OK
+5.2.5 AT+CGDCONT Define PDP context
+The set command specifies PDP context parameter values for a PDP context identified by the (local)context
+identification parameter <cid>. The number of PDP contexts that may be in a defined state at the same time
+is given by the range returned by the test command. A special form of the write command
+(AT+CGDCONT=<cid>)causes the values for context <cid> to become undefined.
+AT+CGDCONT Define PDP context
+Test Command
+AT+CGDCONT=?
+Response
+1)
++CGDCONT: (range of supported<cid>s),<PDP_type>,,,(list of
+supported <d_comp>s),(list of supported <h_comp>s),(list of
+<ipv4_ctrl>s),(list of <request_type>s)
+OK
+2)
+ERROR
+Read Command
+AT+CGDCONT?
+Response
+1)
++CGDCONT:
+<cid>,<PDP_type>,<APN>[[,<PDP_addr>],<d_comp>,<h_comp>,
+<ipv4_ctrl>,<request_type>,<P-CSCF_discovery>,<IM_CN_Signa
+lling_Flag_Ind>]<CR><LF>
++CGDCONT:
+<cid>,<PDP_type>,<APN>[[,<PDP_addr>],<d_comp>,<h_comp>,
+<ipv4_ctrl>,<request_type>,<P-CSCF_discovery>,<IM_CN_Signa
+lling_Flag_Ind>]
+OK
+2)
+ERROR
+Write Command
+AT+CGDCONT=<cid>[,<PDP
+_type>[,<APN>[,<PDP_addr>
+[,<d_comp>[,<h_comp>][,<ip
+Response
+1)
+OK
+2)
+--- PAGE 119 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 118 / 684
+v4_ctrl>[,<request_type>]]]]]
+]
+ERROR
+Execution Command
+AT+CGDCONT
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> (PDP Context Identifier)a numeric parameter which specifies a
+particular PDP context definition. The parameter is local to the TE-MT
+interface and is used in other PDP context-related commands. The
+range of permitted values (minimum value=1)is returned by the test
+form of the command.
+1…15
+<PDP_type> (Packet Data Protocol type)a string parameter which specifies the type
+of packet data protocol.
+IP Internet Protocol
+IPV6 Internet Protocol Version 6
+IPV4V6 Dual PDN Stack
+<APN> (Access Point Name)a string parameter which is a logical name that is
+used to select the GGSN or the external packet data network.
+<PDP_addr> A string parameter that identifies the MT in the address space
+applicable to the PDP. This parameter will be omitted when PDP_type
+is PPP type.
+Read command will continue to return the null string even if an
+address has been allocated during the PDP startup procedure. The
+allocated address may be read using command AT+CGPADDR.
+<d_comp> A numeric parameter that controls PDP data compression, this value
+may depend on platform:
+0 off (default if value is omitted)
+1 on
+2 V.42bis
+<h_comp> A numeric parameter that controls PDP header compression, this
+value may depend on platform:
+0 off (default if value is omitted)
+1 RFC1144
+<ipv4_ctrl> Parameter that controls how the MT/TA requests to get the IPv4
+address information:
+0 Address Allocation through NAS Signaling
+--- PAGE 120 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 119 / 684
+1 on
+<request_type> integer type; indicates the type of PDP context activation request for
+the PDP context, see 3GPP TS 24.301 [83] (subclause 6.5.1.2)and
+3GPP TS 24.008 [8] (subclause 10.5.6.17). If the initial PDP context is
+supported (see subclause 10.1.0)it is not allowed to assign <cid>=0
+for emergency bearer services. According to 3GPP TS 24.008 [8]
+(subclause 4.2.4.2.2 and subclause 4.2.5.1.4)and 3GPP TS 24.301
+[83] (subclause 5.2.2.3.3 and subclause 5.2.3.2.2), a separate PDP
+context must be established for emergency bearer services.
+NOTE 4: If the PDP context for emergency bearer services is the only
+activated context, only emergency calls are allowed, see 3GPP TS
+23.401 [82] subclause 4.3.12.9.
+0 PDP context is for new PDP context establishment or for
+handover from a non-3GPP access network (how the MT
+decides whether the PDP context is for new PDP context
+establishment or for handover is implementation specific)
+1 PDP context is for emergency bearer services
+2 PDP context is for new PDP context establishment
+<P-CSCF_discovery> integer type; influences how the MT/TA requests to get the P-CSCF
+address, see 3GPP TS 24.229 [89] annex B and annex L.
+0 Preference of P-CSCF address discovery not influenced by
++CGDCONT
+1 Preference of P-CSCF address discovery through NAS
+signalling
+2 Preference of P-CSCF address discovery through DHCP
+<IM_CN_Signalling_Flag_In
+d>
+integer type; indicates to the network whether the PDP context is for
+IM CN subsystem-related signalling only or not.
+0 UE indicates that the PDP context is not for IM CN
+subsystem-related signalling only
+1 UE indicates that the PDP context is for IM CN
+subsystem-related signalling only
+Examples
+AT+CGDCONT=?
++CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)
++CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)
++CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)
+OK
+AT+CGDCONT?
++CGDCONT: 1,"IP",""
+OK
+--- PAGE 121 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 120 / 684
+AT+CGDCONT=1,"IP","cnnet"
+OK
+AT+CGDCONT
+OK
+5.2.6 AT+CGDSCONT Define Secondary PDP Context
+The set command specifies PDP context parameter values for a Secondary PDP context identified by the
+(local)context identification parameter,<cid>. The number of PDP contexts that may be in a defined state at
+the same time is given by the range returned by the test command. A special form of the set command,
+AT+CGDSCONT=<cid> causes the values for context number <cid> to become undefined.
+AT+CGDSCONT Define Secondary PDP Context
+Test Command
+AT+CGDSCONT=?
+Response
+1)
++CGDSCONT: (range of supported <cid>s),(list of <p_cid>s for
+active primary contexts),<PDP_type>,(list of supported
+<d_comp>s),(list of supported <h_comp>s), (list of supported <
+imCnSignallingFlagInd>s)
+OK
+2)
+ERROR
+Read Command
+AT+CGDSCONT?
+Response
+1)
++CGDSCONT: [<cid>,<p_cid>,<d_comp>,<h_comp>, <
+imCnSignallingFlagInd>
+[<CR><LF>+CGDSCONT: <cid>,<p_cid>,<d_comp>,<h_comp>, <
+imCnSignallingFlagInd>[..]]]
+OK
+2)
+ERROR
+Write Command
+AT+CGDSCONT=<cid>[,<p_
+cid>[,<d_comp>[,<h_comp>[
+,<imCnSignallingFlagInd>]]]]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+--- PAGE 122 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 121 / 684
+Defined Values
+<cid> a numeric parameter which specifies a particular PDP context
+definition. The parameter is local to the TE-MT interface and is used in
+other PDP context-related commands. The range of permitted values
+(minimum value=1)is returned by the test form of the command.
+NOTE: The <cid>s for network-initiated PDP contexts have values
+outside the ranges activated by the +CGACT.
+<p_cid> a numeric parameter which specifies a particular PDP context
+definition which has been specified by use of the +CGDCONT
+command and activated by the +CGACT. The parameter is local to the
+TE-MT interface. The list of permitted values is returned by the test
+form of the command.
+<PDP_type> (Packet Data Protocol type)a string parameter which specifies the type
+of packet data protocol.
+IP Internet Protocol
+IPV6 Internet Protocol Version 6
+IPV4V6 Dual PDN Stack
+<d_comp> a numeric parameter that controls PDP data compression (applicable
+for SNDCPonly)(refer 3GPP TS 44.065 [61])
+0 off
+1 on (manufacturer preferred compression)
+2 V.42bis
+Other values are reserved.
+<h_comp> a numeric parameter that controls PDP header compression (refer
+3GPP TS 44.065 [61] and 3GPP TS 25.323 [62])
+0 off
+1 RFC1144
+Other values are reserved.
+<imCnSignallingFlagInd> integer type; indicates to the network whether the PDP context is for
+IM CN subsystem-related signalling only or not.
+0 UE indicates that the PDP context is not for IM CN
+subsystem-related signalling only
+1 UE indicates that the PDP context is for IM CN
+subsystem-related signalling only
+Examples
+AT+CGDSCONT=?
++CGDSCONT: (2,3,4,5,6,7,8,9,10,11,12,13,14,15),(1),"IP",(0-2),(0-1),(0-1)
++CGDSCONT: (2,3,4,5,6,7,8,9,10,11,12,13,14,15),(1),"IPV6",(0-2),(0-1),(0-1)
++CGDSCONT: (2,3,4,5,6,7,8,9,10,11,12,13,14,15),(1),"IPV4V6",(0-2),(0-1),(0-1)
+--- PAGE 123 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 122 / 684
+OK
+AT+CGDSCONT?
++CGDSCONT:
+OK
+AT+CGDSCONT=4,2
++CME ERROR: operation not supported
+Currently, the <imCnSignallingFlagInd> parameter is not supported in 1803 and 1802
+5.2.7 AT+CGTFT Traffic Flow Template
+This command allows the TE to specify a Packet Filter - PF for a Traffic Flow Template - TFT that is used in
+the GGSN in UMTS/GPRS and Packet GW in EPS for routing of packets onto different QoS flows towards
+the TE. The concept is further described in the 3GPP TS 23.060 [47]. A TFT consists of from one and up to
+15 Packet Filters, each identified by a unique <packet filter identifier>. A Packet Filter also has an
+<evaluation precedence index> that is unique within all TFTs associated with all PDP contexts that are
+associated with the same PDP address.
+AT+CGTFT Traffic Flow Template
+Test Command
+AT+CGTFT=?
+Response
+1)
++CGTFT: <PDP_type>,(list of supported <packet filter
+identifier>s),(list of supported <evaluation precedence
+index>s),(list of supported <source address and subnet
+mask>s),(list of supported <protocol number (ipv4)/ next header
+(ipv6)>s),(list of supported <destination port range>s),(list of
+supported <source port range>s),(list of supported <ipsec security
+parameter index (spi)>s),(list of supported <type of service
+(tos)(ipv4)and mask / traffic class (ipv6)and mask>s),(list of
+supported <flow label (ipv6)>s),(list of supported <direction>s)
+[<CR><LF>+CGTFT: <PDP_type>,(list of supported <packet filter
+identifier>s),(list of supported <evaluation precedence
+index>s),(list of supported <source address and subnet
+mask>s),(list of supported <protocol number (ipv4)/ next header
+(ipv6)>s),(list of supported <destination port range>s),(list of
+supported <source port range>s),(list of supported <ipsec security
+parameter index (spi)>s),(list of supported <type of service
+(tos)(ipv4)and mask / traffic class (ipv6)and mask>s),(list of
+NOTE
+--- PAGE 124 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 123 / 684
+supported <flow label (ipv6)>s),(list of supported <direction>s)
+[..]]
+OK
+2)
+ERROR
+Read Command
+AT+CGTFT?
+Response
+1)
++CGTFT: [<cid>,<packet filter identifier>,<evaluation precedence
+index>,<source address and subnet mask>,<protocol number
+(ipv4)/ next header (ipv6)>,<source port range>,<destination port
+range>,<ipsec security parameter index (spi)>,<type of service
+(tos)(ipv4)and mask / traffic class (ipv6)and mask>,<direction>
+[<CR><LF>+CGTFT: <cid>,<packet filter identifier>,<evaluation
+precedence index>,<source address and subnet
+mask>,<protocol number (ipv4)/ next header (ipv6)>,<source
+port range>,<destination port range>,<ipsec security parameter
+index (spi)>,<type of service (tos)(ipv4)and mask / traffic class
+(ipv6)and mask>,<direction>
+[..]]]
+OK
+2)
+ERROR
+Write Command
+AT+CGTFT=<cid>[,[<packet
+filter identifier>,<evaluation
+precedence index>[,<source
+address and subnet
+mask>[,<protocol number
+(ipv4)/ next header
+(ipv6)>[,<destination port
+range>[,<source port
+range>[,<ipsec security
+parameter index
+(spi)>[,<type of service
+(tos)(ipv4)and mask / traffic
+class (ipv6)and
+mask>[,<flow label
+(ipv6)>[,<direction>]]]]]]]]]]
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CGTFT
+Response
+OK
+Parameter Saving Mode NO_SAVE
+--- PAGE 125 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 124 / 684
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> a numeric parameter which specifies a particular PDP context
+definition (see the AT+CGDCONT and AT+CGDSCONT commands).
+<PDP_type> (Packet Data Protocol type)a string parameter which specifies the type
+of packet data protocol.
+IP Internet Protocol
+IPV6 Internet Protocol Version 6
+IPV4V6 Dual PDN Stack
+<packet filter identifier> a numeric parameter, value range from 1 to 15.
+<evaluation precedence
+index>
+a numeric parameter. The value range is from 0 to 255.
+<source address and
+subnet mask>
+string type The string is given as dot-separated numeric
+(0-255)parameters on the form:
+"a1.a2.a3.a4.m1.m2.m3.m4" for IPv4 or
+"a1.a2.a3.a4.a5.a6.a7.a8.a9.a10.a11.a12.a13.a14.a15.a16.m1.m2.m
+3.m4.m5.m6.m7.m8.m9.m10.m11.m12.m13.m14.m15.m16", for IPv6.
+NOTE: subnet mask can’t be 0.0.0.0
+<protocol number (ipv4)/
+next header (ipv6)>
+a numeric parameter, value range from 0 to 255.
+<destination port range> string type. The string is given as dot-separated numeric
+(0-65535)parameters on the form "f.t".
+<source port range> string type. The string is given as dot-separated numeric
+(0-65535)parameters on the form "f.t".
+<ipsec security parameter
+index (spi)>
+numeric value in hexadecimal format. The value range is from
+00000000 to FFFFFFFF.
+<type of service
+(tos)(ipv4)and mask / traffic
+class (ipv6)and mask>
+string type. The string is given as dot-separated numeric
+(0-255)parameters on the form "t.m".
+<flow label (ipv6)> numeric value in hexadecimal format. The value range is from 00000
+to FFFFF. Valid for IPv6 only.
+<direction> integer type. Specifies the transmission direction in which the packet
+filter shall be applied.
+0 Pre-Release 7 TFT filter
+1 Uplink
+2 Downlink
+3 Up & Downlink
+Examples
+--- PAGE 126 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 125 / 684
+AT+CGTFT=?
++CGTFT:
+"IP",(1-15),(0-255),,(0-255),(0-65535.0-65535),(0-65535.0-65535),(0-FFFFFFFF),(0-255.0-255),(0-FFF
+FF)
++CGTFT:
+"IPV6",(1-15),(0-255),,(0-255),(0-65535.0-65535),(0-65535.0-65535),(0-FFFFFFFF),(0-255.0-255),(0-F
+FFFF)
++CGTFT:
+"IPV4V6",(1-15),(0-255),,(0-255),(0-65535.0-65535),(0-65535.0-65535),(0-FFFFFFFF),(0-255.0-255),(0
+-FFFFF)
+OK
+AT+CGTFT?
++CGTFT:
+OK
+AT+CGTFT=1,1,0,"74.125.71.100.255.255.255.255"
+OK
+AT+CGTFT
+OK
+If a specified PDP context is deactivate, the corresponding Packet Filter TFT need to be specified
+again.
+5.2.8 AT+CGQREQ Quality of service profile (requested)
+This command allows the TE to specify a Quality of Service Profile that is used when the MT sends an
+Activate PDP Context Request message to the network. A special form of the set command
+(AT+CGQREQ=<cid>)causes the requested profile for context number <cid> to become undefined.
+AT+CGQREQ Quality of service profile (requested)
+Test Command
+AT+CGQREQ=?
+Response
+1)
++CGQREQ: <PDP_type>,(list of supported <precedence>s),(list of
+supported <delay>s),(list of supported <reliability>s),(list of
+supported <peak>s),(list of supported <mean>s)
+OK
+NOTE
+--- PAGE 127 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 126 / 684
+2)
+ERROR
+Read Command
+AT+CGQREQ?
+Response
+1)
++CGQREQ:
+[<cid>,<precedence>,<delay>,<reliability>,<peak>,<mean>[<CR>
+<LF><LF>
++CGQREQ:
+<cid>,<precedence>,<delay>,<reliability>,<peak>,<mean>[…]]]
+OK
+2)
+ERROR
+Write Command
+AT+CGQREQ=<cid>[,<prece
+dence>[,<delay>[,<reliability
+>[,<peak>[,<mean>]]]]]
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CGQREQ
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context
+definition (see AT+CGDCONT command). The range is from 1 to 15
+<PDP_type> (Packet Data Protocol type)a string parameter which specifies the type
+of packet data protocol.
+IP Internet Protocol
+<precedence> A numeric parameter which specifies the precedence class:
+0 network subscribed value
+1 high priority
+2 normal priority
+3 low priority
+<delay> A numeric parameter which specifies the delay class:
+0 network subscribed value
+1 delay class 1
+2 delay class 2
+3 delay class 3
+--- PAGE 128 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 127 / 684
+4 delay class 4
+<reliability> A numeric parameter which specifies the reliability class:
+0 network subscribed value
+1 Non real-time traffic,error-sensitive application that cannot
+cope with data loss
+2 Non real-time traffic,error-sensitive application that can cope
+with infrequent data loss
+3 Non real-time traffic,error-sensitive application that can cope
+with data loss, GMM/-
+SM, and SMS
+4 Real-time traffic,error-sensitive application that can cope with
+data loss
+5 Real-time traffic error non-sensitive application that can cope
+with data loss
+<peak> A numeric parameter which specifies the peak throughput class:
+0 network subscribed value
+1 Up to 1000 (8 kbit/s)
+2 Up to 2000 (16 kbit/s)
+3 Up to 4000 (32 kbit/s)
+4 Up to 8000 (64 kbit/s)
+5 Up to 16000 (128 kbit/s)
+6 Up to 32000 (256 kbit/s)
+7 Up to 64000 (512 kbit/s)
+8 Up to 128000 (1024 kbit/s)
+9 Up to 256000 (2048 kbit/s)
+<mean> A numeric parameter which specifies the mean throughput class:
+0 network subscribed value
+1 100 (~0.22 bit/s)
+2 200 (~0.44 bit/s)
+3 500 (~1.11 bit/s)
+4 1000 (~2.2 bit/s)
+5 2000 (~4.4 bit/s)
+6 5000 (~11.1 bit/s)
+7 10000 (~22 bit/s)
+8 20000 (~44 bit/s)
+9 50000 (~111 bit/s)
+10 100000 (~0.22 kbit/s)
+11 200000 (~0.44 kbit/s)
+12 500000 (~1.11 kbit/s)
+13 1000000 (~2.2 kbit/s)
+14 2000000 (~4.4 kbit/s)
+15 5000000 (~11.1 kbit/s)
+16 10000000 (~22 kbit/s)
+17 20000000 (~44 kbit/s)
+18 50000000 (~111 kbit/s)
+--- PAGE 129 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 128 / 684
+31 optimization
+Examples
+AT+CGQREQ=?
++CGQREQ: "IP",(0-3),(0-4),(0-5),(0-9),(0-18,31)
+OK
+AT+CGQREQ?
++CGQREQ: 1,3,4,3,9,31
+OK
+AT+CGQREQ=1,3,4,3,9,31
+OK
+AT+CGQREQ
+OK
+5.2.9 AT+CGEQREQ 3G quality of service profile (requested)
+The test command returns values supported as a compound value.
+The read command returns the current settings for each defined context for which a QOS was explicitly
+specified.
+The write command allows the TE to specify a Quality of Service Profile for the context identified by the
+context identification parameter <cid> which is used when the MT sends an Activate PDP Context Request
+message to the network.
+A special form of the write command, AT+CGEQREQ=<cid> causes the requested profile for context
+number <cid> to become undefined.
+AT+CGEQREQ 3G quality of service profile (requested)
+Test Command
+AT+CGEQREQ=?
+Response
+1)
++CGEQREQ: <PDP_type>,(list of supported <Traffic class>s),(list
+of supported <Maximum bitrate UL>s),(list of supported <Maximum
+bitrate DL>s),(list of supported <Guaranteed bitrate UL>s,(list of
+supported <Guaranteed bitrate DL>s),(list of supported <Deliv ery
+order>s),(list of supported <Maximum SDU size>s),(list of supported
+<SDU error ratio>s),(list of supported <Residual bit error
+Ratio>s),(list of supported <Delivery of erroneous SDUs>s),(list of
+Supported <Transfer delay>s),(list of supported <Traffic handling
+--- PAGE 130 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 129 / 684
+priority>s),(list of supported <Source statistics descriptor>s),(list
+of supported <Signaling indication flag>s)
+OK
+2)
+ERROR
+Read Command
+AT+CGEQREQ?
+Response
+1)
++CGEQREQ: [<cid>,<Traffic class>,<Maximum bitrate
+UL>,<Maximum bitrate DL>,<Guaranteed bitrate
+UL>,<Guaranteed bitrate DL>,<Delivery order>,<Maximum SDU
+size>,<SDU error ratio>,<Residual bit error ratio>,<Delivery of
+erroneous SDUs>,<Transfer Delay>,<Traffic handling
+priority>,<Source statistics descriptor>,<Signaling indication
+flag>][<CR><LF><LF>
++CGEQREQ: <cid>,<Traffic class>,<Maximum bitrate
+UL>,<Maximum bitrate DL>,<Guaranteed bitrate
+UL>,<Guaranteed bitrate DL>,<Delivery order>,<Maximum SDU
+size>,<SDU error ratio>,<Residual bit error ratio>,<Delivery of
+erroneous SDUs>,<Transfer Delay>,<Traffic handling
+priority>,<Source statistics descriptor>,<Signaling indication
+flag>[…]]
+OK
+2)
+ERROR
+Write Command
+AT+CGEQREQ=<cid>[,<Traff
+ic class>[,<Maximum bitrate
+UL>[,<Maximum bitrate
+DL>[,<Guaranteed bitrate
+UL>[,<Guaranteed bitrate
+DL>[,<Delivery
+order>[,<Maximum SDU
+size>[,<SDU error
+ratio>[,<Residual bit error
+ratio>[,<Delivery of
+erroneous SDUs>[,<Transfer
+delay>[,<Traffic handling
+priority>[,<Source statistics
+descriptor>[,<Signaling
+indication flag>]]]]]]]]]]]]]]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CGEQREQ
+Response
+1)
+OK
+--- PAGE 131 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 130 / 684
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> Parameter specifies a particular PDP context definition. The
+parameter is also used in other PDP context-related commands. The
+range is from 1 to 15
+<Traffic class> 0 conversational
+1 streaming
+2 interactive
+3 background
+4 subscribed value
+<Maximum bitrate UL> This parameter indicates the maximum number of kbits/s delivered to
+UMTS(up-link traffic)at a SAP. As an Examples a bitrate of 32kbit/s
+would be specified as 32(e.g. AT+CGEQREQ=…,32,…).
+The range is from 0 to 256000. When the parameter is between 64
+and 568, it should be an integer multiple of 8; between 568 and 8640
+(except 8640), it should be an integer multiple of 64; between 8641
+and 16000, it should be an integer multiple of 100; between 16000 and
+128000, it should be an integer multiple of 1000; between 128000 and
+256000, it should be an integer multiple of 2000. The default value is
+0. If the parameter is set to '0' the subscribed value will be requested.
+<Maximum bitrate DL> This parameter indicates the maximum number of kbits/s delivered to
+UMTS(down-link traffic)at a SAP.As an Examples a bitrate of 32kbit/s
+would be specified as 32(e.g. AT+CGEQREQ=…,32,…).
+The range is from 0 to 256000. When the parameter is between 64
+and 568, it should be an integer multiple of 8; between 568 and 8640
+(except 8640), it should be an integer multiple of 64; between 8641
+and 16000, it should be an integer multiple of 100; between 16000 and
+128000, it should be an integer multiple of 1000; between 128000 and
+256000, it should be an integer multiple of 2000. The default value is
+0. If the parameter is set to '0' the subscribed value will be
+requested.3600-3800)
+<Guaranteed bitrate UL> This parameter indicates the guaranteed number of kbit/s delivered to
+UMTS(up-link traffic)at a SAP(provided that there is data to deliver).As
+an Examples a bitrate of 32kbit/s would be specified as
+32(e.g.AT+CGEQREQ=…,32,…).
+The range is from 0 to 256000. When the parameter is between 64
+and 568, it should be an integer multiple of 8; between 568 and
+8640(except 8640), it should be an integer multiple of 64; between
+--- PAGE 132 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 131 / 684
+8641 and 16000, it should be an integer multiple of 100; between
+16000 and 128000, it should be an integer multiple of 1000; between
+128000 and 256000, it should be an integer multiple of 2000. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Guaranteed bitrate DL> This parameter indicates the guaranteed number of kbit/s delivered to
+UMTS(down-link traffic)at a SAP(provided that there is data to
+deliver).As an Examples a bitrate of 32kbit/s would be specified as
+32(e.g.AT+CGEQREQ=…,32,…).
+The range is from 0 to 256000. When the parameter is between 64
+and 568, it should be an integer multiple of 8; between 568 and
+8640(except 8640), it should be an integer multiple of 64; between
+8641 and 16000, it should be an integer multiple of 100; between
+16000 and 128000, it should be an integer multiple of 1000; between
+128000 and 256000, it should be an integer multiple of 2000. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Delivery order> This parameter indicates whether the UMTS bearer shall provide
+in-sequence SDU delivery or not.
+0 no
+1 yes
+2 subscribed value
+<Maximum SDU size> This parameter indicates the maximum allowed SDU size in octets.
+The range is 0, 10 to 1500, 1510, 1520. When the parameter is
+between 10 and 1510, it should be an integer multiple of 10. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<SDU error ratio> This parameter indicates the target value for the fraction of SDUs lost
+or detected as erroneous. SDU error ratio is defined only for
+conforming traffic. As an Examples a target SDU error ratio of 5*10-3
+would be specified as "5E3"(e.g. AT+CGEQREQ=.,"5E3",…).
+"0E0" subscribed value
+"1E2"
+"7E3"
+"1E3"
+"1E4"
+"1E5"
+"1E6"
+"1E1"
+<Residual bit error ratio> This parameter indicates the target value for the undetected bit error
+ratio in the delivered SDUs. If no error detection is requested,
+Residual bit error ratio indicates the bit error ratio in the delivered
+SDUs. As an Examples a target residual bit error ratio of 5*10-3 would
+be specified as "5E3"(e.g.
+AT+CGEQREQ=…,"5E3",.).
+--- PAGE 133 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 132 / 684
+"0E0" subscribed value
+"5E2"
+"1E2"
+"5E3"
+"4E3"
+"1E3"
+"1E4"
+"1E5"
+"1E6"
+"6E8"
+<Delivery of erroneous
+SDUs>
+This parameter indicates whether SDUs detected as erroneous shall
+be delivered or not.
+0 no
+1 yes
+2 no detect
+3 subscribed value
+<Transfer delay> This parameter indicates the targeted time between request to transfer
+an SDU at one SAP to its delivery at the other SAP, in milliseconds.
+The range is 0 to 950. When the parameter is between 10 and 150, it
+should be an integer multiple of 10. When the parameter is between
+150 and 950, it should be an integer multiple of 50. The default value
+is 0. If the parameter is set to '0' the subscribed value will be
+requested.
+<Traffic handling priority> This parameter specifies the relative importance for handling of all
+SDUs belonging to the UMTS
+Bearer compared to the SDUs of the other bearers.
+The range is from 0 to 3. The default value is 0. If the parameter is set
+to '0' the subscribed value will be requested.
+<Source statistics
+descriptor>
+This parameter indicates profile parameter that Source statistics
+descriptor for requested UMTS QoS The range is from 0 to 1. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Signaling indication flag> This parameter indicates Signaling flag.
+The range is from 0 to 1 The default value is 0. If the parameter is set
+to '0' the subscribed value will be requested.
+<PDP_type> (Packet Data Protocol type)a string parameter which specifies the type
+of packet data protocol.
+IP Internet Protocol
+Examples
+AT+CGEQREQ=?
++CGEQREQ:
+"IP",(0-4),(0-256000),(0-256000),(0-256000),(0-256000),(0-2),(0-1520),("0E0","1E1","1E2","7E3","1E
+--- PAGE 134 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 133 / 684
+3","1E4","1E5","1E6"),("0E0","5E2","1E2","5E3","4E3","1E3","1E4","1E5","1E6","6E8"),(0-3),(0-95
+0),(0-3),(0-1),(0-1)
+OK
+AT+CGEQREQ?
++CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0
+OK
+AT+CGEQREQ=1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0
+OK
+AT+CGEQREQ
+OK
+5.2.10 AT+CGQMIN Quality of service profile (minimum acceptable)
+This command allows the TE to specify a minimum acceptable profile which is checked by the MT against
+the negotiated profile returned in the Activate PDP Context Accept message. A special form of the set
+command, AT+CGQMIN=<cid> causes the minimum acceptable profile for context number <cid> to
+become undefined.
+AT+CGQMIN Quality of service profile (minimum acceptable)
+Test Command
+AT+CGQMIN=?
+Response
+1)
++CGQMIN: <PDP_type>,(list of supported <precedence>s),(list of
+supported <delay>s),(list of supported <reliability>s),(list of
+supported <peak>s),(list of supported <mean>s)[<CR><LF>
++CGQMIN: <PDP_type>,(list of supported <precedence>s),(list of
+supported <delay>s),(list of supported <reliability>s),(list of
+supported <peak>s),(list of supported <mean>s)[…]]
+OK
+2)
+ERROR
+Read Command
+AT+CGQMIN?
+Response
+1)
++CGQMIN:
+[<cid>,<precedence>,<delay>,<reliability>,<peak>,<mean>[<CR>
+<LF><LF>
++CGQMIN:
+<cid>,<precedence>,<delay>,<reliability>,<peak>,<mean>[…]]]
+OK
+--- PAGE 135 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 134 / 684
+2)
+ERROR
+Write Command
+AT+CGQMIN=<cid>[,<preced
+ence>[,<delay>[,<reliability>
+[,<peak>[,<mean>]]]]]
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CGQMIN
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context
+definition (see AT+CGDCONT command). The range is from 1 to 15
+<PDP_type> (Packet Data Protocol type)a string parameter which specifies the type
+of packet data protocol.
+IP Internet Protocol
+<precedence> A numeric parameter which specifies the precedence class:
+0 network subscribed value
+1 high priority
+2 normal priority
+3 low priority
+<delay> A numeric parameter which specifies the delay class:
+0 network subscribed value
+1 delay class 1
+2 delay class 2
+3 delay class 3
+4 delay class 4
+<reliability> A numeric parameter which specifies the reliability class:
+0 network subscribed value
+1 Non real-time traffic, error-sensitive application that cannot
+cope with data loss
+2 Non real-time traffic, error-sensitive application that can cope
+with infrequent data loss
+3 Non real-time traffic, error-sensitive application that can cope
+with data loss, GMM/-
+SM, and SMS
+4 Real-time traffic, error-sensitive application that can cope with
+--- PAGE 136 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 135 / 684
+data loss
+5 Real-time traffic error non-sensitive application that can cope
+with data loss
+<peak> A numeric parameter which specifies the peak throughput class:
+0 network subscribed value
+1 Up to 1000 (8 kbit/s)
+2 Up to 2000 (16 kbit/s)
+3 Up to 4000 (32 kbit/s)
+4 Up to 8000 (64 kbit/s)
+5 Up to 16000 (128 kbit/s)
+6 Up to 32000 (256 kbit/s)
+7 Up to 64000 (512 kbit/s)
+8 Up to 128000 (1024 kbit/s)
+9 Up to 256000 (2048 kbit/s)
+<mean> A numeric parameter which specifies the mean throughput class:
+0 network subscribed value
+1 100 (~0.22 bit/s)
+2 200 (~0.44 bit/s)
+3 500 (~1.11 bit/s)
+4 1000 (~2.2 bit/s)
+5 2000 (~4.4 bit/s)
+6 5000 (~11.1 bit/s)
+7 10000 (~22 bit/s)
+8 20000 (~44 bit/s)
+9 50000 (~111 bit/s)
+10 100000 (~0.22 kbit/s)
+11 200000 (~0.44 kbit/s)
+12 500000 (~1.11 kbit/s)
+13 1000000 (~2.2 kbit/s)
+14 2000000 (~4.4 kbit/s)
+15 5000000 (~11.1 kbit/s)
+16 10000000 (~22 kbit/s)
+17 20000000 (~44 kbit/s)
+18 50000000 (~111 kbit/s)
+31 optimization
+Examples
+AT+CGQMIN=?
++CGQMIN: "IP",(0-3),(0-4),(0-5),(0-9),(0-18,31)
+OK
+AT+CGQMIN?
++CGQMIN: 1,3,4,5,1,1
+--- PAGE 137 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 136 / 684
+OK
+AT+CGQMIN=1,3,4,5,1,1
+OK
+AT+CGQMIN
+OK
+5.2.11 AT+CGEQMIN 3G quality of service profile (minimum acceptable)
+The test command returns values supported as a compound value.
+The read command returns the current settings for each defined context for which a QOS was explicitly
+specified.
+The write command allow the TE to specify a Quallity of Service Profile for the context identified by the
+context identification parameter<cid> which is checked by the MT against the negotiated profile returned in
+the Activate/Modify PDP Context Accept message.
+A special form of the write command, AT+CGEQMIN=<cid> causes the requested for context number <cid>
+to become undefined.
+AT+CGEQMIN 3G quality of service profile (minimum acceptable)
+Test Command
+AT+CGEQMIN=?
+Response
+1)
++CGEQMIN: <PDP_type>,(list of supported <Traffic class>s),(list of
+supported <Maximum bitrate UL>s),(list of supported <Maximum
+bitrate DL>s),(list of supported <Guaranteed bitrate UL>s,(list of
+supported<Guaranteed bitrate DL>s),(list of supported <Delivery
+order>s),(list of supported <Maximum SDU size>s),(list of supported
+<SDU error ratio>s),(list of supported <Residual bit error
+Ratio>s),(list of supported <Delivery of erroneous SDUs>s),(list of
+Supported <Transfer delay>s),(list of supported <Traffic
+handlingpriority>s),(list of supported <Source statistics
+descriptor>s),(list of supported <Signaling indication flag>s)
+OK
+2)
+ERROR
+Read Command
+AT+CGEQMIN?
+Response
+1)
++CGEQMIN: [<cid>,<Traffic class>,<Maximum bitrate
+UL>,<Maximum bitrate DL>,<Guaranteed bitrate
+--- PAGE 138 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 137 / 684
+UL>,<Guaranteed bitrateDL>,<Delivery order>,<Maximum SDU
+size>,<SDU error ratio>,<Residual bit error ratio>,<Delivery of
+erroneous SDUs>,<Transfer Delay>,<Traffic handling
+priority>,<Source statistics descriptor>,<Signaling indication
+flag>][<CR><LF><LF>+CGEQMIN: <cid>,<Traffic
+class>,<Maximum bitrate UL>,<Maximum bitrate
+DL>,<Guaranteed bitrate UL>,<Guaranteed bitrateDL>,<Delivery
+order>,<Maximum SDU size>,<SDU error ratio>,<Residual bit
+error ratio>,<Delivery of erroneous SDUs>,<Transfer
+Delay>,<Traffic handling priority>,<Source statistics
+descriptor>,<Signaling indication flag>[…]]
+OK
+2)
+ERROR
+Write Command
+AT+CGEQMIN=<cid>[,<Traffi
+c class>[,<Maximum bitrate
+UL>[,<Maximum bitrate
+DL>[,<Guaranteed bitrate
+UL>[,<Guaranteed
+bitrateDL>[,<Delivery
+order>[,<Maximum SDU
+size>[,<SDU error
+ratio>[,<Residual biterror
+ratio>[,<Delivery of
+erroneous SDUs>[,<Transfer
+delay>[,<Traffic
+handlingpriority>[,<Source
+statistics
+descriptor>[,<Signaling
+indication flag>]]]]]]]]]]]]]]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CGEQMIN
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> Parameter specifies a particular PDP context definition. The
+--- PAGE 139 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 138 / 684
+parameter is also used in other PDP context-related commands. The
+range is from 1 to 15.
+<Traffic class> 0 conversational
+1 streaming
+2 interactive
+3 background
+4 subscribed value
+<Maximum bitrate UL> This parameter indicates the maximum number of kbits/s delivered to
+UMTS(up-link traffic)at a SAP.As an Examples a bitrate of 32kbit/s
+would be specified as 32(e.g. AT+CGEQMIN=…,32,…).
+The range is from 0 to 256000. When the parameter is between
+64 and 568, it should be an integer multiple of 8; between 568 and
+8640(except 8640), it should be an integer multiple of 64; between
+8641 and 16000, it should be an integer multiple of 100; between
+16000 and 128000, it should be an integer multiple of 1000; between
+128000 and 256000, it should be an integer multiple of 2000. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Maximum bitrate DL> This parameter indicates the maximum number of kbits/s delivered to
+UMTS(down-link traffic)at a SAP.As an Examples a bitrate of 32kbit/s
+would be specified as 32(e.g. AT+CGEQMIN=…,32,…).
+The range is from 0 to 256000. When the parameter is between 64
+and 568, it should be an integer multiple of 8; between 568 and
+8640(except 8640), it should be an integer multiple of 64; between
+8640 and 16000, it should be an integer multiple of 100; between
+16000 and 128000, it should be an integer multiple of 1000; between
+128000 and 256000, it should be an integer multiple of 2000. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Guaranteed bitrate UL> This parameter indicates the guaranteed number of kbit/s delivered to
+UMTS(up-link traffic)at a SAP(provided that there is data to deliver).As
+an Examples a bitrate of 32kbit/s would be specified as
+32(e.g.AT+CGEQMIN=…,32,…).
+The range is from 0 to 256000. When the parameter is between 64
+and 568, it should be an integer multiple of 8; between 568 and
+8640(except 8640), it should be an integer multiple of 64; between
+8640 and 16000, it should be an integer multiple of 100; between
+16000 and 128000, it should be an integer multiple of 1000; between
+128000 and 256000, it should be an integer multiple of 2000. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Guaranteed bitrate DL> This parameter indicates the guaranteed number of kbit/s delivered to
+UMTS(down-link traffic)at a SAP(provided that there is data to
+deliver).As an Examples a bitrate of 32kbit/s would be specified as
+32(e.g.AT+CGEQMIN=…,32,…).
+--- PAGE 140 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 139 / 684
+The range is from 0 to 256000. When the parameter is between 64
+and 568, it should be an integer multiple of 8; between 568 and
+8640(except 8640), it should be an integer multiple of 64; between
+8641 and 16000, it should be an integer multiple of 100; between
+16000 and 128000, it should be an integer multiple of 1000; between
+128000 and 256000, it should be an integer multiple of 2000. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Delivery order> This parameter indicates whether the UMTS bearer shall provide
+in-sequence SDU delivery or not.
+0 no
+1 yes
+2 subscribed value
+<Maximum SDU size> This parameter indicates the maximum allowed SDU size inoctets.
+The range is 0, 10 to 1500, 1510, 1520. When the parameter is
+between 10 and 1510, it should be an integer multiple of 10. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<SDU error ratio> This parameter indicates the target value for the fraction of SDUs lost
+or detected as erroneous. SDU error ratio is defined only for
+conforming traffic.As an Examples a target SDU error ratio of 5*10-3
+would be specified as "5E3"(e.g.AT+CGEQMIN=.,"5E3",…).
+"0E0" subscribed value
+"1E2"
+"7E3"
+"1E3"
+"1E4"
+"1E5"
+"1E6"
+"1E1"
+<Residual bit error ratio> This parameter indicates the target value for the undetected bit error
+ratio in the delivered SDUs. If no error detection is requested,
+Residual bit error ratio indicates the bit error ratio in the delivered
+SDUs. As an Examples a target residual bit error ratio of 5*10-3 would
+be specified as "5E3"(e.g.
+AT+CGEQMIN=…,"5E3",.).
+"0E0" subscribed value
+"5E2"
+"1E2"
+"5E3"
+"4E3"
+"1E3"
+"1E4"
+"1E5"
+"1E6"
+--- PAGE 141 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 140 / 684
+"6E8"
+<Delivery of erroneous
+SDUs>
+This parameter indicates whether SDUs detected as erroneous shall
+be delivered or not.
+0 no
+1 yes
+2 no detect
+3 subscribed value
+<Transfer delay> This parameter indicates the targeted time between request to transfer
+an SDU at one SAP to its delivery at the other SAP, in milliseconds.
+The range is from 0 to 950, and the parameter is an integer of 10. The
+default value is 0. If the parameter is set to '0' the subscribed value will
+be requested.
+<Traffic handling priority> This parameter specifies the relative importance for handling of all
+SDUs belonging to the UMTS.
+Bearer compared to the SDUs of the other bearers.
+The range is 0 to 3. The default value is 0. If the parameter is set to '0'
+the subscribed value will be requested.
+<Source statistics
+descriptor>
+This parameter indicates profile parameter that Source statistics
+descriptor for requested UMTS QoS
+The range is from 0 to 1. The default value is 0. If the parameter is set
+to '0' the subscribed value will be requested.
+<Signaling indication flag> This parameter indicates Signaling flag.
+The range is from 0 to 1 The default value is 0. If the parameter is set
+to '0' the subscribed value will be requested.
+<PDP_type> (Packet Data Protocol type)a string parameter which specifies the type
+of packet data protocol.
+IP Internet Protocol
+Examples
+AT+CGEQMIN=?
++CGEQMIN:
+"IP",(0-4),(0-256000),(0-256000),(0-256000),(0-256000),(0-2),(0-1520),("0E0","1E1","1E2","7E3","1E
+3","1E4","1E5","1E6"),("0E0","5E2","1E2","5E3","4E3","1E3","1E4","1E5","1E6","6E8"),(0-3),(0-95
+0),(0-3),(0-1),(0-1)
+OK
+AT+CGEQMIN?
++CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0
+OK
+AT+CGEQMIN=1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0
+OK
+AT+CGEQMIN
+--- PAGE 142 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 141 / 684
+OK
+5.2.12 AT+CGDATA Enter data state
+The command causes the MT to perform whatever actions are necessary to establish communication
+between the TE and the network using one or more Packet Domain PDP types. This may include
+performing a PS attach and one or more PDP context activations.
+AT+CGDATA Enter data state
+Test Command
+AT+CGDATA=?
+Response
+1)
++CGDATA: (list of supported <L2P>s)
+OK
+2)
+ERROR
+Write Command
+AT+CGDATA=[<L2P>,[<cid>]
+]
+Response
+1)
+CONNECT [<text>]
+2)
+NO CARRIER
+3)
+OK
+4)
+ERROR
+5)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<L2P> A string parameter that indicates the layer 2 protocol to be used
+between the TE and MT.
+NULL
+<text> CONNECT result code string; the string formats please refer ATX
+command.
+<cid> A numeric parameter which specifies a particular PDP context
+definition (see AT+CGDCONT command).
+1…15
+--- PAGE 143 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 142 / 684
+Examples
+AT+CGDATA=?
++CGDATA: ("")
+OK
+AT+CGDATA="",1
+CONNECT
+5.2.13 AT+CGPADDR Show PDP address
+The write command returns a list of PDP addresses for the specified context identifiers.
+AT+CGPADDR Show PDP address
+Test Command
+AT+CGPADDR=?
+Response
+1)
+[+CGPADDR: (list of defined <cid>s)]
+OK
+2)
+ERROR
+Write Command
+AT+CGPADDR=<cid>[,<cid>[
+,…]]
+Response
+1)
+[+CGPADDR: <cid>,<PDP_addr>[<CR><LF>
++CGPADDR: <cid>,<PDP_addr>[..]]]
+OK
+2)
+SIM card supports IPV4V6 type and the PDP_type of the command
+"at+cgdcont" defined is ipv4v6:
+[+CGPADDR: <cid>,<PDP_addr_IPV4>,<PDP_addr_IPV6>]
++CGPADDR: <cid>,<PDP_addr_IPV4>,<PDP_addr_IPV6>[..]
+OK
+3)
+ERROR
+Execution Command
+AT+CGPADDR
+Response
+1)
+[+CGPADDR: <cid>,<PDP_addr>]
++CGPADDR: <cid>,<PDP_addr>[..]
+--- PAGE 144 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 143 / 684
+OK
+2)
+SIM card supports IPV4V6 type and the PDP_type of the command
+"at+cgdcont" defined is ipv4v6:
+[+CGPADDR: <cid>,<PDP_addr_IPV4>,<PDP_addr_IPV6>]
++CGPADDR: <cid>,<PDP_addr_IPV4>,<PDP_addr_IPV6>[..]
+OK
+3)
+ERROR
+4)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context
+definition (see AT+CGDCONT command). If no <cid> is specified, the
+addresses for all defined contexts are returned.
+1…15
+<PDP_addr> A string that identifies the MT in the address space applicable to the
+PDP. The address may be static or dynamic. For a static address, it
+will be the one set by the AT+CGDCONT command when the context
+was defined. For a dynamic address it will be the one assigned during
+the last PDP context activation that used the context definition referred
+to by <cid>. <PDP_addr> is omitted if none is available.
+<PDP_addr_IPV4> A string parameter that identifies the MT in the address space
+applicable to the PDP.
+<PDP_addr_IPV6> A string parameter that identifies the MT in the address space
+applicable to the PDP when the sim_card supports ipv6. The pdp type
+must be set to "ipv6" or "ipv4v6" by the AT+CGDCONT command.
+Examples
+AT+CGPADDR=?
++CGPADDR: (1)
+OK
+AT+CGPADDR=1
++CGPADDR: 1,10.83.214.110
+--- PAGE 145 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 144 / 684
+OK
+AT+CGPADDR
++CGPADDR: 1,10.83.214.110
+OK
+5.2.14 AT+CGCLASS GPRS mobile station class
+This command is used to set the MT to operate according to the specified GPRS mobile class.
+AT+CGCLASS GPRS mobile station class
+Test Command
+AT+CGCLASS=?
+Response
+1)
++CGCLASS: (list of supported <class>s)
+OK
+2)
+ERROR
+Read Command
+AT+CGCLASS?
+Response
+1)
++CGCLASS: <class>
+OK
+2)
+ERROR
+Write Command
+AT+CGCLASS=<class>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CGCLASS
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+--- PAGE 146 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 145 / 684
+Defined Values
+<class> A string parameter which indicates the GPRS mobile class (in
+descending order of functionality)
+A class A (highest)
+Examples
+AT+CGCLASS=?
++CGCLASS: ("A")
+OK
+AT+CGCLASS?
++CGCLASS: "A"
+OK
+AT+CGCLASS="A"
+OK
+AT+CGCLASS
+OK
+5.2.15 AT+CGEREP GPRS event reporting
+The write command enables or disables sending of unsolicited result codes, "+CGEV" from MT to TE in the
+case of certain events occurring in the Packet Domain MT or the network. <mode> controls the processing
+of unsolicited result codes specified within this command. <bfr> controls the effect on buffered codes when
+<mode> 1 or 2 is entered. If a setting is not supported by the MT, ERROR or +CME ERROR: is returned.
+Read command returns the current <mode> and buffer settings.
+Test command returns the modes and buffer settings supported by the MT as compound values.
+AT+CGEREP GPRS event reporting
+Test Command
+AT+CGEREP=?
+Response
+1)
++CGEREP: (list of supported <mode>s),(list of supported <bfr>s)
+OK
+2)
+ERROR
+--- PAGE 147 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 146 / 684
+Read Command
+AT+CGEREP?
+Response
+1)
++CGEREP: <mode>,<bfr>
+OK
+2)
+ERROR
+Write Command
+AT+CGEREP=<mode>[,<bfr>
+]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CGEREP
+Response
+1)Set default value (<mode>=2,<bfr>=0):
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<mode> 0 buffer unsolicited result codes in the MT; if MT result code buffer is
+full, the oldest ones can be discarded. No codes are forwarded to the
+TE.
+1 discard unsolicited result codes when MT-TE link is reserved (e.g.
+in on-line data mode); otherwise forward them directly to the TE.
+2 buffer unsolicited result codes in the MT when MT-TE link is
+reserved (e.g. in on-line data mode)and flush them to the TE when
+MT-TE link becomes available; otherwise forward them directly to the
+TE.
+<bfr> 0 MT buffer of unsolicited result codes defined within this command
+is cleared when <mode> 1 or 2 is entered.
+1 MT buffer of unsolicited result codes defined within this command
+is flushed to the TE when <mode> 1 or 2 is entered (OK response
+shall be given before flushing the codes).
+The events are valid for GPRS/UMTS and LTE unless explicitly mentioned.
+For network attachment, the following unsolicited result codes and the corresponding events are defined:
+--- PAGE 148 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 147 / 684
++CGEV: NW DETACH The network has forced a PS detach. This implies that all active
+contexts have been deactivated. These are not reported separately.
++CGEV: ME DETACH The mobile termination has forced a PS detach. This implies that all
+active contexts have been deactivated. These are not reported
+separately.
+For MT class, the following unsolicited result codes and the corresponding events are defined:
++CGEV: NW CLASS <class> The network has forced a change of MT class. The highest available
+class is reported (see +CGCLASS). The format of the parameter
+<class> is found in command +CGCLASS.
++CGEV: ME CLASS <class> The mobile termination has forced a change of MT class. The highest
+available class is reported (see +CGCLASS). The format of the
+parameter <class> is found in command +CGCLASS.
+For PDP context activation, the following unsolicited result codes and the corresponding events are defined:
++CGEV: NW PDN ACT
+<cid>[,<WLAN_Offload>]
+The network has activated a context. The context represents a
+Primary PDP context in GSM/UMTS. The <cid> for this context is
+provided to the TE. The format of the parameter <cid> is found in
+command +CGDCONT.
+<WLAN_Offload>: integer type. An integer that indicates whether
+traffic can be offloaded using the specified PDN connection via a
+WLAN or not. This refers to bit 1 (E-UTRAN offload acceptability
+value)and bit 2 (UTRAN offload acceptability value)in the WLAN
+offload acceptability IE as specified in 3GPP TS 24.008 [8] subclause
+10.5.6.20.
+0 offloading the traffic of the PDN connection via a WLAN when in
+S1 mode or when in Iu mode is not acceptable.
+1 offloading the traffic of the PDN connection via a WLAN when in
+S1 mode is acceptable, but not acceptable in Iu mode.
+2 offloading the traffic of the PDN connection via a WLAN when in
+Iu mode is acceptable, but not acceptable in S1 mode.
+3 offloading the traffic of the PDN connection via a WLAN when in
+S1 mode or when in Iu mode is acceptable.
+This event is not applicable for EPS.
+NOTE
+--- PAGE 149 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 148 / 684
++CGEV: ME PDN ACT
+<cid>[,<reason>[,<cid_other
+>]][,<WLAN_Offload>]
+The mobile termination has activated a context. The context
+represents a PDN connection in LTE or a Primary PDP context in
+GSM/UMTS. The <cid> for this context is provided to the TE. This
+event is sent either in result of explicit context activation request
+(+CGACT), or in result of implicit context activation request associated
+to attach request (+CGATT=1). The format of the parameters <cid>
+and <cid_other> are found in command +CGDCONT. The format of
+the parameter <WLAN_Offload> is defined above.
+<reason>: integer type; indicates the reason why the context
+activation request for PDP type IPv4v6 was not granted. This
+parameter is only included if the requested PDP type associated with
+<cid> is IPv4v6, and the PDP type assigned by the network for <cid>
+is either IPv4 or IPv6.
+0 IPv4 only allowed
+1 IPv6 only allowed
+2 single address bearers only allowed.
+3 single address bearers only allowed and MT initiated
+context activation for a second address type
+bearer was not successful.
+4 CI_PS_PDP_INVALID_REASON
+<cid_other>: integer type; indicates the context identifier allocated by
+MT for an MT initiated context of a second address type. MT shall only
+include this parameter if <reason> parameter indicates single address
+bearers only allowed, and MT supports MT initiated context activation
+of a second address type without additional commands from TE, and
+MT has activated the PDN connection or PDP context associated with
+<cid_other>.
+For legacy TEs supporting MT initiated context activation without TE requests, there is also a
+subsequent event +CGEV: ME PDN ACT <cid_other> returned to TE.
++CGEV: NW ACT
+<p_cid>,<cid>,<event_type>
+[,<WLAN_Offload>]
+The network has activated a context. The <cid> for this context is
+provided to the TE in addition to the associated primary <p_cid>. The
+format of the parameters <p_cid> and <cid> are found in command
++CGDSCONT. The format of the parameter <WLAN_Offload> is
+NOTE
+--- PAGE 150 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 149 / 684
+defined above.
+<event_type>: integer type; indicates whether this is an informational
+event or whether the TE has to acknowledge it.
+0 Informational event
+1 Information request: Acknowledgement required. The
+acknowledgement can be accept or reject, see +CGANS.
++CGEV: ME ACT
+<p_cid>,<cid>,<event_type>
+[,<WLAN_Offload>]
+The network has responded to an ME initiated context activation. The
+<cid> for this context is provided to the TE in addition to the
+associated primary <p_cid>. The format of the parameters <p_cid>
+and <cid> are found in command +CGDSCONT. The format of the
+parameters <event_type> and <WLAN_Offload> are defined above.
+For PDP context deactivation, the following unsolicited result codes and the corresponding events are
+defined:
++CGEV: NW DEACT
+<PDP_type>,<PDP_addr>[,<
+cid>]
+The network has forced a context deactivation. The <cid> that was
+used to activate the context is provided if known to the MT. The format
+of the parameters <PDP_type>,<PDP_addr> and <cid> are found in
+command +CGDCONT.
++CGEV: ME DEACT
+<PDP_type>,<PDP_addr>[,<
+cid>]
+The mobile termination has forced a context deactivation. The <cid>
+that was used to activate the context is provided if known to the MT.
+The format of the parameters <PDP_type>,<PDP_addr> and <cid>
+are found in command +CGDCONT.
++CGEV: NW PDN DEACT
+<cid>[,<WLAN_Offload>]
+The network has deactivated a context. The context represents a PDN
+connection in LTE or a Primary PDP context in GSM/UMTS. The
+associated <cid> for this context is provided to the TE. The format of
+the parameter <cid> is found in command +CGDCONT. The format of
+the parameter <WLAN_Offload> is defined above.
+Occurrence of this event replaces usage of the event +CGEV: NW DEACT
+<PDP_type>,<PDP_addr>[,<cid>].
++CGEV: ME PDN DEACT
+<cid>
+The mobile termination has deactivated a context. The context
+represents a PDN connection in LTE or a Primary PDP context in
+GSM/UMTS. The <cid> for this context is provided to the TE. The
+format of the parameter <cid> is found in command +CGDCONT.
+NOTE
+NOTE
+--- PAGE 151 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 150 / 684
+Occurrence of this event replaces usage of the event +CGEV: ME DEACT
+<PDP_type>,<PDP_addr>[,<cid>].
++CGEV: NW DEACT
+<p_cid>,<cid>,<event_type>
+[,<WLAN_Offload>]
+The network has deactivated a context. The <cid> for this context is
+provided to the TE in addition to the associated primary <p_cid>. The
+format of the parameters <p_cid> and <cid> are found in command
++CGDSCONT. The format of the parameters <event_type> and
+<WLAN_Offload> are defined above.
+Occurrence of this event replaces usage of the event +CGEV: NW DEACT
+<PDP_type>,<PDP_addr>[,<cid>].
++CGEV: ME DEACT
+<p_cid>,<cid>,<event_type>
+The network has responded to an ME initiated context deactivation
+request. The associated <cid> is provided to the TE in addition to the
+associated primary <p_cid>. The format of the parameters <p_cid>
+and <cid> are found in command +CGDSCONT. The format of the
+parameter <event_type> is defined above.
+Occurrence of this event replaces usage of the event +CGEV: ME DEACT
+<PDP_type>,<PDP_addr>[,<cid>].
+For PDP context modification, the following unsolicited result codes and the corresponding events are
+defined:
++CGEV: NW MODIFY
+<cid>,<change_reason>,<ev
+ent_type>[,<WLAN_Offload
+>]
+The network has modified a context. The associated <cid> is provided
+to the TE in addition to the <change_reason> and <event_type>. The
+format of the parameter <cid> is found in command +CGDCONT or
++CGDSCONT. The format of the parameters
+<change_reason>,<event_type>, and <WLAN_Offload> are defined
+above.
+<change_reason>: integer type; a bitmap that indicates what kind of
+NOTE
+NOTE
+--- PAGE 152 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 151 / 684
+change occurred. The <change_reason> value is determined by
+summing all the applicable bits. For Examples if both the values of
+QoS changed (Bit 2)and <WLAN_Offload> changed (Bit 3)have
+changed, then the <change_reason> value is 6.
+The WLAN offload value will change when bit 1 or bit 2 or both of the indicators in the WLAN offload
+acceptability IE change, see the parameter <WLAN_Offload> defined above.
+Bit 1 TFT changed
+Bit 2 Qos changed
+Bit 3 WLAN Offload changed
++CGEV: ME MODIFY
+<cid>,<change_reason>,<ev
+ent_type>[,<WLAN_Offload
+>]
+The mobile termination has modified a context. The associated <cid>
+is provided to the TE in addition to the <change_reason> and
+<event_type>. The format of the parameter <cid> is found in
+command +CGDCONT or +CGDSCONT. The format of the
+parameters <change_reason>,<event_type> and <WLAN_Offload>
+are defined above.
+For other PDP context handling, the following unsolicited result codes and the corresponding events are
+defined:
++CGEV: REJECT
+<PDP_type>,<PDP_addr>
+A network request for context activation occurred when the MT was
+unable to report it to the TE with a +CRING unsolicited result code and
+was automatically rejected. The format of the parameters <PDP_type>
+and <PDP_addr> are found in command +CGDCONT.
+This event is not applicable for EPS.
++CGEV: NW REACT
+<PDP_type>,<PDP_addr>[,<
+cid>]
+The network has requested a context reactivation. The <cid> that was
+used to reactivate the context is provided if known to the MT. The
+format of the parameters <PDP_type>,<PDP_addr> and <cid> are
+found in command +CGDCONT.
+NOTE
+NOTE
+NOTE
+--- PAGE 153 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 152 / 684
+This event is not applicable for EPS.
+Examples
+AT+CGEREP=?
++CGEREP: (0-2),(0-1)
+OK
+AT+CGEREP?
++CGEREP: 2,0
+OK
+AT+CGEREP=2,0
+OK
+AT+CGEREP
+OK
+5.2.16 AT+CGAUTH Set type of authentication for PDP-IP connections of GPRS
+This command is used to set type of authentication for PDP-IP connections of GPRS.
+AT+CGAUTH Set type of authentication for PDP-IP connections of GPRS
+Test Command
+AT+CGAUTH=?
+Response
+1)
++CGAUTH: (range of supported <cid>s),(list of supported
+<auth_type> s),50,50
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Read Command
+AT+CGAUTH?
+Response
+1)
++CGAUTH: [<cid>,<auth_type>[,<user>,<passwd>]]
+…
+OK
+--- PAGE 154 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 153 / 684
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+CGAUTH=<cid>[,<auth_t
+ype>[,<passwd>[,<user>]]]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CGAUTH
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<cid> Parameter specifies a particular PDP context definition. This is also
+used in other PDP context-related commands.
+1…15
+<auth_type> Indicate the type of authentication to be used for the specified context.
+If CHAP is selected another parameter <passwd> needs to be
+specified. If PAP is selected two additional parameters <passwd> and
+<user> need to specified.
+0 none
+1 PAP
+2 CHAP
+3 PAP or CHAP //1803S platform
+<passwd> Parameter specifies the password used for authentication.
+<user> Parameter specifies the user name used for authentication.
+Examples
+AT+CGAUTH=?
++CGAUTH: (1-15),(0-2),50,50 //1803S platform

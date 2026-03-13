@@ -1,0 +1,633 @@
+--- PAGE 71 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 70 / 684
+2.2.21 AT+GCAP Request overall capabilities
+Execution command causes the TA reports a list of additional capabilities.
+AT+GCAP Request overall capabilities
+Test Command
+AT+GCAP=?
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+GCAP
+Response
+1)
++GCAP: (list of <name>s)
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<name> List of additional capabilities.
++CGSM GSM function is supported
++FCLASS FAX function is supported
++DS Data compression is supported
++ES Synchronous data mode is supported.
++CIS707-A CDMA data service command set
++CIS-856 EVDO data service command set
++MS Mobile Specific command set
+Examples
+AT+GCAP
++GCAP: +CGSM,+FCLASS,+DS
+OK
+AT+GCAP=?
+OK
+--- PAGE 72 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 71 / 684
+AT Commands for Status Control
+3.1 Overview of AT Commands for Status Control
+Command Description
+AT+CFUN Set phone functionality
+AT+CSQ Query signal quality
+AT+AUTOCSQ Set CSQ report
+AT+CSQDELTA Set RSSI delta change threshold
+AT+CPOF Power down the module
+AT+CRESET Reset the module
+AT+CACM Accumulated call meter
+AT+CAMM Accumulated call meter maximum
+AT+CPUC Price per unit and currency table
+AT+CCLK Real time clock management
+AT+CMEE Report mobile equipment error
+AT+CPAS Phone activity status
+AT+SIMEI Set IMEI for the module
+3.2 Detailed Description of AT Commands for Status Control
+3.2.1 AT+CFUN Set phone functionality
+This command is used to select the level of functionality <fun> in the ME. Level "full functionality" is where
+the highest level of power is drawn. "Minimum functionality" is where minimum power is drawn. Level of
+functionality between these may also be specified by manufacturers. When supported by manufacturers,
+ME resetting with <rst> parameter may be utilized.
+AT+CFUN Set phone functionality
+--- PAGE 73 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 72 / 684
+Test Command
+AT+CFUN=?
+Response
++CFUN: (range of supported <fun>s),(range of supported <rst>s)
+OK
+Read Command
+AT+CFUN?
+Response
+1)
++CFUN: <fun>
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+CFUN=<fun>[,<rst>]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<fun> 0 minimum functionality
+1 full functionality, online mode
+4 disable phone both transmit and receive RF circuits
+5 Factory Test Mode
+6 Reset
+7 Offline Mode
+8 Disable SIM
+<rst> 0 do not reset the ME before setting it to <fun> power level
+1 reset the ME before setting it to <fun> power level. This value only
+takes effect when <fun> equals 1.
+Examples
+AT+CFUN=?
++CFUN: (0-1,4-8),(0-1)
+OK
+--- PAGE 74 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 73 / 684
+AT+CFUN?
++CFUN: 1
+OK
+AT+CFUN=1
+OK
+<fun>=5 only display <Operation Mode> as Factory Test Mode, but not has any function.
+AT+CFUN=6 must be used after setting AT+CFUN=7. If module in offline mode, must execute
+AT+CFUN=6 or restart module to online mode.
+3.2.2 AT+CSQ Query signal quality
+This command is used to return received signal strength indication <rssi> and channel bit error rate <ber>
+from the ME. Test command returns values supported by the TA as compound values.
+AT+CSQ Query signal quality
+Test Command
+AT+CSQ=?
+Response
++CSQ: (range of supported <rssi>s),(range of supported <ber>s)
+OK
+Execution Command
+AT+CSQ
+Response
+1)
++CSQ: <rssi>,<ber>
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<rssi> 0 -113 dBm or less
+1 -111 dBm
+2…30 -109… -53 dBm
+NOTE
+--- PAGE 75 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 74 / 684
+31 -51 dBm or greater
+99 not known or not detectable
+<ber> (in percent)
+0 <0.01%
+1 0.01% --- 0.1%
+2 0.1% --- 0.5%
+3 0.5% --- 1.0%
+4 1.0% --- 2.0%
+5 2.0% --- 4.0%
+6 4.0% --- 8.0%
+7 >=8.0%
+99 not known or not detectable
+Examples
+AT+CSQ=?
++CSQ: (0-31,99),(0-7,99)
+OK
+AT+CSQ
++CSQ: 31,99
+OK
+3.2.3 AT+AUTOCSQ Set CSQ report
+This command is used to enable or disable automatic report CSQ information, when automatic report
+enabled, the module reports CSQ information every five seconds or only after <rssi> or <ber> is changed,
+the format of automatic report is "+CSQ: <rssi>,<ber>".
+AT+AUTOCSQ Set CSQ report
+Test Command
+AT+AUTOCSQ=?
+Response
++AUTOCSQ: (range of supported<auto>s),(range of
+supported<mode>s)
+OK
+Read Command
+AT+AUTOCSQ?
+Response
++AUTOCSQ: <auto>,<mode>
+OK
+Write Command Response
+--- PAGE 76 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 75 / 684
+AT+AUTOCSQ=<auto>[,<mo
+de>]
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference Vendor
+Defined Values
+<auto> 0 disable automatic report
+1 enable automatic report
+<mode> 0 CSQ automatic report every five seconds
+1 CSQ automatic report only after <rssi> or <ber> is changed.
+NOTE: If the parameter of <mode> is omitted when executing write
+command,<mode> will be set to default value.
+Examples
+AT+AUTOCSQ=?
++AUTOCSQ: (0-1),(0-1)
+OK
+AT+AUTOCSQ?
++AUTOCSQ: 0,0
+OK
+AT+AUTOCSQ=1
+OK
+3.2.4 AT+CSQDELTA Set RSSI delta change threshold
+This command is used to set RSSI delta threshold for signal strength reporting.
+AT+CSQDELTA Set RSSI delta change threshold
+Test Command
+AT+CSQDELTA=?
+Response
++CSQDELTA: (list of supported <delta>s)
+OK
+--- PAGE 77 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 76 / 684
+Read Command
+AT+CSQDELTA?
+Response
+1)
++CSQDELTA: <delta>
+OK
+2)
+ERROR
+Write Command
+AT+CSQDELTA=<delta>
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CSQDELTA
+Response
+Set default value(<delta>=5)
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference Vendor
+Defined Values
+<delta> Range: from 0 to 5.
+Examples
+AT+CSQDELTA=?
++CSQDELTA: (0-5)
+OK
+AT+CSQDELTA?
++CSQDELTA: 5
+OK
+AT+CSQDELTA
+OK
+3.2.5 AT+CPOF Power down the module
+This command is used to power off the module. Once the AT+CPOF command is executed, The module will
+store user data and deactivate from network, and then shutdown.
+--- PAGE 78 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 77 / 684
+AT+CPOF Power down the module
+Test Command
+AT+CPOF=?
+Response
+OK
+Execution Command
+AT+CPOF
+Response
+OK
+Parameter Saving Mode -
+Max Response Time 9000ms
+Reference Vendor
+Examples
+AT+CPOF=?
+OK
+AT+CPOF
+OK
+3.2.6 AT+CRESET Reset the module
+This command is used to reset the module.
+AT+CRESET Reset the module
+Execution Command
+AT+CRESET
+Response
+OK
+Test Command
+AT+CRESET=?
+Response
+OK
+Parameter Saving Mode -
+Max Response Time 9000ms
+Reference Vendor
+Examples
+AT+CRESET=?
+OK
+AT+CRESET
+OK
+--- PAGE 79 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 78 / 684
+3.2.7 AT+CACM Accumulated call meter
+This command is used to reset the Advice of Charge related accumulated call meter value in SIM file
+EFACM.
+AT+CACM Accumulated call meter
+Test Command
+AT+CACM=?
+Response
+1)
+OK
+2)
+ERROR
+Read Command
+AT+CACM?
+Response
+1)
++CACM: <acm>
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+CACM=<passwd>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CACM
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<passwd> String type, SIM PIN2.
+<acm> String type, accumulated call meter value similarly coded as <ccm>
+under +CAOC.
+--- PAGE 80 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 79 / 684
+Examples
+AT+CACM=?
+OK
+AT+CACM?
++CACM: "000000"
+OK
+AT+CACM="000000"
++CME ERROR: SIM PUK2 required
+AT+CACM
++CME ERROR: SIM PIN required
+3.2.8 AT+CAMM Accumulated call meter maximum
+This command is used to set the Advice of Charge related accumulated call meter maximum value in SIM
+file EFACMmax.
+AT+CAMM Accumulated call meter maximum
+Test Command
+AT+CAMM=?
+Response
+1)
+OK
+2)
+ERROR
+Read Command
+AT+CAMM?
+1)
++CAMM: <acmmax>
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+CAMM=<acmmax>[,<pas
+swd>]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+--- PAGE 81 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 80 / 684
+Execution Command
+AT+CAMM
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<acmmax> String type, accumulated call meter maximum value similarly coded as
+<ccm> under AT+CAOC, value zero disables ACMmax feature.
+<passwd> String type, SIM PIN2.
+Examples
+AT+CAMM=?
+OK
+AT+CAMM?
++CAMM: "000000"
+OK
+AT+CAMM="000000"
++CME ERROR: SIM PIN required
+AT+CAMM
++CME ERROR: SIM PIN required
+3.2.9 AT+CPUC Price per unit and currency table
+This command is used to set the parameters of Advice of Charge related price per unit and currency table in
+SIM file EFPUCT.
+AT+CPUC Price per unit and currency table
+Test Command
+AT+CPUC=?
+Response
+1)
+OK
+2)
+ERROR
+--- PAGE 82 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 81 / 684
+Read Command
+AT+CPUC?
+Response
+1)
++CPUC: [<currency>,<ppu>]
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+CPUC=<currency>,<ppu
+>[,<passwd>]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<currency> String type, three-character currency code (e.g. "GBP", "DEM"),
+character set as specified by command Select TE Character Set
+AT+CSCS.
+<ppu> String type, price per unit, dot is used as a decimal separator. (e.g.
+"2.66").
+<passwd> String type, SIM PIN2
+Examples
+AT+CPUC=?
+OK
+AT+CPUC?
++CPUC: "","0.000000"
+OK
+AT+CPUC="1","0.000000"
++CME ERROR: SIM PIN required
+--- PAGE 83 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 82 / 684
+3.2.10 AT+CCLK Real time clock management
+This command is used to manage Real Time Clock of the module.
+AT+CCLK Real time clock management
+Test Command
+AT+CCLK=?
+Response
+OK
+Read Command
+AT+CCLK?
+Response
++CCLK: <time>
+OK
+Write Command
+AT+CCLK=<time>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+NOTE: timezone not save
+Maximum Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<time> String type value; format is "yy/MM/dd,hh:mm:ss±zz", where
+characters indicate year (two last digits), month, day, hour, minutes,
+seconds and time zone (indicates the difference, expressed in
+quarters of an hour, between the local time and GMT; three last digits
+are mandatory, range (-96 to 96). E.g. 6th of May 2008, 14:28:10
+GMT+8 equals to "08/05/06,14:28:10+32".
+NOTE:
+1.<time> format must be "yy/MM/dd,hh:mm:ss±zz", Otherwise, it will
+lead to unpredictable results.
+2. For 160X platforms, yy ∈ [1970,2037], for 1803S platforms, yy ∈
+[1970,2069].
+3. Time zone is nonvolatile, and the factory value is invalid time zone.
+4. Command +CCLK? will return time zone when time zone is valid,
+and if time zone is 00, command +CCLK? will return "+00", but not
+"-00".
+Examples
+AT+CCLK=?
+--- PAGE 84 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 83 / 684
+OK
+AT+CCLK?
++CCLK: "14/01/01,02:14:36+08"
+OK
+AT+CCLK="14/01/01,02:14:36+08"
+OK
+3.2.11 AT+CMEE Report mobile equipment error
+This command is used to disable or enable the use of result code "+CME ERROR: <err>" or "+CMS
+ERROR: <err>" as an indication of an error relating to the functionality of ME; when enabled, the format of
+<err> can be set to numeric or verbose string.
+AT+CMEE Report mobile equipment error
+Test Command
+AT+CMEE=?
+Response
++CMEE: (list of supported <n>s)
+OK
+Read Command
+AT+CMEE?
+Response
++CMEE: <n>
+OK
+Write Command
+AT+CMEE=<n>
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CMEE
+Response
+OK
+Note: Set default value
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<n> 0 Disable result code,i.e. only "ERROR" will be displayed.
+1 Enable error result code with numeric values.
+2 Enable error result code with string values.
+--- PAGE 85 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 84 / 684
+Examples
+AT+CMEE=?
++CMEE: (0-2)
+OK
+AT+CMEE?
++CMEE: 2
+OK
+AT+CMEE=2
+OK
+3.2.12 AT+CPAS Phone activity status
+This command is used to return the activity status <pas> of the ME. It can be used to interrogate the ME
+before requesting action from the phone.
+AT+CPAS Phone activity status
+Test Command
+AT+CPAS=?
+Response
++CPAS: (list of supported <pas>s)
+OK
+Execution Command
+AT+CPAS
+Response
++CPAS: <pas>
+OK
+Parameter Saving Mode -
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<pas> 0 ready (ME allows commands from TA/TE)
+3 ringing (ME is ready for commands from TA/TE, but the ringer is
+active)
+4 call in progress (ME is ready for commands from TA/TE, but a call
+is in progress)
+Examples
+--- PAGE 86 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 85 / 684
+AT+CPAS=?
++CPAS: (0,3,4)
+OK
+AT+CPAS
++CPAS: 0
+OK
+This command is same as AT+CLCC, but AT+CLCC is more commonly used. So AT+CLCC is
+recommended to use.
+3.2.13 AT+SIMEI Set the IMEI for the module
+This command is used to set the module’s IMEI value.
+AT+SIMEI Set the IMEI for the module
+Test Command
+AT+SIMEI=?
+Response
+OK
+Read Command
+AT+SIMEI?
+Response
+1)
++SIMEI: <imei>
+OK
+2)
+ERROR
+Write Command
+AT+SIMEI=<imei>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference Vendor
+Defined Values
+NOTE

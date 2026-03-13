@@ -1,0 +1,862 @@
+--- PAGE 88 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 87 / 684
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+< RP0> Main antenna Reference Signal Receiving Power
+< RP1> Auxiliary antenna Reference Signal Receiving Power
+< RQ0> Main antenna Reference Signal Receiving Quality
+< RQ1> Auxiliary antenna Reference Signal Receiving Quality
+< SI0> Main antenna Received Signal Strength Indicator
+< SI1> Auxiliary antenna Received Signal Strength Indicator
+Examples
+AT+SIGNS
++RSRP0: -82
++RSRP1: -89
++RSRQ0: -8
++RSRQ1: -8
++RSSI0: -36
++RSSI1: -43
+OK
+AT+SIGNS?
++RSRP0: -83
++RSRP1: -88
++RSRQ0: -8
++RSRQ1: -8
++RSSI0: -37
++RSSI1: -42
+OK
+AT+SIGNS=?
++SIGNS:
+OK
+Currently, only ASR1803S_057_030 branch versions are supported.
+NOTE
+--- PAGE 89 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 88 / 684
+AT Commands for Network
+4.1 Overview of AT Commands for Network
+Command Description
+AT+CREG Network registration
+AT+COPS Operator selection
+AT+CUSD Unstructured supplementary service data
+AT+CSSN Supplementary service notifications
+AT+CPOL Preferred operator list
+AT+COPN Read operator names
+AT+CNMP Preferred mode selection
+AT+CNBP Preferred band selection
+AT+CPSI Inquiring UE system information
+AT+CNSMOD Show network system mode
+AT+CTZU Automatic time and time zone update
+AT+CTZR Time and time zone reporting
+4.2 Detailed Description of AT Commands for Network
+4.2.1 AT+CREG Network registration
+This command is used to control the presentation of an unsolicited result code +CREG: <stat> when <n>=1
+and there is a change in the ME network registration status, or code +CREG: <stat>[,<lac>,<ci>] when
+<n>=2 and there is a change of the network cell.
+Read command returns the status of result code presentation and an integer <stat> which shows whether
+the network has currently indicated the registration of the ME. Location information elements <lac> and <ci>
+are returned only when <n>=2 and ME is registered in the network.
+--- PAGE 90 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 89 / 684
+AT+CREG Network registration
+Test Command
+AT+CREG=?
+Response
++CREG: (range of supported <n>s)
+OK
+Read Command
+AT+CREG?
+Response
+1)
++CREG: <n>,<stat>[,<lac>,<ci>]
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+CREG=<n>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CREG
+Response
+Set default value(<n>=0):
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<n> 0 disable network registration unsolicited result code.
+1 enable network registration unsolicited result code +CREG: <stat>.
+2 enable network registration and location information unsolicited
+result code +CREG: <stat>[,<lac>,<ci>].
+<stat> 0 not registered, ME is not currently searching a new operator to
+register to.
+1 registered, home network.
+2 not registered, but ME is currently searching a new operator to
+register to.
+3 registration denied.
+4 unknown.
+5 registered, roaming.
+6 registered for "SMS only", home network (applicable only when
+E-UTRAN)
+--- PAGE 91 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 90 / 684
+7 registered for "SMS only", roaming (applicable only when <AcT>
+indicates E-UTRAN)
+11 attached for emergency bearer services only
+<lac> Two byte location area code in hexadecimal format(e.g."00C3" equals
+193 in decimal).
+<ci> Cell Identify in hexadecimal format.
+GSM: Maximum is two byte.
+WCDMA: Maximum is four byte.
+Examples
+AT+CREG=?
++CREG: (0-2)
+OK
+AT+CREG?
++CREG: 0,1
+OK
+AT+CREG=1
+OK
+AT+CREG
+OK
+4.2.2 AT+COPS Operator selection
+Write command forces an attempt to select and register the GSM/UMTS network operator. <mode> is used
+to select whether the selection is done automatically by the ME or is forced by this command to operator
+<oper> (it shall be given in format <format>). If the selected operator is not available, no other operator shall
+be selected (except <mode>=4). The selected operator name format shall apply to further read commands
+(AT+COPS?)also. <mode>=2 forces an attempt to deregister from the network. The selected mode affects
+to all further network registration (e.g. after <mode>=2, ME shall be unregistered until <mode>=0 or 1 is
+selected).
+Read command returns the current mode and the currently selected operator. If no operator is
+selected,<format> and <oper> are omitted.
+Test command returns a list of quadruplets, each representing an operator present in the network.
+Quadruplet consists of an integer indicating the availability of the operator <stat>, long and short
+alphanumeric format of the name of the operator, and numeric format representation of the operator. Any of
+the formats may be unavailable and should then be an empty field. The list of operators shall be in order:
+home network, networks referenced in SIM, and other networks.
+--- PAGE 92 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 91 / 684
+It is recommended (although optional)that after the operator list TA returns lists of supported <mode>s and
+<format>s. These lists shall be delimited from the operator list by two commas.
+AT+COPS Operator selection
+Test Command
+AT+COPS=?
+Response
+1)
+[+COPS: [list of supported (<stat>,long alphanumeric <oper>,short
+alphanumeric <oper>,numeric <oper>[,<AcT>])s]
+[,,(list of supported <mode>s),(list of supported <format>s)]]
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Read Command
+AT+COPS?
+Response
+1)
++COPS: <mode>[,<format>,<oper>[,<AcT>]]
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+COPS=<mode>[,<format
+>[,<oper>[,<AcT>]]]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 60S
+Reference 3GPP TS 27.007
+Defined Values
+<mode> 0 automatic
+1 manual
+2 force deregister
+3 set only <format>
+4 manual/automatic
+NOTE: if <mode> is set to 1, 4 in write command, the <oper> is
+--- PAGE 93 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 92 / 684
+needed.Nomally, LTE is default search mode, So, if not in LTE, the <
+AcT > is needed.
+<format> 0 long format alphanumeric <oper>
+1 short format alphanumeric <oper>
+2 numeric <oper>
+<oper> string type,<format> indicates if the format is alphanumeric or
+numeric.
+<stat> 0 unknown
+1 available
+2 current
+3 forbidden
+<AcT> Access technology selected
+0 GSM
+1 GSM Compact
+2 UTRAN
+3 GSM w/EGPRS
+4 UTRAN w/HSDPA
+5 UTRAN w/HSUPA
+6 UTRAN w/HSDPA and HSUPA
+7 EUTRAN
+8 UTRAN HSPA+
+Examples
+AT+COPS=?
++COPS: (2,"CHN-UNICOM","UNICOM","46001",7),(1,"CHN-UNICOM","UNICOM",
+"46001",2),(1,"CHN-UNICOM","UNICOM","46001",0),(3,"CHINA MOBILE","CMCC",
+"46000",7),(3,"CHN-CT","CT","46011",7),(3,"CHINA MOBILE","CMCC","46000",
+0),,(0,1,2,3,4),(0,1,2)
+OK
+AT+COPS?
++COPS: 0,2,"46001",7
+OK
+AT+COPS=0,2,"46001",7
+OK
+4.2.3 AT+CUSD Unstructured supplementary service data
+This command allows control of the Unstructured Supplementary Service Data (USSD). Both network and
+mobile initiated operations are supported. Parameter <n> is used to disable/enable the presentation of an
+--- PAGE 94 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 93 / 684
+unsolicited result code (USSD response from the network, or network initiated operation)+CUSD:
+<m>[,<str>,<dcs>] to the TE. In addition, value <n>=2 is used to cancel an ongoing USSD session.
+AT+CUSD Unstructured supplementary service data
+Test Command
+AT+CUSD=?
+Response
++CUSD: (range of supported <n>s)
+OK
+Read Command
+AT+CUSD?
+Response
++CUSD: <n>
+OK
+Write Command
+AT+CUSD=<n>[,<str>[,<dcs>
+]]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Execution Command
+AT+CUSD
+Response
+Set default value(<n>=0):
+OK
+NOTE: After execute，you must test module whether to support IMS:
+at*imsrcfg="switch"
+1) if spported, the module return:
+*IMSRCFG: "switch","on"
+OK
+In the case, you must execute at*imscfg="switch",off to switch
+off IMS, otherwise, AT+CUSD will return ERROR.
+2) if not supported, the module return:
+ERROR
+In the case, you can execute AT+CUSD directly.
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<n> 0 disable the result code presentation in the TA
+1 enable the result code presentation in the TA
+2 cancel session (not applicable to read command response)
+<str> String type USSD-string.
+--- PAGE 95 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 94 / 684
+<dcs> Cell Broadcast Data Coding Scheme in integer format (default 17).
+see 3GPP TS 23.038.
+Refer value: 0,4,8,15,16,17
+<m> 0 no further user action required (network initiated USSD-Notify, or
+no further information needed after mobile initiated operation)
+1 further user action required (network initiated USSD-Request, or
+further information needed after mobile initiated operation)
+2 USSD terminated by network
+4 operation not supported
+5 network time out
+Examples
+AT+CUSD=?
++CUSD: (0-2)
+OK
+AT+CUSD?
++CUSD: 1
+OK
+AT+CUSD=0
+OK
+AT+CUSD
+OK
+4.2.4 AT+CSSN Supplementary service notifications
+This command refers to supplementary service related network initiated notifications. The set command
+enables/disables the presentation of notification result codes from TA to TE.
+When <n>=1 and a supplementary service notification is received after a mobile originated call setup,
+intermediate result code +CSSI: <code1>[,<index>] is sent to TE before any other MO call setup result
+codes presented in the present document. When several different <code1>s are received from the network,
+each of them shall have its own +CSSI result code.
+When <m>=1 and a supplementary service notification is received during a mobile terminated call setup or
+during a call, or when a forward check supplementary service notification is received, unsolicited result
+code +CSSU: <code2>[,<index>[,<number>,<type>[,<subaddr>,<satype>]]] is sent to TE. In case of MT
+call setup, result code is sent after every +CLIP result code (refer command "Calling line identification
+presentation +CLIP")and when several different <code2>s are received from the network, each of them
+shall have its own +CSSU result code.
+--- PAGE 96 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 95 / 684
+AT+CSSN Supplementary service notifications
+Test Command
+AT+CSSN=?
+Response
+1)
++CSSN: (list of supported <n>s),(list of supported <m>s)
+OK
+2)
+ERROR
+Read Command
+AT+CSSN?
+Response
++CSSN: <n>,<m>
+OK
+Write Command
+AT+CSSN=<n>[,<m>]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<n> Parameter sets/shows the +CSSI result code presentation status in
+the TA:
+0 disable
+1 enable
+<m> Parameter sets/shows the +CSSU result code presentation status in
+the TA:
+0 disable
+1 enable
+<code1> 0 unconditional call forwarding is active
+1 some of the conditional call forwarding are active
+2 call has been forwarded
+3 call is waiting
+5 outgoing calls are barred
+<index> Refer "Closed user group +CCUG".
+<code2> 0 this is a forwarded call (MT call setup)
+2 call has been put on hold (during a voice call)
+3 call has been retrieved (during a voice call)
+5 call on hold has been released (this is not a SS notification)(during
+--- PAGE 97 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 96 / 684
+a voice call)
+<number> String type phone number of format specified by <type>.
+<type> Type of address octet in integer format; default 145 when dialing string
+includes international access code character "+", otherwise 129.
+<subaddr> String type sub address of format specified by <satype>.
+<satype> Type of sub address octet in integer format, default 128.
+Examples
+AT+CSSN=?
++CSSN: (0-1),(0-1)
+OK
+AT+CSSN?
++CSSN: 1,1
+OK
+AT+CSSN=1,1
+OK
+4.2.5 AT+CPOL Preferred operator list
+This command is used to edit the SIM preferred list of networks.
+AT+CPOL Preferred operator list
+Test Command
+AT+CPOL=?
+Response
+1)
++CPOL: (range of supported <index>s),(range of supported
+<format>s)
+OK
+2)
+ERROR
+Read Command
+AT+CPOL?
+Response
+1)
+[+CPOL:
+<index1>,<format>,<oper1>[<GSM_AcT1>,<GSM_Compact_AcT
+1>,<UTRAN_AcT1>,<LTE_AcT1>][<CR><LF><CR><LF>
++CPOL:
+<index2>,<format>,<oper2>[,<GSM_AcT1>,<GSM_Compact_AcT
+--- PAGE 98 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 97 / 684
+1>,<UTRAN_AcT1>,<LTE_AcT1>]
+[..]]]
+OK
+2)
+ERROR
+Write Command
+AT+CPOL=<index>[,<format
+>[,<oper>][,<GSM_AcT1>,<G
+SM_Compact_AcT1>,<UTRA
+N_AcT1>,<LTE_AcT1>]]
+NOTE: If using USIM card, the
+last four parameters must set.
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<index> Integer type, the order number of operator in the SIM preferred
+operator list.
+If only input <index>, command will delete the value indicate by
+<index>.
+<format> 0 long format alphanumeric <oper>
+1 short format alphanumeric <oper>
+2 numeric <oper>
+<operX> String type.
+<GSM_AcTn> GSM access technology:
+0 access technology not selected
+1 access technology selected
+<GSM_Compact_AcTn> GSM compact access technology:
+0 access technology not selected
+1 access technology selected
+<UTRA_AcTn> UTRA access technology:
+0 access technology not selected
+1 access technology selected
+<LTE_AcTn> LTE access technology:
+0 access technology not selected
+1 access technology selected
+Examples
+AT+CPOL=?
+--- PAGE 99 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 98 / 684
++CPOL: (1-80),(0-2)
+OK
+AT+CPOL?
++CPOL: 1,2,"46001"
++CPOL: 2,2,"46001"
++CPOL: 3,2,"46001",0,0,0,1
++CPOL: 4,2,"46009",0,0,0,1
++CPOL: 5,2,"46001",0,0,1,0
++CPOL: 6,2,"46009",0,0,1,0
+OK
+AT+CPOL=1,2,"46001"
+OK
+4.2.6 AT+COPN Read operator names
+This command is used to return the list of operator names from the ME. Each operator code <numericX>
+that has an alphanumeric equivalent <alphaX> in the ME memory shall be returned.
+AT+COPN Read operator names
+Test Command
+AT+COPN=?
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+COPN
+Response
+1)
++COPN: <numeric1>,<alpha1>[<CR><LF><CR><LF>
++COPN: <numeric2>,<alpha2>
+[..]]
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+--- PAGE 100 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 99 / 684
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<numericX> String type, operator in numeric format (see AT+COPS).
+<alphaX> String type, operator in long alphanumeric format (see AT+COPS).
+Examples
+AT+COPN=?
+OK
+AT+COPN
++COPN: "46000","CMCC"
++COPN: "46001","UNICOM"
+……
+OK
+4.2.7 AT+CNMP Preferred mode selection
+This command is used to select or set the state of the mode preference.
+AT+CNMP Preferred mode selection
+Test Command
+AT+CNMP=?
+Response
++CNMP: (list of supported <mode>s)
+OK
+Read Command
+AT+CNMP?
+Response
++CNMP: <mode>
+OK
+Write Command
+AT+CNMP=<mode>
+Response
+1)
+OK
+2)If <mode> not supported by module, this command will return
+ERROR.
+ERROR
+--- PAGE 101 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 100 / 684
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<mode> 2 Automatic
+13 GSM Only
+14 WCDMA Only
+38 LTE Only
+Examples
+AT+CNMP=?
++CNMP: (2,13,14,38)
+OK
+AT+CNMP?
++CNMP: 2
+OK
+AT+CNMP=2
+OK
+1 The response will be returned immediately for Test Command and Read Command. The Max
+Response Time for Write Command is 10 seconds.
+2 The set value in Write Command will take efficient immediately;
+4.2.8 AT+CNBP Preferred band selection
+This command is used to select or set the state of the band preference.
+AT+CNBP Preferred band selection
+Read Command
+AT+CNBP?
+Response
++CNBP: <mode>[,<lte_mode>][,<lte_modeExt>][,<saveMode>]
+NOTE
+--- PAGE 102 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 101 / 684
+OK
+Write Command
+AT+CNBP=<mode>[,<lte_mo
+de>][,<lte_modeExt>][,<save
+Mode>]
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<mode> 64bit number, the value is "1" << "<pos>", then or by bit.
+<pos> Value:
+0xFFFFFFFF7FFFFFFF Any (any value)
+7 GSM_DCS_1800
+8 GSM_EGSM_900
+9 GSM_PGSM_900
+16 GSM_450
+17 GSM_480
+18 GSM_750
+19 GSM_850
+20 GSM_RGSM_900
+21 GSM_PCS_1900
+22 WCDMA_IMT_2000
+23 WCDMA_PCS_1900
+24 WCDMA_III_1700
+25 WCDMA_IV_1700
+26 WCDMA_850
+27 WCDMA_800
+48 WCDMA_VII_2600
+49 WCDMA_VIII_900
+50 WCDMA_IX_1700
+<lte_mode> 64 bit number, the value is "1" << "<lte_pos>", then or by bit.
+NOTE: FDD(band1 ~ band32), TDD(band33 ~ band42)
+<lte_pos> Value:
+0x000007FF3FDF3FFF Any (any value)
+0 EUTRAN_BAND1(UL:1920-1980; DL:2110-2170)
+1 EUTRAN_BAND2(UL:1850-1910; DL:1930-1990)
+2 EUTRAN_BAND3(UL:1710-1785; DL:1805-1880)
+3 EUTRAN_BAND4(UL:1710-1755; DL:2110-2155)
+4 EUTRAN_BAND5(UL: 824-849; DL: 869-894)
+--- PAGE 103 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 102 / 684
+5 EUTRAN_BAND6(UL: 830-840; DL: 875-885)
+6 EUTRAN_BAND7(UL:2500-2570; DL:2620-2690)
+7 EUTRAN_BAND8(UL: 880-915; DL: 925-960)
+8 EUTRAN_BAND9(UL:1749.9-1784.9;
+DL:1844.9-1879.9)
+9 EUTRAN_BAND10(UL:1710-1770; DL:2110-2170)
+10 EUTRAN_BAND11(UL:1427.9-1452.9; DL:1475.9-1500.9)
+11 EUTRAN_BAND12(UL:698-716; DL:728-746)
+12 EUTRAN_BAND13(UL: 777-787; DL: 746-756)
+13 EUTRAN_BAND14(UL: 788-798; DL: 758-768)
+16 EUTRAN_BAND17(UL: 704-716; DL: 734-746)
+17 EUTRAN_BAND18(UL: 815-830; DL: 860-875)
+18 EUTRAN_BAND19(UL: 830-845; DL: 875-890)
+19 EUTRAN_BAND20(UL: 832-862; DL: 791-821)
+20 EUTRAN_BAND21(UL:1447.9-1462.9; DL: 1495.9-1510.9)
+22 EUTRAN_BAND23(UL: 2000-2020; DL: 2180-2200)
+23 EUTRAN_BAND24(UL: 1626.5-1660.5; DL: 1525 -1559)
+24 EUTRAN_BAND25(UL: 1850-1915; DL: 1930 -1995)
+25 EUTRAN_BAND26(UL: 814-849; DL: 859 -894)
+26 EUTRAN_BAND27(UL: 807.5-824; DL: 852 -869)
+27 EUTRAN_BAND28(703-748; DL: 758-803)
+28 EUTRAN_BAND29(UL:1850-1910 or 1710-1755;
+DL:716-728)
+29 EUTRAN_BAND30(UL: 2305-2315 ; DL: 2350 - 2360)
+30 EUTRAN_BAND31(UL: 452.5-457.4; DL:462.5–467.4)
+32 EUTRAN_BAND33(UL: 1900-1920; DL: 1900-1920)
+33 EUTRAN_BAND34(UL: 2010-2025; DL: 2010-2025)
+34 EUTRAN_BAND35(UL: 1850-1910; DL: 1850-1910)
+35 EUTRAN_BAND36(UL: 1930-1990; DL: 1930-1990)
+36 EUTRAN_BAND37(UL: 1910-1930; DL: 1910-1930)
+37 EUTRAN_BAND38(UL: 2570-2620; DL: 2570-2620)
+38 EUTRAN_BAND39(UL: 1880-1920; DL: 1880-1920)
+39 EUTRAN_BAND40(UL: 2300-2400; DL: 2300-2400)
+40 EUTRAN_BAND41(UL: 2496-2690; DL: 2496-2690)
+41 EUTRAN_BAND42(UL: 3400-3600; DL: 3400-3600)
+42 EUTRAN_BAND43(UL: 3600-3800; DL: 3600-3800)
+<lte_modeExt> 16 bit number, the value is "1" << "<lte_posExt>", then or by bit.
+NOTE: band65 ~ band76
+<lte_posExt> 7 EUTRAN_BAND72(UL: 451-455.9; DL: 461-465.9)
+<saveMode> 0 Save in NVM (default vaule)
+1 Don't save in NVM
+Examples
+--- PAGE 104 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 103 / 684
+AT+CNBP?
++CNBP: 0X0000000000000180,0X0000000040080085,0X0080
+OK
+AT+CNBP=0X0000000000000180,0X0000000040080085,0X0080
+OK
+4.2.9 AT+CPSI Inquiring UE system information
+This command is used to return the UE system information.
+AT+CPSI Inquiring UE system information
+Test Command
+AT+CPSI=?
+Response
+1)
+OK
+2)
+ERROR
+Read Command
+AT+CPSI?
+Response
+1)If camping on a gsm cell:
++CPSI: <System Mode>,<Operation
+Mode>,<MCC>-<MNC>,<LAC>,<Cell ID>,<Absolute RF Ch
+Num>,<RxLev>,<Track LO Adjust>,<C1-C2>
+OK
+2)If camping on a wcdma cell:
++CPSI: <System Mode>,<Operation
+Mode>,<MCC>-<MNC>,<LAC>,<Cell ID>,<Frequency
+Band>,<PSC>,<Freq>,<SSC>,<EC/IO>,<RSCP>,<Qual>,<RxLev>,
+<TXPWR>
+OK
+3)If camping on a lte cell:
++CPSI: <System Mode>,<Operation Mode>[,<MCC>-<MNC>,<TA
+C>,<SCellID>,<PCellID>,<Frequency Band>,<earfcn>,<dlbw>,<
+ulbw>,<RSRQ>,<RSRP>,<RSSI>,<RSSNR>]
+OK
+4)If no service:
++CPSI: NO SERVICE, Low Power Mode
+OK
+5)
+--- PAGE 105 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 104 / 684
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<System Mode> System mode, values: "NO SERVICE", "GSM", "WCDMA", "LTE"
+<Operation Mode> UE operation mode, values: "Unknown", "Online", "Offline", "Factory
+Test Mode", "Reset", "Low Power Mode", "Flight Mode".
+<MCC> Mobile Country Code (first part of the PLMN code)
+<MNC> Mobile Network Code (second part of the PLMN code)
+<LAC> Location Area Code (hexadecimal digits)
+<Cell ID> Service-cell Identify.
+<Absolute RF Ch Num> AFRCN for service-cell.
+<Track LO Adjust> Track LO Adjust
+<C1> Coefficient for base station selection
+<C2> Coefficient for Cell re-selection
+<Frequency Band> Frequency Band of active set
+<PSC> Primary synchronization code of active set.
+<Freq> Downlink frequency of active set.
+<SSC> Secondary synchronization code of active set
+<EC/IO> Ec/Io value
+<RSCP> Received Signal Code Power
+<Qual> Quality value for base station selection
+<RxLev> RX level value for base station selection
+<TXPWR> UE TX power in dBm. If no TX, the value is 500.
+<Cpid> Cell Parameter ID
+<TAC> Tracing Area Code
+<PCellID> Physical Cell ID
+<earfcn> E-UTRA absolute radio frequency channel number for searching LTE
+cells
+<dlbw> Transmission bandwidth configuration of the serving cell on the
+downlink
+<ulbw> Transmission bandwidth configuration of the serving cell on the uplink
+<RSRP> Current reference signal received power in （RSRP report value -140）
+dBm. Available for LTE
+<RSRQ> The signal reception quality is: (RSRQ report value -40)/2 dBm.
+<RSSNR> Average reference signal signal-to-noise ratio of the serving cell
+<SCellID> String type. cell ID in decimal format for serving cell
+<RSSI> Received signal strength indicator value: (RSSI report value -110)
+--- PAGE 106 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 105 / 684
+dBm.
+Examples
+AT+CPSI?
++CPSI:
+LTE,Online,460-01,0x230A,175499523,318,EUTRAN-BAND3,1650,5,0,21,67,255,19
+OK
+4.2.10 AT+CNSMOD Show network system mode
+This command is used to return the current network system mode.
+NOTE: Generally, it’s applied to the network system mode changed platform to indicate current access
+network system type.
+AT+CNSMOD Show network system mode
+Test Command
+AT+CNSMOD=?
+Response
++CNSMOD: (list of supported <n>s)
+OK
+Read Command
+AT+CNSMOD?
+Response
+1)
++CNSMOD: <n>,<stat>
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Write Command
+AT+CNSMOD=<n>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+--- PAGE 107 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 106 / 684
+Defined Values
+<n> 0 disable auto report the network system mode information
+1 auto report the network system mode information, command:
++CNSMOD: <stat>
+<stat> 0 no service
+1 GSM
+2 GPRS
+3 EGPRS (EDGE)
+4 WCDMA
+5 HSDPA only(WCDMA)
+6 HSUPA only(WCDMA)
+7 HSPA (HSDPA and HSUPA, WCDMA)
+8 LTE
+NOTE: When AT+CNSMOD?, MT maybe return GSM but indication is
+GSM/GPRS/ EDGE in GSM, or MT maybe return WCDMA but
+indication is HSDPA / HSUPA / HSPA in WCDMA.
+Examples
+AT+CNSMOD=?
++CNSMOD: (0,1)
+OK
+AT+CNSMOD?
++CNSMOD: 0,8
+OK
+AT+CNSMOD=0
+OK
+4.2.11 AT+CTZU Automatic time and time zone update
+This command is used to enable and disable automatic time and time zone update via NITZ
+AT+CTZU Automatic time and time zone update
+Test Command
+AT+CTZU=?
+Response
++CTZU: (range of supported <on/off>s)
+OK
+--- PAGE 108 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 107 / 684
+Read Command
+AT+CTZU?
+Response
++CTZU: <on/off>
+OK
+Write Command
+AT+CTZU=<on/off>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CME ERROR: <err>
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference 3GPP TS 27.007
+Defined Values
+<on/off> Integer type value indicating:
+0 Disable automatic time zone update via NITZ.
+1 Enable automatic time zone update via NITZ.
+NOTE: 1. The value of <on/off> is nonvolatile, and factory value is 0.
+2. For automatic time and time zone update is enabled
+(+CTZU=1):
+If time zone is only received from network and it isn’t equal
+to local time zone (AT+CCLK), time zone is updated
+automatically, and real time clock is updated based on local
+time and the difference between time zone from network
+and local time zone (Local time zone must be valid).
+If Universal Time and time zone are received from network,
+both time zone and real time clock is updated automatically,
+and real time clock is based on Universal Time and time
+zone from network.
+Examples
+AT+CTZU=?
++CTZU: (0-1)
+OK
+AT+CTZU?
++CTZU: 0
+OK

@@ -1,0 +1,593 @@
+--- PAGE 274 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 273 / 684
+AT+CURCD=100,1
+OK
+Currently only support delay time setting, the default cache size for URC is one. This command applies
+to platform 1601 related projects, such as A7600E, A7600C-C1SE etc.
+NOTE
+--- PAGE 275 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 274 / 684
+AT Commands for Hardware
+11.1 Overview of AT Commands for Hardware
+Command Description
+AT+CVALARM Low and high voltage Alarm
+AT+CVAUXS Set state of the pin named VDD_AUX
+AT+CVAUXV Set voltage value of the pin named VDD_AUX
+AT+CADC Read ADC value
+AT+CADC2 Read ADC2 value
+AT+CMTE Control the module critical temperature URC alarm
+AT+CPMVT Low and high voltage Power Off
+AT+CRIIC Read values from register of IIC device
+AT+CWIIC Write values to register of IIC device
+AT+CBC Read the voltage value of the power supply
+AT+CPMUTEMP Read the temperature of the module
+AT+CGDRT Set the direction of specified GPIO
+AT+CGSETV Set the value of specified GPIO
+AT+CGGETV Get the value of specified GPIO
+AT+CRIICNAU8X Read values from register of IIC device nau8810
+AT+CWIICNAU8X Write values to register of IIC device nau8810
+11.2 Detailed Description of AT Commands for Hardware
+11.2.1 AT+CVALARM Low and high voltage Alarm
+This command is used to open or close the low voltage alarm function.
+AT+CVALARM Low and high voltage Alarm
+--- PAGE 276 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 275 / 684
+Test Command
+AT+CVALARM=?
+Response
++CVALARM: (list of supported <enable>s),(list of supported <low
+voltage>s),(list of supported <high voltage>s)
+OK
+Read Command
+AT+CVALARM?
+Response
++CVALARM: <enable>,<low voltage>,<high voltage>
+OK
+Write Command
+AT+CVALARM=<enable>[,<l
+ow voltage>],[<high
+voltage>]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time -
+Reference -
+Defined Values
+<enable> 0 Close
+1 Open. If voltage less than <low voltage>, it will report
+"UNDER-VOLTAGE WARNNING" every 10s. If voltage greater than
+<high voltage>, it will report "OVER-VOLTAGE WARNNING" every
+10s.
+<low voltage> Between 3300mV and 4000mV. Default value is 3300.
+<high voltage> Between 4001mV and 4300mV. Default value is 4300.
+Examples
+AT+CVALARM=1,3400,4300
+OK
+AT+CVALARM?
++CVALARM: 1,3400,4300
+OK
+AT+CVALARM=?
++CVALARM: (0,1),(3300-4000),(4001-4300)
+OK
+--- PAGE 277 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 276 / 684
+11.2.2 AT+CVAUXS Set state of the pin named VDD_AUX
+This command is used to set state of the pin which is named VDD_AUX.
+AT+CVAUXS Set state of the pin named VDD_AUX
+Test Command
+AT+CVAUXS=?
+Response
+1)
++CVAUXS: (list of supported <state>s)
+OK
+Read Command
+AT+CVAUXS?
+Response
++CVAUXS: <state>
+OK
+Write Command
+AT+CVAUXS=<state>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time -
+Reference -
+Defined Values
+<state> 0 output of the pin disabled.
+1 output of the pin enabled.
+Examples
+AT+CVAUXS=?
++CVAUXS: (0,1)
+OK
+AT+CVAUXS=1
+OK
+AT+CVAUXS?
++CVAUXS: 1
+OK
+NOTE
+--- PAGE 278 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 277 / 684
+For the 1603 platform, This AT command is only applicable to A7600C1_V401 MODULE.
+11.2.3 AT+CVAUXV Set voltage value of the pin named VDD_AUX
+This command is used to set the voltage value of the pin which is named VDD_AUX.
+AT+CVAUXV Set voltage value of the pin named VDD_AUX
+Test Command
+AT+CVAUXV=?
+Response
++CVAUXV: (list of supported <voltage>s)
+OK
+Read Command
+AT+CVAUXV?
+Response
++CVAUXV: <voltage>
+OK
+Write Command
+AT+CVAUXV=<voltage>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time -
+Reference -
+Defined Values
+<voltage> Voltage value of the pin which is named VDD_AUX. The unit is in mv.
+Examples
+AT+CVAUXV=?
++CVAUXV:
+(1200,1250,1700,1800,1850,1900,2500,2600,2700,2750,2800,2850,2900,3000,3100,3300)
+OK
+AT+CVAUXV=3000
+OK
+AT+CVAUXV?
+--- PAGE 279 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 278 / 684
++CVAUXV: 3000
+OK
+For the 1603 platform, only A7600C1 series can execute this command. For A7600C1_V301 series
+models, the valid parameters are (2500, 2600, 2700, 2800, 2850, 2900, 3000, 3100, 3300)
+11.2.4 AT+CADC Read ADC value
+This command is used to read the ADC value from modem. ME supports 2 types of ADC, which are raw
+type and voltage type.
+AT+CADC Read ADC value
+Test Command
+AT+CADC=?
+Response
++CADC: (range of supported <adc>s)
+OK
+Write Command
+AT+CADC=<adc>
+Response
+1)
++CADC: <value>
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<adc> ADC type:
+0 raw type.
+2 voltage type(mv).
+<value> Integer type value of the ADC.
+Examples
+NOTE
+--- PAGE 280 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 279 / 684
+AT+CADC=?
++CADC: (0,2)
+OK
+AT+CADC=2
++CADC: 908
+OK
+11.2.5 AT+CADC2 Read ADC2 value
+This command is used to read the ADC2 value from modem. ME supports 2 types of ADC, which are raw
+type and voltage type.
+AT+CADC2 Read ADC2 value
+Test Command
+AT+CADC2=?
+Response
++CADC2: (range of supported <adc>s)
+OK
+Write Command
+AT+CADC2=<adc>
+Response
+1)
++CADC2: <value>
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<adc> ADC2 type:
+0 raw type.
+2 voltage type(mv)
+<value> Integer type value of the ADC2.
+Examples
+--- PAGE 281 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 280 / 684
+AT+CADC2=?
++CADC2: (0,2)
+OK
+AT+CADC2=2
++CADC2: 904
+OK
+11.2.6 AT+CMTE Control the module critical temperature URC alarm
+This command is used to control the module whether URC alarm when the module’s temperature upon the
+critical temperature.
+AT+CMTE Control the module critical temperature URC alarm
+Test Command
+AT+CMTE=?
+Response
++CMTE: (list of supported<on/off>s)
+OK
+Read Command
+AT+CMTE?
+Response
++CMTE: <on/off>
+OK
+Write Command
+AT+CMTE=<on/off>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<on/off> 0 Disable temperature detection
+1 Enable temperature detection
+Examples
+AT+CMTE=?
+--- PAGE 282 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 281 / 684
++CMTE: (0,1)
+OK
+AT+CMTE=1
+OK
+AT+CMTE?
++CMTE: 1
+OK
+11.2.7 AT+CPMVT Low and high voltage Power Off
+This command is used to open or close the low and high voltage power off function and set the threshold of
+power off voltage.
+AT+CPMVT Low and high voltage Power Off
+Test Command
+AT+CPMVT=?
+Response
++CPMVT: (list of supported <enable>s),(list of supported <low
+voltage>s),(list of supported <high voltage>s)
+OK
+Read Command
+AT+CPMVT?
+Response
++CPMVT: <enable>,<low voltage>,<high voltage>
+OK
+Write Command
+AT+CPMVT=<enable>[,<low
+voltage>],[<high voltage>]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time -
+Reference -
+Defined Values
+<enable> 0 Close. 0 is the default value
+1 Open. If voltage less than <low voltage>, it will report
+"UNDER-VOLTAGE WARNNING POWER DOWN" and power off the
+module. If voltage greater than <high voltage>, it will report
+--- PAGE 283 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 282 / 684
+"OVER-VOLTAGE WARNNING POWER DOWN" and power off the
+module
+<low voltage> Between 3200mV and 4000mV. Default value is 3200.
+<high voltage> Between 4001mV and 4300mV. Default value is 4300.
+Examples
+AT+CPMVT=1,3400,4300
+OK
+AT+CPMVT?
++CPMVT: 1,3400,4300
+OK
+AT+CPMVT=?
++CPMVT: (0,1),(3200-4000),(4001-4300)
+OK
+For the 160x platform, low voltage range is 3300mv-4000mv,for 180x platform,low voltage range is
+3200mv-4000mv.
+11.2.8 AT+CRIICNAU8X Read values from register of IIC device nau8810
+This command is used to read values from register of IIC device nau8810.
+AT+CRIICNAU8X Read values from register of IIC device nau8810
+Test Command
+AT+CRIICNAU8X=?
+Response
+OK
+Write Command
+AT+CRIICNAU8X=<addr>,<r
+eg>,<len>
+Response
+1)
++CRIICNAU8X: <data>
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+NOTE
+--- PAGE 284 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 283 / 684
+Defined Values
+<addr> Device address. Input format must be hex, such as FF (do not input
+"0x").
+<reg> Register address. Input format must be hex, such as FF (do not input
+"0x").
+<len> Read length. Range:2; unit:byte.
+<data> Data read. Input format must be hex, such as 0xFFFF.
+Examples
+AT+CRIICNAU8X=34,f,2
++CRIICNAU8X: 0xff
+OK
+AT+CRIICNAU8X=34,6,2
++CRIICNAU8X: 0x140
+OK
+11.2.9 AT+CWIICNAU8X Write values to register of IIC device nau8810
+This command is used to write values to register of IIC device nau8810.
+AT+CWIICNAU8X Write values to register of IIC device nau8810
+Test Command
+AT+CWIICNAU8X=?
+Response
+OK
+Write Command
+AT+CWIICNAU8X=<addr>,<r
+eg>,<data>,<len>
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<addr> Device address. Input format must be hex, such as FF (do not input
+--- PAGE 285 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 284 / 684
+"0x").
+<reg> Register address. Input format must be hex, such as FF(do not input
+"0x").
+<len> Read length. Range: 2; unit: byte.
+<data> Data written. Input format must be hex, such as 0xFFFF
+Examples
+AT+CWIICNAU8X=34,6,141,2
+OK
+11.2.10 AT+CWIIC Write values to register of IIC device
+This command is used to write values to register of IIC device
+AT+CWIIC Write values to register of IIC device
+Test Command
+AT+CWIIC=?
+Response
+OK
+Write Command
+AT+CWIIC=<addr>,<reg>,<d
+ata>,<len>
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<addr> Device address. Input format must be hex, such as FF (do not input
+"0x").
+<reg> Register address. Input format must be hex, such as FF(do not input
+"0x").
+<len> Read length. Range: 2; unit: byte.
+<data> Data written. Input format must be hex, such as 0xFFFF
+Examples
+AT+CWIIC=34,6,141,2
+OK
+--- PAGE 286 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 285 / 684
+11.2.11 AT+CRIIC Read values from register of IIC device
+This command is used to read values from register of IIC device .
+AT+CRIIC Read values from register of IIC device
+Test Command
+AT+CRIIC=?
+Response
+OK
+Write Command
+AT+CRIIC=<addr>,<reg>,<le
+n>
+Response
+1)
++CRIIC: <data>
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<addr> Device address. Input format must be hex, such as FF (do not input
+"0x").
+<reg> Register address. Input format must be hex, such as FF (do not input
+"0x").
+<len> Read length. Range:2; unit:byte.
+<data> Data read. Input format must be hex, such as 0xFFFF.
+Examples
+AT+CRIIC=34,f,2
++CRIIC: 0xff
+OK
+AT+CRIIC=34,6,2
++CRIIC: 0x140
+OK
+AT+CRIIC and AT+CWIIC ; For standard universal iic timing slave devices
+AT+CRIICNAU8X,AT+CWIICNAU8X ;For nau8x series non-standard iic timing slave devices
+NOTE
+--- PAGE 287 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 286 / 684
+11.2.12 AT+CBC Read the voltage value of the power supply
+This command is used to read the voltage value of the power supply.
+AT+CBC Read the voltage value of the power supply
+Execution Command
+AT+CBC
+Response
+1)
++CBC: <vol>
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<vol> The voltage value, such as 3.8.
+Examples
+AT+CBC
++CBC: 3.749V
+OK
+11.2.13 AT+CPMUTEMP Read the temperature of the module
+This command is used to read the temperature of the module.
+AT+CPMUTEMP Read the temperature of the module
+Execution Command
+AT+CPMUTEMP
+Response
++CPMUTEMP: <temp>
+OK
+Parameter Saving Mode -
+Max Response Time -
+--- PAGE 288 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 287 / 684
+Reference -
+Defined Values
+<temp> The Temperature value, such as 29.
+Examples
+AT+CPMUTEMP
++CPMUTEMP: 15
+OK
+11.2.14 AT+CGDRT Set the direction of specified GPIO
+This command is used to set the specified GPIO to input or output state. If setting to input state, then this
+GPIO can not be set to high or low value.
+AT+CGDRT Set the direction of specified GPIO
+Test Command
+AT+CGDRT=?
+Response
++CGDRT: (list of supported <GPIO>s),(list of supported <gpio_io>s)
+OK
+Write Command
+AT+CGDRT=<GPIO>
+Response
+1)
++CGDRT: <GPIO>,<gpio_io>
+OK
+2)
+ERROR
+Write Command
+AT+CGDRT=<GPIO>,<gpio_i
+o>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+--- PAGE 289 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 288 / 684
+Defined Values
+<GPIO> The value is GPIO ID, different hardware versions have different
+values.
+<gpio_io> 0 in
+1 out
+Examples
+AT+CGDRT=?
++CGDRT: (1,2,3,6,12,14,16,18,22,41,43,63,77),(0-1)
+OK
+AT+CGDRT=3,0
+OK
+AT+CGDRT=3
++CGDRT: 3,0
+OK
+The return value of ‘AT+CGDRT=?’ applies only to platform 1603. Platform 1601 has different return
+values.
+11.2.15 AT+CGSETV Set the value of specified GPIO
+This command is used to set the value of the specified GPIO to high or low.
+The direction of specified GPIO must be set as OUT direction by using AT+CGDRT before this AT command,
+otherwise an error will be returned.
+AT+CGSETV Set the value of specified GPIO
+Test Command
+AT+CGSETV=?
+Response
++CGSETV: (list of supported <GPIO>s),(list of supported
+<gpio_hl>s)
+OK
+Write Command
+AT+CGSETV=<GPIO>,<gpio
+_hl>
+Response
+1)
+OK
+NOTE
+--- PAGE 290 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 289 / 684
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<GPIO> The value is GPIO ID, different hardware versions have different
+values.
+<gpio_hl> 0 low
+1 high
+Examples
+AT+CGSETV=?
++CGSETV: (1,2,3,6,12,14,16,18,22,41,43,63,77),(0-1)
+OK
+AT+CGSETV=6,0
+OK
+The return value of ‘AT+CGSETV=?’ applies only to platform 1603. Platform 1601 has different return
+values.
+11.2.16 AT+CGGETV Get the value of specified GPIO
+This command is used to get the value (high or low)of the specified GPIO.
+The direction of specified GPIO must be set as IN direction by using AT+CGDRT before this AT command,
+otherwise an error will be returned.
+AT+CGSETV Get the value of specified GPIO
+Test Command
+AT+CGGETV=?
+Response
++CGGETV: (list of supported <GPIO>s)
+OK
+NOTE

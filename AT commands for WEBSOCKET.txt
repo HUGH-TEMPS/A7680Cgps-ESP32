@@ -1,0 +1,275 @@
+--- PAGE 620 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 619 / 684
+314 SIM busy
+315 SIM wrong
+316 SIM PUK required
+317 SIM PIN2 required
+318 SIM PUK2 required
+320 Memory failure
+321 Invalid memory index
+322 Memory full
+330 SMSC address unknown
+331 no network service
+332 Network timeout
+340 no +CNMA acknowledgement expected
+341 Buffer overflow
+342 SMS size more than expected
+500 unknown error
+Examples
+AT+CMGS=02112345678
++CMS ERROR: 304
+--- PAGE 621 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 620 / 684
+AT Commands for WEBSOCKET
+29.1 Overview of AT Commands for websocket
+Command Description
+AT+WSSTART Start websocket service
+AT+WSSTOP Stop websocket service
+AT+WSCONNECT Connect to websocket server
+AT+WSDISC Disconnect from server
+AT+WSSEND Publish a message to server
+29.2 Detailed Description of AT Commands for websocket(S)
+Webcosket,Currently only 1603,1606 and 1803 is supported.
+29.2.1 AT+WSSTART Start websocket service
+AT+WSSTART is used to start websocket service by activating PDP context. You must execute this
+command before any other websocket related operations.
+AT+WSSTART Start websocket service
+Execution Command
+AT+WSSTART
+Response
+1)If start websocket service successfully:
+OK
++WSSTART: 0
+2)If failed:
+OK
++WSSTART: <err>
+3)If websocket service have started successfully and you executed
+AT+WSSTART again:
+--- PAGE 622 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 621 / 684
+ERROR
+Write Command
+AT+WSSTART=<cid>
+Response
+1)If start websocket service successfully:
+OK
++WSSTART: 0
+2)If failed:
+OK
++WSSTART: <err>
+3)If websocket service have started successfully and you executed
+AT+WSSTART=<cid> again:
+ERROR
+Max Response Time 12000ms
+Parameter Saving Mode -
+Reference
+Defined Values
+<err> The result code, please refer to Chapter 29.3
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+Examples
+AT+WSSTART
+OK
++WSSTART: 0
+AT+WSSTART=1
+OK
++WSSTART: 0
+29.2.2 AT+WSSTOP Stop websocket service
+AT+WSSTOP is used to stop websocket service.
+--- PAGE 623 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 622 / 684
+AT+WSSTOP Stop websocket service
+Execution Command
+AT+WSSTOP
+Response
+1)If stop websocket service successfully:
+OK
++WSSTOP: 0
+2)If failed:
++WSSTOP: <err>
+ERROR
+3)If websocket service have stopped successfully and you executed
+AT+WSSTOP again:
+ERROR
+Write Command
+AT+WSSTOP=<cid>
+Response
+1)If stop websocket service successfully:
+OK
++WSSTOP: 0
+2)If failed:
++WSSTOP: <err>
+ERROR
+3)If websocket service have stopped successfully and you executed
+AT+WSTSTOP=<cid> again:
+ERROR
+Max Response Time 12000ms
+Parameter Saving Mode -
+Reference
+Defined Values
+<err> The result code, please refer to chapter 29.3
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+Examples
+AT+WSSTOP
+OK
++WSSTOP: 0
+AT+WSSTOP=1
+--- PAGE 624 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 623 / 684
+OK
++WSSTOP: 0
+29.2.3 AT+WSCONNECT Connect to websocket server
+AT+WSCONNECT is used to connect to a websocket server.
+AT+WSCONNECT Connect to Websocket server
+Test Command
+AT+WSCONNECT=?
+Response
++WSCONNECT: (9-256),(1-64800)
+OK
+Read Command
+AT+WSCONNECT?
+Response
+1)if connected:
++WSCONNECT:
+<connect_status>[,<server_addr>,<server_port>,<server_path>
+]
+OK
+2)if not connected:
++ WSCONNECT: <connect_status>
+OK
+Write Command
+AT+WSCONNECT=<server_a
+ddr>,[time_out]
+Response
+1)If successfully:
+OK
++WSCONNECT: 0
+2)If failed:
+OK
++WSCONNECT: <err>
+3)If failed:
++WSCONNECT: <err>
+ERROR
+4)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+--- PAGE 625 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 624 / 684
+Defined Values
+<connect_status>
+This parameter has the following two values:
+0 the current device is not connected.
+1 the current device is connected.
+<server_addr>
+The string that described the server address and port. The range of
+the string length is 9 to 256 bytes. The string should be like this
+"ws://116.247.119.165:5141/test", must begin with "ws://". If the
+<server_addr> not include the port, the default port is 80.If the
+<server_addr> not include the path, the default path is /.
+<server_port> The websocketconnet port, the default port is 80.
+<server_path> The websocketconnet path, the default path is /.
+<time_out> The timeout value for connect. The unit is second. The range is 60s to
+180s. The default value is 120s (not set the timeout value).
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 29.3.
+Examples
+AT+WSCONNECT="ws://121.40.165.18:8800",120
+OK
++WSCONNECT: 0
+AT+WSCONNECT?
++WEBSOCKETCONNECT: 1,"121.40.165.18",8800,"/"
+OK
+29.2.4 AT+WSDISC Disconnect from server
+AT+WSDISC is used to disconnect from the server.
+AT+WSDISC Disconnect from server
+Test Command
+AT+WSDISC=?
+Response:
++WSDISC:(0, 60-180)
+OK
+Write Command
+AT+WSDISC=<timeout>
+Response
+1)If disconnect successfully:
+--- PAGE 626 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 625 / 684
++WSDISC: 0
+OK
+2)If disconnect successfully:
+OK
++WSDISC: 0
+3)If failed:
+OK
++WSDISC: <err>
+4)If failed:
+ERROR
+5)If failed:
++WSDISC: <err>
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<timeout> The timeout value for disconnection. The unit is second. The range is
+60s to 180s. The default value is 0s (not set the timeout value).
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 29.3.
+Examples
+AT+WSDISC=120
+OK
++WSDISC: 0
+29.2.5 AT+WSSEND Publish a message to server
+AT+WSSEND is publish a message to server.
+--- PAGE 627 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 626 / 684
+AT+WSSEND publish a message to server
+Test Command
+AT+WSSEND=?
+Response
++WSSEND: (1-1024),(0-1)
+OK
+Write Command
+AT+WSSEND=<dataLength>,
+<datatype>
+Response
+1)If successfully:
+>
+<input data here>
+OK
++WSSEND: 0,<dataLength>
+2)If failed:
+OK
++WSSEND: <err>
+3)If failed:
++WSSEND: <err>
+ERROR
+4)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<dataLength> The length of input topic data. The range is from 1 to 1024 bytes.
+<datatype> The publish message’s type. The range is from 0 to 1.
+0 text message
+1 binary message
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 29.3.
+Examples
+AT+WSSEND=10,1
+>
+OK
++WSSEND: 0,10

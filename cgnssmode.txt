@@ -1,0 +1,305 @@
+--- PAGE 11 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 10 / 684
+18.2.17 AT+CMQTTCFG
+2020.10.21 25.2.2 AT+CWSTASCANEX Add this command
+2020.10.29 12.2.9 AT+FSCOPY Modify this command
+2020.10.30 2.2.1 A/ Delete this command
+2020.11.2 11.2.15 Unsolicited result codes Modify this section
+2020.11.2
+16.2.3 AT+HTTPPARA
+5.2.17 AT+CPING
+16.2.8 AT+HTTPPOSTFILE
+4.2.2 AT+COPS
+4.2.8 AT+CNBP
+7.2.8 AT+CCWA
+7.2.2 AT+CHUP
+7.2.11 AT+CLIR
+22.2.2 AT+LFOTA
+11.2.7 AT+CPMVT
+5.2.14 AT+CGCLASS
+15.2.4 AT+CIPSEND
+15.2.5 AT+CIPRXGET
+15.2.6 AT+CIPCLOSE
+15.2.16 AT+CIPACK
+15.2.17 AT+CDNSGIP
+23.2.2 AT+CSCFOTA
+Modify these commands
+2020.11.3
+18.2.9 AT+CMQTTDISC
+19.2.13 AT+CCHCLOSE
+10.2.6 AT+IFC
+24.2.5 AT+CGNSSIPR
+24.2.6 AT+CGNSSMODE
+24.2.10 AT+CGPSINFO
+25.2.1 AT+CWSTASCAN
+25.2.2 AT+CWSTASCANEX
+16.2.3 AT+HTTPPARA
+20.2.1 AT+CTTS
+22.2.1 AT+CFOTA
+19.2.2 AT+CCERTDOWN
+24.2.13 AT+CGNSSPORTSWITCH
+Modify these commands
+2020.11.7
+17.2.3 AT+CFTPSLOGIN
+17.2.12 AT+CFTPSPUTFILE
+17.2.17 AT+CFTPSTYPE
+17.2.18 AT+CFTPSSLCFG
+21.2.3 AT+CREC
+20.2.1 AT+CTTS
+20.2.2 AT+CTTSPARAM
+21.1 AT Commands for Audio
+15.2.4 AT+CIPSEND
+24.2.1 AT+CGNSSPWR
+Modify these commands
+================================================================================
+--- PAGE 16 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 15 / 684
+26.2.11 AT+BLESSDAD
+2021.5.14 7.2.11 AT+CLIR
+7.2.12 AT+COLP Modify these commands
+2021.5.17 14.2.1 AT+CHTPSERV Modify the word
+2021.5.18 9.2.15 AT+CMGW
+9.2.20 AT+CMGSEX Modify these commands
+2021.5.19
+26.2.2 AT+BLESTATUS
+26.2.3 AT+BLEHOST
+26.2.4 AT+BLEADDRESS
+26.2.5 AT+BLESREG
+26.2.6 AT+BLESDREG
+10.2.10AT+CFGRI
+24.2.6AT+CGNSSIPR
+24.2.9AT+CGPSNMEARATE
+24.2.7 AT+CGNSSMODE
+21.2.3 AT+CREC
+Modify these commands
+2021.5.31 21.2.3 AT+CREC Modify this commands
+2021.6.1 12.1Overview of AT Commands for
+File System
+Modify the length of actual fully
+qualified names
+2021.6.1 12.2.6 AT+FSRENAME Delete the Note
+2021.6.2 5.2.4 AT+CGACT
+7.2.12 AT+COLP Modify these commands
+2021.6.16
+6.2.12 AT+SWITCHSIM
+6.2.13 AT+DUALSIM
+6.2.14 AT+BINDSIM
+Add these commands
+2021.6.17 21.2.3 AT+CREC Modify this commands
+2021.6.29 22.2.1AT+CFOTA Modify URC report
+2021.6.29
+2.2.1 ATD
+2.2.2 ATA
+2.2.3 ATH
+7.2.2 AT+CHUP
+7.2.11 AT+CLIR
+7.2.12 AT+COLP
+7.2.15 AT+CSTA
+Modify these commands
+================================================================================
+--- PAGE 41 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 40 / 684
+24.2.3 AT+CGPSCOLD Cold start GPS ..................................................................................502
+24.2.4 AT+CGPSWARM Warm start GPS .............................................................................. 503
+24.2.5 AT+CGPSHOT Hot start GPS ...................................................................................... 503
+24.2.6 AT+CGNSSIPR Configure the baud rate of UART3 and GPS module .......................504
+24.2.7 AT+CGNSSMODE Configure GNSS support mode ....................................................505
+24.2.8 AT+CGNSSNMEA Configure NMEA sentence type .................................................... 507
+24.2.9 AT+CGPSNMEARATE Set NMEA output rate .............................................................509
+24.2.10 AT+CGPSFTM Start GPS test mode ....................................................................510
+24.2.11 AT+CGPSINFO Get GPS fixed position information ............................................ 511
+24.2.12 AT+CGNSSINFO Get GNSS fixed position information .......................................513
+24.2.13 AT+CGNSSCMD Send command to GNSS .........................................................515
+24.2.14 AT+CGNSSPORTSWITCH Select the output port for NMEA sentence .............. 516
+24.2.15 AT+CAGPS Get AGPS data from the AGNSS server for assisted positioning ....517
+24.2.16 AT+CGNSSPROD Get the production of GNSS .....................................................518
+AT Commands for WIFI .................................................................................................520
+25.1 Overview of AT Commands for WIFI .............................................................................................520
+25.2 Detailed Description of AT Commands for WIFI ........................................................................... 520
+25.2.1 AT+CWSTASCAN Scan WIFI network .........................................................................520
+25.2.2 AT+CWSTASCANEX Scan WIFI network extension command .................................... 522
+25.2.3 AT+CWSTASCANSYN Asynchronous control command of scan wifi network ............. 524
+25.2.4 AT+CWMAP Open/Close WIFI ....................................................................................... 525
+25.2.5 AT+CWSSID SSID setting .............................................................................................. 526
+25.2.6 AT+CWAUTH Authentication setting ...............................................................................527
+25.2.7 AT+CWMOCH 80211 mode and channel setting ........................................................... 529
+25.2.8 AT+CWISO Client isolation setting ................................................................................. 529
+25.2.9 AT+CWMACADDR Get MAC address ............................................................................530
+25.2.10 AT+CWCLICNT Get client number connected to the WIFI .....................................531
+AT Commands for Bluetooth ........................................................................................532
+26.1 Overview of AT Commands for Bluetooth .....................................................................................532
+26.2 Detailed Description of AT Commands for BLE ............................................................................533
+26.2.1 AT+BLEPOWER Power on/off Ble Device ...................................................................534
+26.2.2 AT+BLESTATUS Inquiry Current BLE Connect Status ................................................535
+26.2.3 AT+BLEHOST Inquiry and Set Host Device Name ..................................................... 536
+26.2.4 AT+BLEADDR Inquiry and Set Device Address .............................................................536
+26.2.5 AT+BLESREG Register GATT Server ..........................................................................537
+26.2.6 AT+BLESDREG Deregister GATT Server ....................................................................538
+26.2.7 AT+BLESSAD Add a Service ....................................................................................... 539
+26.2.8 AT+BLESSRM Remove a Service ............................................................................... 541
+26.2.9 AT+BLESSCAD Add a Characteristic to an Existed Service .......................................542
+26.2.10 AT+BLESSCRM Remove a Characteristic ........................................................... 543
+26.2.11 AT+BLESSDAD Add a Descriptor to an Existed Characteristic ...........................544
+26.2.12 AT+BLESSDRM Remove a Descriptor .................................................................546
+26.2.13 AT+BLESSSTART Start a Server ......................................................................... 547
+26.2.14 AT+BLESSSTOP Stop a Server ........................................................................... 548
+26.2.15 AT+BLESSETADVDATA Set Adverting Package ................................................. 550
+================================================================================
+--- PAGE 500 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 499 / 684
+AT Commands for GNSS
+24.1 Overview of AT Commands for GNSS
+Command Description
+AT+CGNSSPWR GNSS power control and AP-Flash control
+AT+CGPSCOLD Cold start GPS
+AT+CGPSWARM Warm start GPS
+AT+CGPSHOT Hot start GPS
+AT+CGNSSIPR Configure the baud rate of UART3 and GPS module
+AT+CGNSSMODE Configure GNSS support mode
+AT+CGNSSNMEA Configure NMEA sentence type
+AT+CGPSNMEARATE Set NMEA output rate
+AT+CGPSFTM Start GPS test mode
+AT+CGPSINFO Get GPS fixed position information
+AT+CGNSSINFO Get GNSS fixed position information
+AT+CGNSSCMD Send command to GNSS
+AT+CGNSSTST Send data received from UART3 to NMEA port
+AT+CGNSSPORTSWITCH Select the output port for NMEA sentence
+AT+CAGPS Get AGPS data from the AGNSS server for assisted positioning
+AT+CGNSSPROD Get the production of GNSS
+24.2 Detailed Description of AT Commands for GNSS
+24.2.1 AT+CGNSSPWR GNSS power control, AP-Flash control and Dynamic Load
+control
+In ASR1603 and ASR1803, this command can control the GNSS module by pulling up/down the power pin,
+and it can also control whether the GNSS module can quickly hot start the AP-Flash. If you only want to
+enable/disable GNSS control, please execute AT+CGNSSPWR=1 or AT+CGNSSPWR=0. If you want to
+================================================================================
+--- PAGE 506 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 505 / 684
+230400
+The function will take effect immediately.
+1. The baud-rate is supported by the ASR1601 projects:
+4800,9600,19200,38400,57600,115200
+2. In the ASR1603 projects and ASR1803S project, the baud rate defaults to 115200 after GPS dynamic
+loading and upgrading the firmware, and 9600 without GPS dynamic loading.
+3. A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+4. 1803S module whose GPS chip is ASR 5311, only 115200 baud rates are supported.
+Examples
+AT+CGNSSIPR=?
++CGNSSIPR: (9600,115200,230400)
+OK
+AT+CGNSSIPR?
++CGNSSIPR: 9600
+OK
+AT+CGNSSIPR=9600
+OK
+24.2.7 AT+CGNSSMODE Configure GNSS support mode
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSMODE Configure GNSS support mode
+Test Command
+AT+CGNSSMODE=?
+Response
++CGNSSMODE: (1-7)
+OK
+Read Command
+AT+CGNSSMODE?
+Response
++CGNSSMODE: <mode>
+OK
+Write Command
+AT+CGNSSMODE=<mode>
+Response
+1)If successfully:
+NOTE
+================================================================================
+--- PAGE 507 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 506 / 684
+OK
+2)If failed:
+ERROR
+Execution Command
+AT+CGNSSMODE
+Response
+Set default value 3
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<mode> 1 GPS L1 + BDS B1 + QZSS
+2 BDS B1
+3 GPS L1+QZSS
+The mode is supported in foreign module:
+1 GPS L1+SBAS+QZSS
+2 BDS B1
+3 GPS+GLONASS+GALILEO+SBAS+QZSS
+4 GPS+BDS+GALILEO
+The function will take effect immediately.
+1.The GPS mode configuration is different from different GPS chip, you can input AT+CGNSSPROD to
+get the information of GPS chip including UNIC and ASR 5311.
+2.The mode is supported by most A7670 projects in foreign module whose GPS chip is UNIC:
+1 GPS L1+SBAS+QZSS
+2 BDS B1
+3 GPS+GLONASS+GALILEO+SBAS+QZSS
+4 GPS+BDS+GALILEO+SBAS+QZSS
+3.The mode is supported in the A7680 project and 7673_V2.01_PCB and 7670_V2.01_PCB whose
+GPS chip is ASR 5311, and 1803S some projects also use 5311 GPS chip:
+1 GPS
+2 BDS
+3 GPS+BDS
+4 GLONASS
+5 GPS+GLONASS
+6 BDS+GLONASS
+7 GPS+BDS+GLONASS
+NOTE
+================================================================================
+--- PAGE 508 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 507 / 684
+Examples
+AT+CGNSSMODE=?
++CGNSSMODE: (1-3)
+OK
+AT+CGNSSMODE?
++CGNSSMODE: 1
+OK
+AT+CGNSSMODE=1
+OK
+24.2.8 AT+CGNSSNMEA Configure NMEA sentence type
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSNMEA Configure NMEA sentence type
+Test Command
+AT+CGNSSNMEA=?
+Response
++CGNSSNMEA: (0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1)
+OK
+Read Command
+AT+CGNSSNMEA?
+Response
++CGNSSNMEA: 1,0,1,1,1,0,0,0
+OK
+Write Command
+AT+CGNSSNMEA=[nGGA,[nGL
+L,[nGSA,[nGSV,[nRMC,[nVTG,[
+nZDA,[nGST]]]]]]]]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+[nGGA,[nGLL,[nGSA,[nGSV,
+[nRMC,[nVTG,[nZDA,[nGST,
+]]]]]]]]
+The range of n is 0-1. It means that the sentence is output every n
+times, 0 means no output, null means to save the original
+configuration.
+================================================================================

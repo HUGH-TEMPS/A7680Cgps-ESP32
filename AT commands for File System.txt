@@ -1,0 +1,643 @@
+--- PAGE 292 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 291 / 684
+the high threshold and below the
+low threshold, the URC will occur.
+UNDER-VOLTAGE WARNING
+This is a URC ALARM when
+Current voltage is UNDER the
+value which you set.
+AT+CVALARM
+OVER-VOLTAGE WARNING
+This is a URC ALARM when
+Current voltage is OVER the value
+which you set.
+AT+CVALARM
+UNDER-VOLTAGE WARNING POWER
+DOWN
+This is a URC ALARM when
+Current voltage is UNDER the
+value which you set.
+AT+CPMVT
+OVER-VOLTAGE WARNING POWER DOWN
+This is a URC ALARM when
+Current voltage is OVER the value
+which you set.
+AT+CPMVT
+Defined Values
+<temp_level> -2 below -45 celsius degree.
+-1 (-45,-30] celsius degree.
+1 (80,85] celsius degree.
+2 over 85 celsius degree.
+--- PAGE 293 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 292 / 684
+AT Commands for File System
+12.1 Overview of AT Commands for File System
+Command Description
+AT+FSCD Select directory as current directory
+AT+FSMKDIR Make new directory
+AT+FSRMDIR Delete directory
+AT+FSLS List directories/files in current directory
+AT+FSDEL Delete file
+AT+FSRENAME Rename file
+AT+FSATTRI Request file attributes
+AT+FSMEM Check the size of available memory
+AT+FSCOPY Copy an appointed file
+AT+FSPRESET Move the location of a file
+AT+FSOPEN Open a file
+AT+FSCLOSE Close a file
+AT+FSREAD Read a file
+AT+FSWRITE Write a file
+AT+FSSEEK Set a file pointer to the specified position
+AT+FSPOSITION Get the offset of a file pointer
+Command Description Supported Modules
+AT+FSRENAME D:/ directory file rename Only Cat1 modules
+AT+FSOPEN Open a file Only ASR1603 standard branch
+AT+FSCLOSE Only ASR1603 standard branch
+AT+FSREAD Only ASR1603 standard branch
+AT+FSWRITE Only ASR1603 standard branch
+AT+FSSEEK Only ASR1603 standard branch
+AT+FSPOSITIO
+N
+Only ASR1603 standard branch
+--- PAGE 294 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 293 / 684
+12.2 Detailed Description of AT Commands for File System
+The file system is used to store files in a hierarchical (tree)structure, and there are some definitions and
+conventions to use the AT commands.
+Local storage space is mapped to "C:", "D:" for SD card. ( The A7678 does not support SD card).
+NOTE: General rules for naming (both directories and files):
+a) The length of actual fully qualified names of files(C:/)can not exceed 115, also include full Dir.
+b) The length of actual fully qualified names of directories and files(D:/)can not exceed 250, also
+include full Dir.
+c) Directory and file names can not include the following characters: \ / : * ? " < > |
+d) Between directory name and file/directory name, use character "/" as list separator, so it can not
+appear in directory name or file name.
+e) File names on “C:/” drive cannot begin with “.” or “blank” and it also can’t end with “.”
+f ) {non-ascii} input is only supported when the SD card function is supported. {non-ascii} input is still
+not allowed when operating external flash and file systems.
+g) The file name in drive D is case-insensitive, but can be displayed in case format.
+If the last character of names is period "."; the SD card can support this character, but the compatibility is
+not good.
+h) Support relative path and absolute path input; ASR1803 does not support directory creation, and
+disk D does not support renaming.
+12.2.1 AT+FSCD Select directory as current directory
+This command is used to select a directory. The Module supports absolute path and relative path.
+AT+FSCD Select directory as current directory
+Test Command
+AT+FSCD=?
+Response
+OK
+Read Command
+AT+FSCD?
+Response
++FSCD: <curr_path>
+OK
+Write Command
+AT+FSCD=<path>
+Response
+1)If set current directory successfully:
++FSCD: <curr_path>
+OK
+2)If set current directory failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+--- PAGE 295 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 294 / 684
+Defined Values
+<path> Directory for selection.
+<curr_path> Current directory.
+Examples
+AT+FSCD=C:
++FSCD: C:/
+OK
+AT+FSCD=C:/
++FSCD: C:/
+OK
+AT+FSCD?
++FSCD: C:/
+OK
+AT+FSCD=D:
++FSCD: D:/
+OK
+If <path> is "..", it will go back to previous level of directory.
+12.2.2 AT+FSMKDIR Make new directory in current directory
+The Module supports absolute path and relative path. Support "D:" and "C:".
+AT+FSMKDIR Make new directory in current directory
+Test Command
+AT+FSMKDIR=?
+Response
+OK
+Write Command Response
+NOTE
+--- PAGE 296 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 295 / 684
+AT+FSMKDIR=<dir> 1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<dir> Directory name which does not already exist in current directory.
+Examples
+AT+FSMKDIR=SIMTech
+OK
+AT+FSCD?
++FSCD: D:/
+OK
+AT+FSLS
++FSLS: SUBDIRECTORIES:
+SIMTech
+OK
+Support "C:" and "D:".
+12.2.3 AT+FSRMDIR Delete directory in current directory
+Supports absolute path and relative path. Support "D:" and “C:”.
+AT+FSRMDIR Delete directory in current directory
+Test Command
+AT+FSRMDIR=?
+Response
+OK
+NOTE
+--- PAGE 297 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 296 / 684
+Write Command
+AT+FSRMDIR=<dir>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<dir> The directory name which already exists in current directory.
+Examples
+AT+FSRMDIR=SIMTech
+OK
+AT+FSCD?
++FSCD: D:/
+OK
+AT+FSLS
++FSLS: SUBDIRECTORIES:
+OK
+Support "C:" and “D:”.
+12.2.4 AT+FSLS List directories/files in current directory
+This command is used to list informations of directories and/or files in current directory. Support "C:", "D:".
+AT+FSLS List directories/files in current directory
+Test Command
+AT+FSLS=?
+Response
++FSLS: (list of supported <type>s)
+NOTE
+--- PAGE 298 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 297 / 684
+OK
+Read Command
+AT+FSLS?
+Response
++FSLS: SUBDIRECTORIES:<dir_num>,FILES:<file_num>
+OK
+Write Command
+AT+FSLS=<type>
+Response
+[+FSLS: SUBDIRECTORIES:
+<list of subdirectories>]
+[+FSLS: FILES:
+<list of files>]
+OK
+Execution Command
+AT+FSLS
+Response
+[+FSLS: SUBDIRECTORIES:
+<list of subdirectories>]
+[+FSLS: FILES:
+<list of files>]
+OK
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<dir_num> Integer type, the number of subdirectories in current directory.
+<file_num> Integer type, the number of files in current directory.
+<type> 0 list both subdirectories and files
+1 list subdirectories only
+2 list files only
+Examples
+AT+FSLS?
++FSLS: SUBDIRECTORIES:2,FILES:2
+OK
+AT+FSLS
++FSLS: SUBDIRECTORIES:
+FirstDir
+--- PAGE 299 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 298 / 684
+SecondDir
++FSLS: FILES:
+image_0.jpg
+image_1.jpg
+OK
+AT+FSLS=2
++FSLS: FILES:
+image_0.jpg
+image_1.jpg
+OK
+12.2.5 AT+FSDEL Delete file in current directory
+This command is used to delete a file. Before do that, it needs to use AT+FSCD select the father directory
+as current directory. Support "C:", "D:".
+AT+FSDEL Delete file in current directory
+Test Command
+AT+FSDEL=?
+Response
+OK
+Write Command
+AT+FSDEL=<filename>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filename> String with or without double quotes, file name which is relative and
+already existing.
+Examples
+AT+FSDEL=image_0.jpg
+OK
+--- PAGE 300 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 299 / 684
+If <filename> is *.*, it means delete all files in current directory.
+12.2.6 AT+FSRENAME Rename file in current directory
+This command is used to rename a file. Support "C:", "D:".
+AT+FSRENAME Rename file in current directory
+Test Command
+AT+FSRENAME=?
+Response
+OK
+Write Command
+AT+FSRENAME=<old_name
+>,<new_name>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<old_name> String with or without double quotes, file name which is existed in
+current directory.
+<new_name> New name of specified file, string with or without double quotes.
+Examples
+AT+FSRENAME=image_0.jpg,image_1.jpg
+OK
+In Cat 4 modules, “D:” does not support AT+FSRENAME.
+NOTE
+NOTE
+--- PAGE 301 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 300 / 684
+Cannot rename files that length is 0.
+12.2.7 AT+FSATTRI Request file attributes
+This command is used to request the attributes of file which exists. Support "C:", "D:".
+AT+FSATTRI Request file attributes
+Test Command
+AT+FSATTRI=?
+Response
+OK
+Write Command
+AT+FSATTRI=<filename>
+Response
+1)If successfully:
++FSATTRI: <file_size>
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filename> String with or without double quotes, file name which is in current
+directory.
+<file_size> The size of specified file, and the unit is in Byte.
+Examples
+AT+FSATTRI=image_0.jpg
++FSATTRI: 8604
+OK
+12.2.8 AT+FSMEM Check the size of available memory
+This command is used to check the size of available memory. The response will list total size and used size
+--- PAGE 302 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 301 / 684
+of local storage space if present and mounted. Support "C:", "D:".
+AT+FSMEM Check the size of available memory
+Test Command
+AT+FSMEM=?
+Response:
+OK
+Execution Command
+AT+FSMEM
+Response:
+1)If successfully, currently C:/:
++FSMEM: C:(<total>,<used>)
+OK
+2)If successfully, currently D:/:
++FSMEM: D:(<total>,<used>)
+OK
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<total> The total size of local storage space.
+<used> The used size of local storage space.
+Examples
+AT+FSMEM
++FSMEM: C:(11348480, 2201600)
+OK
+The unit of storage space size is in Byte.
+12.2.9 AT+FSCOPY Copy an appointed file
+NOTE
+--- PAGE 303 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 302 / 684
+This command is used to copy an appointed file on C:/ to an appointed directory on C:/,or C:/ to D:/, the new
+file name should give in parameter. Support "C:", "D:".
+AT+FSCOPY Copy an appointed file
+Test Command
+AT+FSCOPY=?
+Response
+OK
+Write Command
+AT+FSCOPY=<file1>,<file2>[
+,<sync_mode>]
+Response
+1)If successfully, synchronous mode:
++FSCOPY: <percent>
+[+FSCOPY: <percent>]
+OK
+2)If successfully, asynchronous mode:
+OK
++FSCOPY: <percent>
+[+FSCOPY: <percent>]
++FSCOPY: END
+3)If any error:
+SD CARD NOT PLUGGED IN
+FILE IS EXISTING
+FILE NOT EXISTING
+DIRECTORY IS EXISTED
+DIRECTORY NOT EXISTED
+INVALID PATH NAME
+INVALID FILE NAME
+SD CARD HAVE NO ENOUGH MEMORY
+EFS HAVE NO ENOUGH MEMORY
+FILE CREATE ERROR
+READ FILE ERROR
+WRITE FILE ERROR
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<file1> The sources file name or the whole path name with sources file name.
+<file2> The destination file name or the whole path name with destination file
+name.
+--- PAGE 304 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 303 / 684
+<percent> The percent of copy done. The range is 0.0 to 100.0
+<sync_mode> The execution mode of the command:
+0 synchronous mode
+1 asynchronous mode
+Examples
+AT+FSCOPY=C:/TESTFILE,COPYFILE //Copy file TESTFILE on C:/ to C:/COPYFILE
++FSCOPY: 0.0
++FSCOPY: 9.7
++FSCOPY: 19.4
+…
++FSCOPY: 100.0
+OK
+The <file1> and <file2> should give the whole path and name, if only given file name, it will refer to
+current path (AT+FSCD)and check the file’s validity.
+If <file2> is a whole path and name, make sure the directory exists, make sure that the file name does
+not exist or the file name is not the same name as the sub folder name, otherwise return error.
+<percent> report refer to the copy file size. The big file maybe report many times, and little file report
+less.
+If <sync_mode> is 1, the command will return OK immediately, and report final result with +FSCOPY:
+END.
+12.2.10 AT+FSPRESET Moves the location of a file
+This command is used to move an appointed file on C:/ to C:/simdir/,or from C:/simdir to C:/.
+AT+FSPRESET Move the location of a file
+Test Command
+AT+FSPRESET=?
+Response
+OK
+Write Command Response
+NOTE
+--- PAGE 305 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 304 / 684
+AT+FSPRESET=<fileName>[,
+<direction>]
+1)If successfully
+OK
+2)If error
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<fileName> The file name to be moved without the path.
+<direction> The direction in which the file was moved
+0 from root directory to the user directory
+1 from user directory to the root directory
+Examples
+AT+FSPRESET=test.txt,0 //move file from root directory to the user directory
+OK
+ 1.Just supported on in the standard branch of ASR1603 and ASR1606.
+ 2. When <direction> = 1, If the file already exists in the root directory, delete the file and move it to
+the root directory.
+12.2.11 AT+FSOPEN Open a file
+This command opens a file and gets the file handle to be used in commands such as
+AT+FSREAD,AT+FSWRITE, AT+FSSEEK,AT+FSPOSITION, AT+FSCLOSE.
+AT+FSOPEN Open a file
+Test Command
+AT+FSOPEN=?
+Response
++FSOPEN: <filename>[,(0-2)]
+OK
+Read Command
+AT+FSOPEN?
+Response
+OK
+Write Command Response
+NOTE
+--- PAGE 306 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 305 / 684
+AT+FSOPEN
+=<fileName>[,<mode>]
+1)If successfully
++FSOPEN: <filehandle>
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filename> The file name to be opened with the path.The maximum length is 115
+bytes.
+<filehandle> The handle of the file.
+<mode> The open mode of the file.
+0 if the file does not exist,it will be created. If the file exists, it will
+be directly opened. And both of them can be read and written.
+1 if the file does not exist,it will be created. If the file exists, it will
+be overwritten and cleared. And both of them can be read and written.
+2 if the file exist, open it and it can be read only. When the file does
+not exist, it will respond an error.
+Examples
+AT+FSOPEN=C:/test.txt,0
++FSOPEN: 1
+OK
+12.2.12 AT+FSREAD Read a file
+This command reads the data of a file which is specified by the handle. The data starts from the current
+position of the pointer which belongs to the file handle.
+AT+FSREAD Read a file
+Test Command
+AT+FSREAD=?
+Response
++FSREAD: <filehandle>[,<length>]
+OK
+--- PAGE 307 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 306 / 684
+Write Command
+AT+FSREAD
+=<filehandle>[,<length>]
+Response
+1)If successfully:
+CONNECT <read_length>
+TA switches to data mode. When the total size of the data reaches
+<length> (unit: byte), TA will return to command mode, display the
+result and then reply the following codes:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filehandle> The handle of the file.
+<length> The length of the file to be read out and the default is the file length.
+<read_length> The actual read length.
+Examples
+AT+FSREAD=1,10
+CONNECT 10
+1234567890
+OK
+12.2.13 AT+FSWRITE Write a file
+This command writes data into a file. The data starts from the current position of the file pointer which
+belongs to the file handle.
+AT+FSWRITE Write a file
+Test Command
+AT+FSWRITE=?
+Response
++FSWRITE: <filehandle>[,<length>[,<timeout>]]
+OK
+Write Command
+AT+FSWRITE=<filehandle>[,
+Response
+1)If successfully:
+--- PAGE 308 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 307 / 684
+<length>,[<timeout>]] CONNECT
+TA switches to data mode. When the total size of the written data
+reaches <length> (unit: byte) or the time reaches <timeout>, TA will
+return to command mode and reply the following codes:
++FSWRITE: <written_length>,<total_length>
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filehandle> The handle of the file to be operated.
+<length> The length of the file to be written ,and the default is 10K. The
+maximum value of this parameter is determined by <freesize> from
+AT+FSMEM.
+<timeout> The time waiting for data to be inputted to USB/UART. The default
+value is 5.Unit: s.
+<written_length> The actual written length.
+<total_length> The total length of the file.
+Examples
+AT+FSWRITE=1,5,10
+CONNECT
+//input data
++FSWRITE: 0,5
+OK
+12.2.14 AT+FSSEEK Set a file Pointer to the Specified Position
+This command set a file pointer to the specified position. This will decide the starting position of commands
+such as AT+FSREAD,AT+FSWRITE, AT+FSSEEK,AT+FSPOSITION.
+AT+FSSEEK Set a file Pointer to the Specified Position
+--- PAGE 309 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 308 / 684
+Test Command
+AT+FSSEEK=?
+Response
++FSSEEK: <filehandle>,<offset>[,<position>]
+OK
+Write Command
+AT+FSSEEK=<filehandle>,<
+offset>,[<position>]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<filehandle> The handle of the file to be operated.
+<offset> The number of bytes of the file pointer movement.
+<position> Pointer movement mode.
+0 The beginning of the file.
+1 The current position of the pointer.
+2 The end of the file.
+Examples
+AT+FSSEEK=1,0,0
+OK
+12.2.15 AT+FSPOSITION Get the Offset of a File Pointer
+This command gets the offset of a file pointer from the beginning of the file.
+AT+FSPRESET Move the location of a file
+Test Command
+AT+FSPOSITION=?
+Response
++FSPOSITION: <filehandle>
+OK
+Write Command
+AT+FSPOSITION=<filehandl
+e>
+Response
+1)If successfully:
++FSPOSITION: <offset>

@@ -1,0 +1,500 @@
+--- PAGE 260 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 259 / 684
+9.2.22 AT+CCONCINDEX Report Concatenated SMS Index
+This command is used to list the SMS index numbers of received short and long messages.
+AT+CCONCINDEX Report Concatenated SMS Index
+Test Command
+AT+CCONCINDEX=?
+Response
++CCONCINDEX: (0-10),(1-50),...
+OK
+Execution Command
+AT+CCONCINDEX
+Response
+1)
++CCONCINDEX: N,i,j,k,...
+OK
+2)
+OK
+3)
++CMS ERROR: <err>
+Parameter Saving Mode NO_SAVE
+Max Response Time 12s
+Reference 3GPP TS 27.005
+Defined Values
+<N> N is the number of segments that form the whole concatenated
+SMS.
+<i,j,k> i,j,k are the SMS indexes of each SMS segment
+Examples
+AT+CCONCINDEX=?
++CCONCINDEX: (0-10),(1-50),...
+OK
+AT+CCONCINDEX
++CCONCINDEX:3,1,2,3
++CCONCINDEX:2,45
+OK
+If no segment is received, N is 0.
+NOTE
+--- PAGE 261 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 260 / 684
+There is no long message on the SIM card or ME, only the OK result code is returned.
+AT Commands for Serial Interface
+10.1 Overview of AT Commands for Serial Interface
+Command Description
+AT&D Set DTR function mode
+AT&C Set DCD function mode
+AT+IPR Set local baud rate temporarily
+AT+IPREX Set local baud rate permanently
+AT+ICF Set control character framing
+AT+IFC Set local data flow control
+AT+CSCLK Control UART Sleep
+AT+CMUX Enable the multiplexer over the UART
+AT+CATR Configure URC destination interface
+AT+CFGRI Configure RI pin
+AT+CURCD Configure the delay time and number of URC
+10.2 Detailed Description of AT Commands for Serial Interface
+10.2.1 AT&D Set DTR function mode
+This command determines how the TA responds when DTR PIN is changed from the ON to the OFF
+condition during data mode.
+AT&D Set DTR function mode
+Execution Command
+AT&D[<value>]
+Response
+1)
+OK
+2)
+--- PAGE 262 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 261 / 684
+ERROR
+Parameter Saving Mode AT&W_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<value> 0 TA ignores status on DTR.
+1 ON->OFF on DTR: Change to Command mode with remaining the
+connected call.
+2 ON->OFF on DTR: Disconnect call, change to Command
+mode.During state DTR=OFF is auto-answer off.
+Examples
+AT&D1
+OK
+10.2.2 AT&C Set DCD function mode
+This command determines how the state of DCD PIN relates to the detection of received line signal from the
+distant end.
+AT&C Set DCD function mode
+Execution Command
+AT&C[<value>]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AT&W_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<value> 0 DCD line shall always be on.
+1 DCD line shall be on only when data carrier signal is present.
+2 Setting the DCD line be on just 1 second after the data calls end.
+--- PAGE 263 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 262 / 684
+Examples
+AT&C1
+OK
+10.2.3 AT+IPR Set local baud rate temporarily
+This command sets the baud rate of module’s serial interface temporarily, after reboot the baud rate is set to
+value of IPREX.
+AT+IPR Set local baud rate temporarily
+Test Command
+AT+IPR=?
+Response
++IPR: (list of supported <speed>s)
+OK
+Read Command
+AT+IPR?
+Response
++IPR: <speed>
+OK
+Write Command
+AT+IPR=<speed>
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+IPR
+Response
+Set the value to boot value:
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<speed> Baud rate per second:
+300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200,
+230400, 460800, 921600, 1842000, 3686400.
+Examples
+--- PAGE 264 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 263 / 684
+AT+IPR?
++IPR: 115200
+OK
+AT+IPR=?
++IPR:
+(300,600,1200,2400,4800,9600,19200,38400,57600,115200,230400,460800,921600,1842000,3686400
+)
+OK
+AT+IPR=115200
+OK
+10.2.4 AT+IPREX Set local baud rate permanently
+This command sets the baud rate of module’s serial interface permanently, after reboot the baud rate is also
+valid.
+AT+IPREX Set local baud rate permanently
+Test Command
+AT+IPREX=?
+Response
++IPREX: (list of supported <speed>s)
+OK
+Read Command
+AT+IPREX?
+Response
++IPREX: <speed>
+OK
+Write Command
+AT+IPREX=<speed>
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+IPREX
+Response
+Set default value 115200:
+OK
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+--- PAGE 265 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 264 / 684
+<speed> Baud rate per second:
+300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200,
+230400, 460800, 921600, 1842000, 3686400.
+Examples
+AT+IPREX?
++IPREX: 115200
+OK
+AT+IPREX=?
++IPREX: (300,600,1200,2400,4800,9600,19200,38400,57600,115200,230400,460800,921600,
+1842000,3686400)
+OK
+AT+IPREX=115200
+OK
+10.2.5 AT+ICF Set control character framing
+This command sets character framing which contains data bit, stop bit and parity bit.
+AT+ICF Set control character framing
+Test Command
+AT+ICF=?
+Response
++ICF: (list of supported<format>s),(list of supported<parity>s)
+OK
+Read Command
+AT+ICF?
+Response
++ICF: <format>,<parity>
+OK
+Write Command
+AT+ICF=<format>,<parity>
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+ICF
+Response
+Set default value:
+OK
+Parameter Saving Mode NO_SAVE
+--- PAGE 266 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 265 / 684
+Max Response Time 9000ms
+Reference -
+Defined Values
+<format> 1 data bit 8, parity bit 1,stop bit 1.
+2 data bit 8, stop bit 1.
+3 data bit 7, parity bit 1,stop bit 1.
+4 data bit 7, stop bit 1.
+<parity> 0 Odd
+1 Even
+2 none
+Examples
+AT+ICF?
++ICF: 2,2
+OK
+AT+ICF=?
++ICF: (1-4),(0-2)
+OK
+AT+ICF=2,2
+OK
+AT+ICF
+OK
+10.2.6 AT+IFC Set local data flow control
+The command sets the flow control mode of the module.
+AT+IFC Set local data flow control
+Test Command
+AT+IFC=?
+Response
++IFC: (list of supported<DCE>s),(list of supported<DTE>s)
+OK
+Read Command
+AT+IFC?
+Response
++IFC: <DCE>,<DTE>
+--- PAGE 267 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 266 / 684
+OK
+Write Command
+AT+IFC=<DCE>[,<DTE>]
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+IFC
+Response
+Set default value:
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<DCE> 0 none
+1 software RTS XON/XOFF
+2 RTS hardware flow control
+<DTE> 0 none
+1 software CTS XON/XOFF
+2 CTS hardware flow control
+The hardware flow control is not supported by A7600X(X)-MNSE and A7600E-MASE.
+Examples
+AT+IFC?
++IFC: 0,0
+OK
+AT+IFC=?
++IFC: (0-2),(0-2)
+OK
+AT+IFC=2,2
+OK
+AT+IFC
+OK
+NOTE
+--- PAGE 268 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 267 / 684
+10.2.7 AT+CSCLK Control UART Sleep
+This command is used to enable UART Sleep or always work. If set to 0, UART always work. If set to 1,
+ensure that DTR is pulled high and the module can go to DTR sleep. If set to 2, the module will enter RX
+sleep. RX wakeup directly sends data through the serial port (for example: AT) to wake up.
+AT+CSCLK Control UART Sleep
+Test Command
+AT+CSCLK=?
+Response
++CSCLK: (range of supported <status>s)
+OK
+Read Command
+AT+CSCLK?
+Response
++CSCLK: <status>
+OK
+Write Command
+AT+CSCLK=<status>
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CSCLK
+Response
+Set <status>=0:
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<status> 0 off
+1 DTR sleep
+2 RX sleep
+The RX sleep is not supported by 1802S.
+NOTE
+--- PAGE 269 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 268 / 684
+Examples
+AT+CSCLK?
++CSCLK: 0
+OK
+AT+CSCLK=?
++CSCLK: (0-2)
+OK
+AT+CSCLK=1
+OK
+AT+CSCLK=2
+OK
+AT+CSCLK
+OK
+10.2.8 AT+CMUX Enable the multiplexer over the UART
+This command is used to enable the multiplexer over the UART, after enabled four virtual ports can be used
+as AT command port or MODEM port, the physical UART can no longer transfer data directly under this
+case. By default all of the four virtual ports are used as AT command port. Second serial port is not support
+this command.
+AT+CMUX Enable the multiplexer over the UART
+Test Command
+AT+CMUX=?
+Response
++CMUX: (0),(0),(1-8),(1-1500),(0),(0),(2-1000)
+OK
+Read Command
+AT+CMUX?
+Response
++CMUX: <value>,<subset>,<port_speed>,<N1>,<T1>,<N2>,<T2>
+OK
+Write Command
+AT+CMUX=<value>[,<subset
+>[,<port_speed>[,<N1>[,<T1
+>[,<N2>[,<T2>]]]]]]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+--- PAGE 270 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 269 / 684
+Defined Values
+<value> 0 currently only 0 is supported (basic operation mode).
+<subset> Currently omitted
+<port_speed> Currently omitted, you can set speed before enable multiplexer
+<N1> 1-1500
+<T1> Currently omitted
+<N2> Currently omitted
+<T2> 2-1000
+Examples
+AT+CMUX?
++CMUX: 0,0,5,1500,0,0,600
+OK
+AT+CMUX=?
++CMUX: (0),(0),(1-8),(1-1500),(0),(0),(2-1000)
+OK
+AT+CMUX=0
+OK
+10.2.9 AT+CATR Configure URC destination interface
+This command is used to configure the serial port which will be used to output URCs. We recommend
+configure a destination port for receiving URC in the system initialization phase, in particular, in the case
+that transmitting large amounts of data, e.g. use TCP/UDP and MT SMS related AT command.
+AT+CATR Configure URC destination interface
+Test Command
+AT+CATR=?
+Response
++CATR: (list of supported <port>s)
+OK
+Read Command
+AT+CATR?
+Response
++CATR: <port>
+OK
+Write Command Response
+--- PAGE 271 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 270 / 684
+AT+CATR=<port> 1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<port> 0 all ports
+1 use UART port to output URCs
+2 use MODEM port to output URCs
+3 use ATCOM port to output URCs
+4 use cmux virtual port1 to output URCs
+5 use cmux virtual port2 to output URCs
+6 use cmux virtual port3 to output URCs
+7 use cmux virtual port4 to output URCs
+Examples
+AT+CATR?
++CATR: 0
+OK
+AT+CATR=?
++CATR: (0-7)
+OK
+AT+CATR=1
+OK
+10.2.10 AT+CFGRI Configure RI pin
+This command configures the time of pulling RI down. These places are going to use it, for Examples:
+SMS, FTP, NETWORK, PB, CM, OS and so on.
+AT+CFGRI Configure RI pin
+Test Command
+AT+CFGRI=?
+Response
++CFGRI: (list of supported<status>),(list of
+--- PAGE 272 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 271 / 684
+supported<URC_time>ms), (list of supported<SMS_time>ms)
+OK
+Read Command
+AT+CFGRI?
+Response
++CFGRI: <status>,<URC_time>,<SMS_time>
+OK
+Write Command
+AT+CFGRI=<status>[,<
+URC_time >[,< SMS_time >]]
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CFGRI
+Response
+Set default value:
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<status> 0 off.
+1 on.
+<URC_time> a numeric parameter which is number of milliseconds to assert RI
+delay to reset RI. The range is 10 to 6000, default value is 60ms.
+<SMS_time> a numeric parameter which is number of milliseconds to assert RI
+delay to reset RI. The range is 20 to 6000, default value is 120ms.
+Examples
+AT+CFGRI?
++CFGRI: 0,60,120
+OK
+AT+CFGRI=?
++CFGRI: (0-1),(10-6000),(20-6000)
+OK
+AT+CFGRI=0,60,120
+OK
+AT+CFGRI
+OK

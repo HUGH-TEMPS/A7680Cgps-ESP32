@@ -1,0 +1,49 @@
+--- PAGE 681 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 680 / 684
+Reference
+Defined Values
+< mac > String type, the MAC address of USBNET, maximum
+length 12
+< mac_display > String type,display the MAC address of USBNET, split with
+a '-'.
+Examples
+AT+USBNETMAC=?
+OK
+AT+USBNETMAC?
++USBNETMAC: F0-0C-29-A3-9B-6D
+OK
+AT+USBNETMAC=AABBCCDDEEFF
+OK
+--- PAGE 682 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 681 / 684
+AT Commands for JammingDetect
+36.1 Overview of AT Commands for JammingDetect
+Command Description
+AT+SJDR Enable Jamming Detect
+AT+SJDCFG Config Jamming Detect
+36.2 Detailed Description of AT Commands for Jamming Detect
+36.2.1 AT+SJDR Enable Jamming Detect
+AT+SJDR Enable Jamming Detect
+Test Command
+AT+SJDR=?
+Response
++SJDR: (0,1)
+OK
+Read Command
+AT+SJDR?
+Response
++SJDR: <mode>
+OK
+Write Command
+AT+SJDR=<mode>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values

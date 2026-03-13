@@ -1,0 +1,302 @@
+--- PAGE 464 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 463 / 684
+0 Operation succeeded
+1 Alerting state(reserved)
+2 Unknown error
+3 Busy
+4 Peer closed
+5 Operation timeout
+6 Transfer failed
+7 Memory error
+8 Invalid parameter
+9 Network error
+10 Open session error
+11 State error
+12 Create socket error
+13 Get DNS error
+14 Connect socket error
+15 Handshake error
+16 Close socket error
+17 Nonet
+18 Send data timeout
+19 Not set certificates
+19.4 Unsolicited Result Codes
+URC Description
++CCHEVENT: <session_id>,RECV EVENT
+In manual receiving mode, when new data of a
+connection arriving to the module, this unsolicited
+result code will be reported to MCU.
++CCH_RECV_CLOSED: <session_id>,<err> When receive data occurred any error, this
+unsolicited result code will be reported to MCU.
++CCHSEND: <session_id>,<err> When send data faild,error code will be reported.
++CCH_PEER_CLOSED: <session_id> The connection is closed by the server.
++CCH: CCH STOP[,<cid>]
+CCH stopped caused by network error. When the
+AT+CCHSTART=<cid> command is used to
+activate a network, the URC carries the cid
+parameter, and each cid link reports an
+independent URC.
+--- PAGE 465 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 464 / 684
+AT Commands for TTS
+20.1 Overview of AT Commands for TTS
+Command Description
+AT+CTTS TTS operation
+AT+CTTSPARAM Set TTS parameters
+AT+CDTAM Set TTS Play Path
+20.2 Detailed Description of AT Commands for TTS
+20.2.1 AT+CTTS TTS operation
+The write command is used to play/decode/pause TTS.
+AT+CTTS TTS operation
+Test Command
+AT+CTTS=?
+Response
+OK
+Read Command
+AT+CTTS?
+Response
++CTTS: <status>
+OK
+Write Command
+AT+CTTS=<mode>,[<text>],[<fil
+ename>]
+Response
+1)If <mode>is 0,and tts is playing:
++CTTS: <err>
+OK
+2)If <mode>is 0,and tts is not playing:
+OK
+3)If <mode>is 1 or 2:
++CTTS:
+--- PAGE 466 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 465 / 684
+OK
++CTTS: <err> // transform end
+4)If <mode>is 3 or 4:
++CTTS:
+OK
++CTTS: <err> // transform end
+5)
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<status> 0 NO_WORKING
+1 TTS_WORKING
+<mode> 0 Stop the speech play
+1 Start to synth and play,<text> is in UCS2 coding format.
+2 Start to synth and play,<text> is in ASCII coding format,
+Chinses text is in GBK coding format.
+3 TTS To wav format,<text> is in ASCII coding format, Chinese
+text is in GBK coding format.
+4 TTS To wav format,<text> is in UCS2 coding format.
+<text> When mode is 1 or 2,the <text> is in ASCII coding format which is
+synthetized to speed to be played, maximum data length is 512
+bytes.(including "").And <text> is in UCS2 coding format,
+maximum data length is 510 bytes. (including ""),because every
+four characters correspond to one Chinese character.When mode
+is 3 or 4,<text> maximum data length is 50 bytes because of the
+memory. For TOUNGTONE TTS Chinese polyphonic characters,
+pronunciation can be specified. format: 多音字<pinyin=发音读音+
+声调>.For IFLY TTS Chinese polyphonic characters, pronunciation
+can be specified. format: 多音字[=发音读音+声调].
+<filename> Enter path and filename, if no path is added, save in C: by default.
+Maximum filename length is 60 bytes.
+Currently only .wav format file storage is supported.
+<err> The result code: 0 is success. Other values are failure. Please
+refer to chapter 20.3
+NOTE
+--- PAGE 467 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 466 / 684
+1.Lowercase English strings are predicted to be pronounced according to English words. If you want
+long lowercase strings to be pronounced correctly, please add a space after each letter.
+2. When using IFlytek TTS, it is recommended that you input measurement units and combined units in
+the text in Chinese. English input may not be able to read correctly.
+Examples
+AT+CTTS=?
+OK
+AT+CTTS?
++CTTS: 0
+OK
+AT+CTTS=1,"6B228FCE4F7F75288BED97F3540862107CFB7EDF"
++CTTS:
+OK
++CTTS: 0
+AT+CTTS=2,"去朝<pinyin=chao2>阳，看朝<pinyin=zhao1>阳"
++CTTS:
+OK
++CTTS: 0
+AT+CTTS=3,"hello world","C:/12.wav"
++CTTS:
+OK
++CTTS: 0
+20.2.2 AT+CTTSPARAM Set TTS Parameters for YOUNGTONE TTS
+The write command is used to Set TTS Parameters for YOUNGTONE TTS.
+AT+CTTSPARAM Set TTS Parameters for YOUNGTONE TTS
+Test Command Response
+--- PAGE 468 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 467 / 684
+AT+CTTSPARAM=? +CTTSPARAM: (0-2),(0-3),(0-3),(0-2),(0-2|10-30),(0-1)
+OK
+Read Command
+AT+CTTSPARAM?
+Response
++CTTSPARAM:
+<volume>,<sysvolume>,<digitmode>,<pitch>,<speed>,<digitr
+eading>
+OK
+Write Command
+AT+CTTSPARAM=<volume>[,<s
+ysvolume>[,<digitmode>[,<pitc
+h>[,<speed>[,<digitreading>]]]]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode Just <volume> is AUTO_SAVE
+Max Response Time 9000ms
+Reference Ventor
+Defined Values
+<volume> 0 The min volume
+1 The normal volume
+2 The max volume
+<sysvolume> 0 The min system volume
+1 The small system volume
+2 The normal system volume
+3 The max system volume
+<digitmode> 0 Read digit based on default mode
+1 Read digit based on telephone number
+2 Read digit based on digit
+3 Read digit based on number
+<pitch> 0 The min voice tone
+1 The normal voice tone
+2 The max voice tone
+<speed> Two kinds of speed regulation methods:
+1 rough speed regulation. The three grades range from 0 to 2. (0 is
+the minimum speed, 1 is the general default speed, and 2 is the
+maximum speed)
+2 precision speed regulation. 20 levels range from 10 to 30. (10 is
+minimum speed, 30 is maximum speed). Just supported on 1601.
+<digitreading> 0 Read the numbers in Chinese
+1 Read the numbers in English
+Examples
+--- PAGE 469 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 468 / 684
+AT+CTTSPARAM=?
++CTTSPARAM: (0-2),(0-3),(0-3),(0-2),(0-2|10-30),(0-1)
+OK
+AT+CTTSPARAM?
++CTTSPARAM: 1,3,0,1,1,0
+OK
+AT+CTTSPARAM=2,3,0,1,1,1
+OK
+AT+CTTSPARAM=2,3,0,1,10,1
+OK
+20.2.3 AT+CTTSPARAM Set TTS Parameters for IFLY TTS
+The write command is used to Set TTS Parameters for IFLY TTS.
+AT+CTTSPARAM Set TTS Parameters for IFLY TTS
+Test Command
+AT+CTTSPARAM=?
+Response
++CTTSPARAM: (0-7),(0-2),(0-2),(0-2),(0-2),(0-1)
+OK
+Read Command
+AT+CTTSPARAM?
+Response
++CTTSPARAM:
+<volume>,<sysvolume>,<digitmode>,<pitch>,<speed>,<ttslib
+>
+OK
+Write Command
+AT+CTTSPARAM=<volume>[,<s
+ysvolume>[,<digitmode>[,<pitc
+h>[,<speed>[,<ttslib>]]]]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode Just <volume> is AUTO_SAVE
+Max Response Time 9000ms
+Reference Ventor
+Defined Values
+--- PAGE 470 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 469 / 684
+<volume> Settting system volume like AT+COUTGAIN,default value is 4.
+<sysvolume> 0 The min system volume
+1 The small system volume
+2 The normal system volume
+<digitmode> 0 Read digit based on default mode
+1 Read digit based on digit
+2 Read digit based on number
+<pitch> 0 The min voice tone
+1 The normal voice tone
+2 The max voice tone
+<speed> 0 The min voice speed
+1 The normal voice speed
+2 The max voice speed
+<ttslib> 0 Support both Chinese and English TTS libraries, and Chinese
+pronunciation is the best.
+1 Support only English TTS library.
+Examples
+AT+CTTSPARAM=?
++CTTSPARAM: (0-7),(0-2),(0-2),(0-2),(0-2),(0-1)
+OK
+AT+CTTSPARAM?
++CTTSPARAM: 1,2,0,1,1,0
+OK
+AT+CTTSPARAM=2,2,0,1,1,1
+OK
+AT+CTTSPARAM=7,2,0,1,1,1
+OK
+<ttslib> fucntion is not supporting at present.
+20.2.4 AT+CDTAM Set Local or Remote Audio Play
+The write command is used to Set TTS Play Path.
+NOTE
+--- PAGE 471 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 470 / 684
+AT+CDTAM Set TTS Play Path
+Test Command
+AT+CDTAM=?
+Response
++CDTAM: (0-1)
+OK
+Read Command
+AT+CDTAM?
+Response
++CDTAM: <status>
+OK
+Write Command
+AT+CDTAM=<mode>
+Response
+1)If <mode>is 0 or 1:
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time -
+Reference -
+Defined Values
+<status> 0 Local Player
+1 Remote Player
+<mode> 0 Local Path
+1 Remote Path
+Examples
+AT+CDTAM=?
++CDTAM: (0-1)
+OK
+AT+CDTAM?
++CDTAM: 0
+OK
+AT+CDTAM=1
+OK

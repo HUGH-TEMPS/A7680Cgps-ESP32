@@ -1,0 +1,1742 @@
+--- PAGE 322 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 321 / 684
+AT+CNTP="120.25.115.20",32
+OK
+AT+CNTP
+OK
++CNTP: 0
+14.3 Command Result Codes
+14.3.1 Description of <err> of HTP
+<err> Description
+0 Operation succeeded
+1 Unknown error
+2 Wrong parameter
+3 Wrong date and time calculated
+4 Network error
+14.3.2 Description of <err> of NTP
+<err> Description
+0 Operation succeeded
+1 Unknown error
+2 Wrong parameter
+3 Wrong date and time calculated
+4 Network error
+5 Time zone error
+6 Time out error
+--- PAGE 323 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 322 / 684
+AT Commands for TCP/IP
+15.1 Overview of AT Commands for TCP/IP
+Command Description
+AT+NETOPEN Start Socket Service
+AT+NETCLOSE Stop Socket Service
+AT+CIPOPEN Establish Connection in Multi-Socket Mode
+AT+CIPSEND Send data through TCP or UDP Connection
+AT+CIPRXGET Set the Mode to Retrieve Data
+AT+CIPCLOSE Close TCP or UDP Socket
+AT+IPADDR Inquire Socket PDP address
+AT+CIPHEAD Add an IP Header When Receiving Data
+AT+CIPSRIP Show Remote IP Address and Port
+AT+CIPMODE Set TCP/IP Application Mode
+AT+CIPSENDMODE Set Sending Mode
+AT+CIPTIMEOUT Set TCP/IP Timeout Value
+AT+CIPCCFG Configure Parameters of Socket
+AT+SERVERSTART Startup TCP Sever
+AT+SERVERSTOP Stop TCP Sever
+AT+CIPACK Query TCP Connection Data Transmitting Status
+AT+CDNSGIP Query the IP Address of Given Domain Name
+AT+CSOCKSETPN Set active PDP context's profile
+AT+CTCPKA Conigure TCP heartbeat
+AT+CDNSCFG Configure Domain Name Server
+AT+CSOC Set some features of the data service
+AT+CIPCFG Configure Parameters of Tcp
+AT+CIPSENDSTR Send HEX String data
+AT+CIPSETAPN Set up the PDP/APN channels to be used
+--- PAGE 324 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 323 / 684
+15.2 Detailed Description of AT Commands for TCP/IP
+15.2.1 AT+NETOPEN Start Socket Service
+AT+NETOPEN is used to start service by activating PDP context. You must execute AT+NETOPEN before
+any other TCP/UDP related operations. You can activate the specified PDP context by <cid>.
+AT+NETOPEN Start Socket Service
+Read Command
+AT+NETOPEN?
+Response
++NETOPEN: <net_state>
+OK
+Write Command
+AT+NETOPEN=<cid>
+/*activate the specified PDP
+context by <cid>*/
+Response
+1) If the PDP context has not been activated or the network closed
+abnormally, response:
+OK
++NETOPEN: <err>,<cid>
+2)When the PDP context has been activated successfully, if you
+execute this command again, response:
++IP ERROR: Network is already opened
+ERROR
+3)other:
+ERROR
+Execute Command
+AT+NETOPEN
+Response
+1)If the PDP context has not been activated or the network closed
+abnormally, response:
+OK
++NETOPEN: <err>
+2)When the PDP context has been activated successfully, if you
+execute AT+NETOPEN again, response:
++IP ERROR: Network is already opened
+ERROR
+3)other:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time Range: 3000ms-120000ms
+default: 120000ms
+--- PAGE 325 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 324 / 684
+(it can be set by AT+CIPTIMEOUT)
+Reference 3GPP TS 27.005
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<net_state> Integer type, indicates the state of PDP context activation.
+0 network close (deactivated)
+1 network open(activated)
+<err> Integer type, the result of operation.
+0 is success, other value is failure, please refer to Chapter 15.3.2 for
+details
+Examples
+AT+NETOPEN?
++NETOPEN: 1
+OK
+AT+NETOPEN
+OK
++NETOPEN: 0
+AT+NETOPEN=1
+OK
++NETOPEN: 0,1
+15.2.2 AT+NETCLOSE Stop Socket Service
+AT+NETCLOSE is used to stop service by deactivating PDP context. It can also close all the opened socket
+connections when you didn’t close these connections by AT+CIPCLOSE. You can deactivate the specified
+PDP context by <cid>.
+AT+NETCLOSE Stop Socket Service
+Test Command
+AT+NETCLOSE=?
+Response
+OK
+Write Command Response
+--- PAGE 326 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 325 / 684
+AT+NETCLOSE=<cid>
+/*deactivate the specified PDP
+context by <cid>*/
+1)If the PDP context has been activated, response:
+OK
++NETCLOSE: <err>,<cid>
+2)If the PDP context has been activated and one connection is in
+non-transparent mode when service type is TCP, response:
+OK
++CIPCLOSE: <link_num>,<err>
++NETCLOSE: <err>,<cid>
+3)If the PDP context has been activated and one connection is in
+transparent mode when service type is TCP, response:
+OK
+CLOSED
++CIPCLOSE: <link_num>,<err>
++NETCLOSE: <err>,<cid>
+4)If the PDP context has been activated and one connection is in
+non-transparent mode when service type is UDP, response:
++CIPCLOSE: <link_num>,<err>
+OK
++NETCLOSE: <err>,<cid>
+5)If the PDP context has been activated and one connection is in
+transparent mode when service type is UDP, response:
+CLOSED
++CIPCLOSE: <link_num>,<err>
+OK
++NETCLOSE: <err>,<cid>
+6)If the PDP context has not been activated, response:
++NETCLOSE: <err>,<cid>
+ERROR
+7)Others:
+ERROR
+Execute Command
+AT+NETCLOSE
+Response
+1)If the PDP context has been activated, response:
+OK
+--- PAGE 327 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 326 / 684
++NETCLOSE: <err>
+2)If the PDP context has been activated and one connection is in
+non-transparent mode when service type is TCP, response:
+OK
++CIPCLOSE: <link_num>,<err>
++NETCLOSE: <err>
+3)If the PDP context has been activated and one connection is in
+transparent mode when service type is TCP, response:
+OK
+CLOSED
++CIPCLOSE: <link_num>,<err>
++NETCLOSE: <err>
+4)If the PDP context has been activated and one connection is in
+non-transparent mode when service type is UDP, response:
++CIPCLOSE: <link_num>,<err>
+OK
++NETCLOSE: <err>
+5)If the PDP context has been activated and one connection is in
+transparent mode when service type is UDP, response:
+CLOSED
++CIPCLOSE: <link_num>,<err>
+OK
++NETCLOSE: <err>
+6)If the PDP context has not been activated, response:
++NETCLOSE: <err>
+ERROR
+7)Others:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time
+Range: 3000ms-120000ms
+default: 120000ms
+(it can be set by AT+CIPTIMEOUT)
+Reference
+--- PAGE 328 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 327 / 684
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<err> Integer type, the result of operation.
+0 is success, other value is failure, please refer to Chapter 15.3.2 for
+details
+Examples
+AT+NETCLOSE
+OK
++NETCLOSE: 0
+AT+ NETCLOSE =1
+OK
++NETCLOSE: 0,1
+15.2.3 AT+CIPOPEN Establish Connection in Multi-Socket Mode
+You can use AT+CIPOPEN to establish a connection with TCP server and UDP server, the maximum of the
+connections is 10.
+Note: If there is other service working in transparent mode, it is not allowed setup transparent connection
+by cipopen cmd.
+AT+CIPOPEN Establish Connection in Multi-Socket Mode
+Test Command
+AT+CIPOPEN=?
+Response
++CIPOPEN: (0-9),("TCP","UDP","UDP SERVER")
+OK
+Read Command
+AT+CIPOPEN?
+Response
++CIPOPEN:
+<link_num>[,<type>,<serverIP>,<serverPort>,<index>]
++CIPOPEN:
+<link_num>[,<type>,<serverIP>,<serverPort>,<index>]
+[…]
+OK
+--- PAGE 329 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 328 / 684
+If a connection identified by <link_num>has not been established
+successfully, only +CIPOPEN: <link_num> will be returned.
+Write Command
+TCP connection
+AT+CIPOPEN=<link_num>,"TC
+P",<serverIP>,<serverPort>[,<lo
+calPort>]
+Response
+1)if PDP context has been activated successfully, response:
+OK
++CIPOPEN: <link_num>,<err>
+2)when the <link_num> is greater than 9, response:
++IP ERROR: Invalid parameter
+ERROR
+3)If PDP context has not been activated, or the connection has
+been established, or parameter is incorrect, or when
+AT+CIPMODE=1 is set, the <link_num> is greater than 0, or other
+errors, response:
++CIPOPEN: <link_num>,<err>
+ERROR
+4)Transparent mode for TCP connection:
+When you want to use transparent mode to transmit data, you
+should set AT+CIPMODE=1 before AT+NETOPEN. And if
+AT+CIPMODE=1 is set, the <link_num> is restricted to be only 0.
+if success
+CONNECT [<text>]
+if failure
+CONNECT FAIL
+5)Others:
+ERROR
+Write Command
+UDP Connection
+AT+CIPOPEN=<link_num>,"UD
+P",,,<localPort>
+1)If PDP context has been activated successfully, response:
++CIPOPEN: <link_num>,0
+OK
+2)When the <link_num> is greater than 9, response:
++IP ERROR: Invalid parameter
+ERROR
+3)If PDP context has not been activated, or the connection has
+been established, or parameter is incorrect, or other errors,
+response:
++CIPOPEN: <link_num>,<err>
+ERROR
+4)Transparent mode for UDP connection:
+When you want to use transparent mode to transmit UDP data,
+you should set AT+CIPMODE=1 before AT+NETOPEN. And if
+--- PAGE 330 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 329 / 684
+AT+CIPMODE=1 is set, the <link_num> is restricted to be only 0.
+<serverIP> and <serverPort> should be set if AT+CIPMODE=1.
+If success
+CONNECT [<text>]
+if failure
+CONNECT FAIL
+5)Others:
+ERROR
+Write Command
+UDP server Connection
+AT+CIPOPEN=<link_num>,"UD
+P SERVER",,,<localPort>
+1)If PDP context has been activated successfully, response:
++CIPOPEN: <link_num>,0
+OK
+2)When the <link_num> is greater than 9, response:
++IP ERROR: Invalid parameter
+ERROR
+3)If PDP context has not been activated, or the connection has
+been established, or parameter is incorrect, or other errors,
+response:
++CIPOPEN: <link_num>,<err>
+ERROR
+4)Others:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time
+Range: 3000ms-120000ms
+default: 120000ms
+(it can be set by AT+CIPTIMEOUT)
+Reference
+Defined Values
+<link_num> Integer type, identifies a connection. Range is 0-9.
+If AT+CIPMODE=1 is set, the <link_num> is restricted to be only 0.
+<type> String type, identifies the type of transmission protocol.
+TCP Transmission Control Protocol
+UDP User Datagram Protocol
+UDP SERVER User Datagram Protocol service
+(Only ASR1603_011_042 version SDK supports UDP SERVER)
+<serverIP> String type, identifies the IP address of server. The IP address format
+consists of 4 octets, separated by decimal point, like
+"AAA.BBB.CCC.DDD". Also the domain name is supported here.
+--- PAGE 331 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 330 / 684
+<serverPort> Integer type, identifies the port of TCP server, range is 0-65535.
+NOTE:
+When open port as TCP, the port must be the opened TCP port;
+When open port as UDP, the port may be any port.
+<localPort> Integer type, identifies the port of local socket, range is 0-65535.
+<index> Integer type, indicates whether the module is used as a client or
+server. When used as server, the range is 0-3,<index> is the server
+index to which the client is linked.
+-1 TCP client
+0-3 TCP server index
+<text> String type, baud rate, indicates CONNECT result code.
+<err> Integer type, the result of operation.
+0 is success, other value is failure, please refer to Chapter 15.3.2 for
+details
+Examples
+AT+CIPOPEN=?
++CIPOPEN: (0-9),("TCP","UDP","UDP SERVER")
+OK
+AT+CIPOPEN?
++CIPOPEN: 0
++CIPOPEN: 1,"TCP","183.230.174.137",6031,-1
++CIPOPEN: 2
++CIPOPEN: 3
++CIPOPEN: 4
++CIPOPEN: 5,"UDP","183.230.174.137",6031,-1
++CIPOPEN: 6
++CIPOPEN: 7
++CIPOPEN: 8
++CIPOPEN: 9
+OK
+AT+CIPOPEN=0,"TCP","183.230.174.137",6031
+OK
++CIPOPEN: 0,0
+//TCP connection
+AT+CIPOPEN=5,"UDP",,,6031
++CIPOPEN: 5,0
+OK
+AT+CIPOPEN=2,"UDP SERVER",,,8888
++CIPOPEN: 2,0
+// UDP Connection
+//UDP server connection
+--- PAGE 332 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 331 / 684
+OK
+15.2.4 AT+CIPSEND Send data through TCP or UDP Connection
+AT+CIPSEND is used to send data to remote side. If service type is TCP, the data is firstly sent to the
+module’s internal TCP/IP stack, and then sent to server by protocol stack. The <length> field may be empty.
+While it is empty, each <Ctrl+Z> character present in the data should be coded as <ETX><Ctrl+Z>. Each
+<ESC> character present in the data should be coded as <ETX><ESC>. Each <ETX> character will be
+coded as <ETX><ETX>. Single <Ctrl+Z> means end of the input data. Single <ESC> is used to cancel the
+sending.
+<ETX> is 0x03, and <Ctrl+Z> is 0x1A,<ESC> is 0x1B.
+AT+CIPSEND Send data through TCP or UDP Connection
+Test Command
+AT+CIPSEND=?
+Response
++CIPSEND: (0-9),(1-1500)
+OK
+Read Command
+AT+CIPSEND?
+Response
+OK
+Write Command
+If service type is "TCP", send data
+with changeable length
+AT+CIPSEND=<link_num>
+Response ">", then type data to
+send, tap CTRL+Z to send data,
+tap ESC to cancel the operation
+Response
+1)If the connection identified by <link_num> has been established
+successfully, response:
+>
+<input data>
+CTRL+Z
+OK
++CIPSEND: <link_num>,<reqSendLength>,<cnfSendLength>
+If <reqSendLength> is equal <cnfSendLength>, it means that the
+data has been sent to TCP/IP protocol stack successfully.
+2)If the connection has not been established, abnormally closed,
+or parameter is incorrect, response:
++CIPERROR: <err>
+ERROR
+3)Others:
+ERROR
+Write Command
+If service type is "TCP", send data
+with fixed length
+AT+CIPSEND=<link_num>,<len
+Response
+1)If the connection identified by <link_num> has been established
+successfully, response:
+>
+--- PAGE 333 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 332 / 684
+gth> <input data with specified length>
+OK
++CIPSEND: <link_num>,<reqSendLength>,<cnfSendLength>
+If <reqSendLength> is equal <cnfSendLength>, it means that the
+data has been sent to TCP/IP protocol stack successfully.
+2)If the connection has not been established, abnormally closed,
+or parameter is incorrect, response:
++CIPERROR: <err>
+ERROR
+3)Others:
+ERROR
+Write Command
+If service type is "UDP", send data
+with changeable length
+AT+CIPSEND=<link_num>,,<ser
+verIP>,<serverPort>
+Response ">", then type data to
+send, tap CTRL+Z to send data,
+tap ESC to cancel the operation
+Response
+1)If the connection identified by <link_num> has been established
+successfully, response:
+>
+<input data>
+CTRL+Z
+OK
++CIPSEND: <link_num>,<reqSendLength>,<cnfSendLength>
+2)If the connection has not been established, abnormally closed,
+or parameter is incorrect, response:
++CIPERROR: <err>
+ERROR
+3)Others:
+ERROR
+Write Command
+If service type is "UDP", send data
+with fixed length
+AT+CIPSEND=<link_num>,<len
+gth>,<serverIP>,<serverPort>
+Response ">", type data until the
+data length is equal to <length>
+Response
+1)If the connection identified by <link_num> has been established
+successfully, response:
+>
+<input data with specified length>
+OK
++CIPSEND: <link_num>,<reqSendLength>,<cnfSendLength>
+2)If the connection has not been established, abnormally closed,
+or parameter is incorrect, response:
++CIPERROR: <err>
+ERROR
+3)Others:
+ERROR
+--- PAGE 334 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 333 / 684
+Parameter Saving Mode NO_SAVE
+Max Response Time
+Range: 3000ms-120000ms
+default: 120000ms
+(it can be set by AT+CIPTIMEOUT)
+Reference
+Defined Values
+<link_num> Integer type, identifies a connection. Range is 0-9.
+<length> Integer type, indicates the length of sending data, range is 1-1500.
+<serverIP> String type, identifies the IP address of server. The IP address format
+consists of 4 octets, separated by decimal point, like
+"AAA.BBB.CCC.DDD". Also the domain name is supported here.
+<serverPort> Integer type, identifies the port of TCP server, range is 0-65535.
+NOTE:
+When open port as TCP, the port must be the opened TCP port;
+When open port as UDP, the port may be any port.
+<reqSendLength> Integer type, the length of the data requested to be sent
+<cnfSendLength> Integer type, the length of the data confirmed to have been sent
+-1 the connection is disconnected.
+0 own send buffer or other side’s congestion window are full.
+Note: If the <cnfSendLength> is not equal to the <reqSendLength>,
+the socket then cannot be used further.
+<err> Integer type, the result of operation.
+0 is success, other value is failure, please refer to Chapter 15.3.2 for
+details
+Examples
+AT+CIPSEND=?
++CIPSEND: (0-9),(1-1500)
+OK
+AT+CIPSEND=1,5
+>12345
+OK
++CIPSEND: 1,5,5
+// If service type is "TCP", send data with
+fixed length
+AT+CIPSEND=8,5,"183.230.174.137",6031
+>12345
+OK
++CIPSEND: 8,5,5
+// If service type is "UDP", send data with
+fixed length
+--- PAGE 335 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 334 / 684
+If you use UDP to send more than 1400 bytes of data when the server does not receive data, this may
+be the reason for the carrier, in this case please send no more than 1400 bytes of data.
+If you use TCP to send data, the instruction can be followed by a comma just like "AT+CIPSEND=0," or
+"AT+CIPSEND=0,10," without an error, but it doesn't make any sense
+15.2.5 AT+CIPRXGET Set the Mode to Retrieve Data
+If set <mode> to 1, after receiving data, the module will buffer it and report a URC as "+CIPRXGET:
+1,<link_num>" to notify the host. Then host can retrieve data by AT+CIPRXGET.
+If set <mode> to 0, the received data will be outputted to COM port directly by URC as "RECV FROM:<IP
+ADDRESS>:<PORT><CR><LF>+IPD(data length)<CR><LF><data>".
+The default value of <mode> is 0.
+Note:
+1. If the buffer is not empty, and the module receives data again, then it will not report a new URC until all
+the received data has been retrieved by AT+CIPRXGET from buffer.
+2. When <mode> is set to 1 and the 2-4 mode will take effect.
+If initially set <mode> to 1, after doing some data transmitting, set <mode> to 0, then the buffered data of
+the previously established connection will be output to the serial port directly, and the maximum length of
+output data at one time is 1500.
+AT+CIPRXGET Set the Mode to Retrieve Data
+Test Command
+AT+CIPRXGET=?
+Response
++CIPRXGET: (0-5),(0-9),(1-1500)
+OK
+Read Command
+AT+CIPRXGET?
+Response
++CIPRXGET: <mode>
+OK
+Write Command
+AT+CIPRXGET=<mode>
+In this case,<mode> can only be 0
+or 1
+Response
+1)If the parameter is correct, response:
+OK
+2)If the parameter is incorrect or other error, response:
++IP ERROR: <err_info>
+ERROR
+NOTE
+--- PAGE 336 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 335 / 684
+3)Others:
+ERROR
+Write Command
+AT+CIPRXGET=2,<link_num>[,<
+len>]
+Retrieve data in ACSII form
+1)If <len> field is empty, the default value to read is 1500.
+If the buffer is not empty, response:
++CIPRXGET: <mode>,<link_num>,<read_len>,<rest_len>
+<data>ACSII form
+OK
+2)If the buffer is empty, response:
++IP ERROR: No data
+ERROR
+3)If the parameter is incorrect or other error, response:
++IP ERROR: <err_info>
+ERROR
+4)Others:
+ERROR
+Write Command
+AT+CIPRXGET=3,<link_num>[,<
+len>]
+Retrieve data in hex form
+Response
+1)If <length> field is empty, the default value to read is 750.
+If the buffer is not empty, response:
++CIPRXGET: <mode>,<link_num>,<read_len>,<rest_len>
+<data>hex form
+OK
+2)If the buffer is empty, response:
++IP ERROR: No data
+ERROR
+3)If the parameter is incorrect or other error, response:
++IP ERROR: <err_info>
+ERROR
+4)Others:
+ERROR
+Write Command
+AT+CIPRXGET=4,<link_num>
+Response
+1)If the parameter is correct, response:
++CIPRXGET: 4,<link_num>,<rest_len>
+OK
+2)If the parameter is incorrect or other error, response:
++IP ERROR: <err_info>
+--- PAGE 337 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 336 / 684
+ERROR
+3)Others
+ERROR
+Write Command
+AT+CIPRXGET=5
+Response
+1)If the parameter is correct, response:
+OK
+2)If the parameter is incorrect or other error, response:
++IP ERROR: <err_info>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9s
+Reference
+Defined Values
+<mode> Integer type, sets the mode to retrieve data
+0 set the way to get the network data automatically
+1 set the way to get the network data manually
+2 read data, the max read length is 1500
+3 read data in HEX form, the max read length is 750
+4 get the rest data length
+5 add IP header reporting based on mode=1, the format is
++CIPRXGETIP:<ip>:<port>
+(Only ASR1603_011_042 version SDK supports 5)
+<link_num> Integer type, identifies a connection. Range is 0-9.
+<len> Integer type, the data length to be read.
+Not required, the default value is 1500 when <mode>=2, and 750
+when <mode>=3.
+<read_len> Integer type, the length of data that has been read.
+<rest_len> Integer type, the length of data which has not been read in the buffer.
+<err_info> String type, displays the cause of occurring error, please refer to
+Chapter 15.3.1 for more details.
+Examples
+AT+CIPRXGET=?
++CIPRXGET: (0-5),(0-9),(1-1500)
+OK
+AT+CIPRXGET?
++CIPRXGET: 1
+--- PAGE 338 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 337 / 684
+OK
+AT+CIPRXGET=1
+OK
+AT+CIPRXGET=2,0
++CIPRXGET: 2,0,6,0
+123456
+OK
+AT+CIPRXGET=3,0
++CIPRXGET: 3,0,6,0
+313233343536
+OK
+AT+CIPRXGET=4,0
++CIPRXGET: 4,0,18
+OK
+AT+CIPRXGET=5
+OK
+1.When data is received and reported, the maximum length of <data length> is 1500 each time.
+2.When AT+CIPRXGET=1, if multiple tcp/udp connections are connected and the server is sending
+data all the time, it is necessary to read the data sent by the server in time.
+15.2.6 AT+CIPCLOSE Close TCP or UDP Socket
+AT+CIPCLOSE is used to close a TCP or UDP Socket
+AT+CIPCLOSE Close TCP or UDP Socket
+Test Command
+AT+CIPCLOSE=?
+Response
++CIPCLOSE: (0-9)
+OK
+Read Command
+AT+CIPCLOSE?
+Response
++CIPCLOSE:
+<link0_state>,<link1_state>,<link2_state>,<link3_state>,<link
+4_state>,<link5_state>,<link6_state>,<link7_state>,<link8_sta
+te>,<link9_state>
+NOTE
+--- PAGE 339 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 338 / 684
+OK
+Write Command
+AT+CIPCLOSE=<link_num>
+Response
+1)If service type is TCP and the connection identified by
+<link_num> has been established, response
+OK
++CIPCLOSE: <link_num>,<err>
+2)If service type is TCP and the access mode is transparent mode,
+response:
+OK
+CLOSED
++CIPCLOSE: <link_num>,<err>
+3)If service type is UDP and the connection identified by
+<link_num> has been established and closed successfully,
+response:
++CIPCLOSE: <link_num>,0
+OK
+4)If service type is UDP and access mode is transparent mode,
+response:
+CLOSED
++CIPCLOSE: <link_num>,<err>
+OK
+5)If the connection has not been established, abnormally closed,
+or parameter is incorrect, response:
++CIPCLOSE: <link_num>,<err>
+ERROR
+6)Others:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time
+Range: 3000ms-120000ms
+default: 120000ms
+(it can be set by AT+CIPTIMEOUT)
+Reference
+Defined Values
+<link_num> Integer type, identifies a connection. Range is 0-9.
+--- PAGE 340 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 339 / 684
+<linkX_state> Integer type, indicates state of connection identified by <link_num>.
+Range is 0-1.
+0 disconnected
+1 connected
+<err> Integer type, the result of operation.
+0 is success, other value is failure, please refer to Chapter 15.3.2 for
+details
+Examples
+AT+CIPCLOSE=?
++CIPCLOSE: (0-9)
+OK
+AT+CIPCLOSE?
++CIPCLOSE: 0,0,0,0,0,1,0,0,1,0
+OK
+AT+CIPCLOSE=0
+OK
++CIPCLOSE: 0,0
+15.2.7 AT+IPADDR Inquire Socket PDP address
+AT+IPADDR is used to get active PDP address.
+AT+IPADDR Inquire Socket PDP Address
+Test Command
+AT+IPADDR=?
+Response
+OK
+Execute Command
+AT+IPADDR
+Response
+1)If PDP context has been activated successfully, response
++IPADDR: <ip_address>
+OK
+2)
++IP ERROR: Network not opened
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+--- PAGE 341 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 340 / 684
+Reference -
+Defined Values
+<ip_address> String type, identifies the IP address of current active socket PDP.
+Examples
+AT+IPADDR
++IPADDR: 10.84.17.161
+OK
+15.2.8 AT+CIPHEAD Add an IP Header When Receiving Data
+AT+CIPHEAD is used to add an IP header when receiving data.
+AT+CIPHEAD Add an IP Header When Receiving Data
+Test Command
+AT+CIPHEAD=?
+Response
++CIPHEAD: (0-1)
+OK
+Read Command
+AT+CIPHEAD?
+Response
++CIPHEAD: <mode>
+OK
+Write Command
+AT+CIPHEAD=<mode>
+Response
+1)If the parameter is correct, response:
+OK
+2)
+ERROR
+Execute Command
+AT+CIPHEAD
+Response
+Set default value:(<mode>=1)
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+--- PAGE 342 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 341 / 684
+<mode> Integer type, indicates whether adding an IP header or not when
+receiving data
+0 not add IP header
+1 add IP header, the format is "+IPD(data length)"
+Examples
+AT+CIPHEAD=?
++CIPHEAD: (0-1)
+OK
+AT+CIPHEAD?
++CIPHEAD: 1
+OK
+AT+CIPHEAD=1
+OK
+AT+CIPHEAD
+OK
+15.2.9 AT+CIPSRIP Show Remote IP Address and Port
+AT+CIPSRIP is used to set whether to display IP address and port of server when receiving data.
+AT+CIPSRIP Show Remote IP Address and Port
+Test Command
+AT+CIPSRIP=?
+Response
++CIPSRIP: (0-1)
+OK
+Read Command
+AT+CIPSRIP?
+Response
++CIPSRIP: <mode>
+OK
+Write Command
+AT+CIPSRIP=<mode>
+Response
+1)If the parameter is correct, response:
+OK
+2)
+ERROR
+Execute Command
+AT+CIPSRIP
+Response
+Set default value:(<mode>=1)
+--- PAGE 343 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 342 / 684
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<mode> Integer type, indicates whether to show IP address and port of server
+or not when receiving data.
+0 not show
+1 show, the format is as follows:
+"RECV FROM:<IP ADDRESS>:<PORT>"
+Examples
+AT+CIPSRIP=?
++CIPSRIP: (0-1)
+OK
+AT+CIPSRIP?
++CIPSRIP: 1
+OK
+AT+CIPSRIP=0
+OK
+AT+CIPSRIP
+OK
+15.2.10 AT+CIPMODE Set TCP/IP Application Mode
+AT+CIPMODE is used to select transparent mode(data mode) or non-transparent mode(command
+mode).The default mode is non-transparent mode.
+AT+CIPMODE Set TCP/IP Application Mode
+Test Command
+AT+CIPMODE=?
+Response
++CIPMODE: (0-1)
+OK
+Read Command
+AT+CIPMODE?
+Response
++CIPMODE: <mode>
+--- PAGE 344 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 343 / 684
+OK
+Write Command
+AT+CIPMODE=<mode>
+Response
+1)If the parameter is correct, response:
+OK
+2)
+ERROR
+Execute Command
+AT+CIPMODE
+Response
+1)Set default value:(<mode>=0)
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<mode> Integer type, sets TCP/IP application mode
+0 Non transparent mode
+1 Transparent mode
+Examples
+AT+CIPMODE=?
++CIPMODE: (0-1)
+OK
+AT+CIPMODE?
++CIPMODE: 0
+OK
+AT+CIPMODE=1
+OK
+AT+CIPMODE
+OK
+When you want to use transparent mode to transmit data, you should set AT+CIPMODE=1 before
+AT+NETOPEN.
+NOTE
+--- PAGE 345 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 344 / 684
+15.2.11 AT+CIPSENDMODE Set Sending Mode
+AT+CIPSENDMODE is used to select sending mode when service type is "TCP".
+If set <mode> to 1, when sending data by AT+CIPSEND, the URC "+CIPSEND:
+<link_num>,<reqSendLength>,<cnfSendLength>" will not be returned until module receives the server’s
+ACK message to the sent data last time.
+If set <mode> to 0, the URC "+CIPSEND: <link_num>,<reqSendLength>,<cnfSendLength>" will be
+returned If the data has been sent to module’s internal TCP/IP protocol stack. In this case, the module
+doesn’t need to wait for the server’s ACK message.
+The default mode is sending without waiting peer TCP ACK mode.
+AT+CIPSENDMODE Set Sending Mode
+Test Command
+AT+CIPSENDMODE=?
+Response
++CIPSENDMODE: (0-1)
+OK
+Read Command
+AT+CIPSENDMODE?
+Response
++CIPSENDMODE: <mode>
+OK
+Write Command
+AT+CIPSENDMODE=<mode>
+Response
+1)If the parameter is correct, response:
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<mode> Integer type, sets sending mode
+0 sending without waiting peer TCP ACK mode
+1 sending wait peer TCP ACK mode
+Examples
+AT+CIPSENDMODE=?
++CIPSENDMODE: (0-1)
+--- PAGE 346 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 345 / 684
+OK
+AT+CIPSENDMODE=1
+OK
+AT+CIPSENDMODE?
++CIPSENDMODE: 1
+OK
+15.2.12 AT+CIPTIMEOUT Set TCP/IP Timeout Value
+AT+CIPTIMEOUT is used to set timeout value for AT+NETOPEN/AT+CIPOPEN/AT+CIPSEND.
+AT+CIPTIMEOUT Set TCP/IP Timeout Value
+Read Command
+AT+CIPTIMEOUT?
+Response
++CIPTIMEOUT:
+<netopen_timeout>,<cipopen_timeout>,<cipsend_timeout>
+OK
+Write Command
+AT+CIPTIMEOUT=[<netopen_ti
+meout>][,[<cipopen_timeout>][,
+[<cipsend_timeout>]]]
+Response
+1)If the parameter is correct, response:
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<netopen_timeout> Integer type, timeout value for AT+NETOPEN.
+default is120000ms. Range is 3000ms-120000ms.
+<cipopen_timeout> Integer type, timeout value for AT+CIPOPEN.
+default is120000ms. Range is 3000ms-120000ms.
+<cipsend_timeout> Integer type, timeout value for AT+CIPSEND.
+default is120000ms. Range is 3000ms-120000ms.
+Examples
+AT+CIPTIMEOUT?
++CIPTIMEOUT: 120000,120000,120000
+--- PAGE 347 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 346 / 684
+OK
+AT+CIPTIMEOUT=3000,3000,3000
+OK
+15.2.13 AT+CIPCCFG Configure Parameters of Socket
+AT+CIPCCFG is used to configure parameters of socket.
+AT+CIPCCFG Configure Parameters of Socket
+Test Command
+AT+CIPCCFG=?
+Response
++CIPCCFG: (0-10),(0-1000),(0),(0-1),(0-1),(0-1),(500-120000),
+(0-1)
+OK
+Read Command
+AT+CIPCCFG?
+Response
++CIPCCFG:
+<NmRetry>,<DelayTm>,<Ack>,<errMode>,<Header-Type>,<As
+yncMode>,<TimeoutVal>,<udpRecvmode>
+OK
+Write Command
+AT+CIPCCFG=[<NmRetry>][,[<
+DelayTm>][,[<Ack>][,[<errMode
+>][,[<HeaderType>][,[[<AsyncM
+ode>][,[<TimeoutVal>][,[<udpRe
+cvmode>]]]]]]]]]
+Response
+1)If the parameter is correct, response:
+OK
+2)
+ERROR
+Execute Command
+AT+CIPCCFG
+Response
+Set default value:
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<NmRetry> Integer type, number of retransmission to be made for an IP
+packet. Range is 0-10. The default value is 10.
+<DelayTm> Integer type, number of milliseconds to delay to output data of
+Receiving. Range is 0-1000. The default value is 0.
+<Ack> Integer type, it can only be set to 0. It’s used to be compatible with
+--- PAGE 348 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 347 / 684
+old TCP/IP command set.
+<errMode> Integer type, sets mode of reporting <err_info>, default value is 1.
+0 error result code with numeric values
+1 error result code with string values
+<HeaderType> Integer type, select which data header is used when receiving
+data, it only takes effect in multi-client mode. Default value is 0.
+0 add data header, the format is "+IPD<data length>"
+1 add data header, the format is "+RECEIVE,<link num>,<data
+length>"
+<AsyncMode> Integer type, range is 0-1. Default value is 0.
+It’s used to be compatible with old TCP/IP command set.
+<TimeoutVal> Integer type, set the minimum retransmission timeout value for
+TCP connection. Range is 500ms-120000ms. Default is 500ms.
+<udpRecvmode> Integer type, range is 0-1. Default value is 0. Used to set the mode
+of udp cache receiving data. This parameter must be set before
+AT+NETOPEN.
+0 Receive by buf
+1 Receive by package
+(Only ASR1603_011_042 version SDK supports this parameter)
+Examples
+AT+CIPCCFG=?
++CIPCCFG: (0-10),(0-1000),(0),(0-1),(0-1),(0-1),(500-120000),(0-1)
+OK
+AT+CIPCCFG?
++CIPCCFG: 10,0,0,1,0,0,500,0
+OK
+AT+CIPCCFG=2
+OK
+AT+CIPCCFG
+OK
+15.2.14 AT+SERVERSTART Startup TCP Sever
+AT+SERVERSTART is used to startup a TCP server, and the server can receive the request of TCP client.
+After the command executes successfully, an unsolicited result code is returned when a client tries to
+connect with module and module accepts request. The unsolicited result code is+CLIENT:
+<link_num>,<server_index>,<client_IP>:<port>.
+--- PAGE 349 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 348 / 684
+AT+SERVERSTART Startup TCP Sever
+Test Command
+AT+SERVERSTART=?
+Response
++SERVERSTART: (0-65535),(0-3)
+OK
+Read Command
+AT+SERVERSTART?
+Response
+1)If the PDP context has not been activated successfully,
+response:
++CIPERROR: <err>
+ERROR
+2)If there exists opened server, response:
+[+SERVERSTART: <server_index>,<port>
+…]
+OK
+3)Others:
+ERROR
+Write Command
+AT+SERVERSTART=<port>,<se
+rver_index>[,<backlog>]
+Response
+1)If there is no error, response:
+OK
+2)If the PDP context has not been activated, or the server
+identified by <server_index> has been opened, or the parameter
+is not correct, or other errors, response:
++CIPERROR: <err>
+ERROR
+3)Others:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<port> Integer type, identifies the listening port of module when used as a
+TCP server. Range is 0-65535.
+<server_index> Integer type, the TCP server index, range is 0-3.
+<backlog> Integer type, the maximum connections can be queued in listening
+queue. Range is 1-3. Default is 3.
+Examples
+--- PAGE 350 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 349 / 684
+AT+SERVERSTART=?
++SERVERSTART: (0-65535),(0-3)
+OK
+AT+SERVERSTART?
+OK
+AT+SERVERSTART=8080,0
+OK
+15.2.15 AT+SERVERSTOP Stop TCP Sever
+AT+SERVERSTOP is used to stop TCP server. Before stopping a TCP server, all sockets <server_index>
+of which equals to the closing TCP server index must be closed first.
+AT+SERVERSTOP Stop TCP Sever
+Write Command
+AT+SERVERSTOP=<server_ind
+ex>
+Response
+1)If there exists open connection with the server identified by
+<server_index>, or the server identified by <server_index> has not
+been opened, or the parameter is incorrect, response:
++SERVERSTOP: <server_index>,<err>
+ERROR
+2)If the server socket is closed immediately, response:
++SERVERSTOP: <server_index>,0
+OK
+(In general, the result is shown as below.)
+3)If the server socket starts to close, response:
+OK
++SERVERSTOP: <server_index>,<err>
+4)Others:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<server_index> Integer type, the TCP server index, range is 0-3.
+<err> Integer type, the result of operation.
+--- PAGE 351 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 350 / 684
+0 is success, other value is failure, please refer to Chapter 15.3.2 for details
+Examples
+AT+SERVERSTOP=0
+OK
++SERVERSTOP: 0,0
+15.2.16 AT+CIPACK Query TCP Connection Data Transmitting Status
+AT+CIPACK is used to query TCP connection data transmitting status.
+AT+CIPACK Query Connection Data Transmitting State
+Test Command
+AT+CIPACK=?
+Response
++CIPACK: (range of supported <link_num>s)
+OK
+Write Command
+AT+CIPACK=<link_num>
+Response
+1)If the PDP context has not been activated, or the connection
+identified by <link_num> has not been established, abnormally closed,
+or the parameter is incorrect, or other errors, response:
++IP ERROR: <err_info>
+ERROR
+2)If the connection has been established, and the service type is
+"TCP", response:
++CIPACK: <sent_data_size>,<ack_data_size>,<recv_data_size>
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 9000ms
+Reference -
+Defined Values
+<link_num> Integer type, identifies a connection. Range is 0-9.
+<sent_data_size> Integer type, the total length of sent data
+<ack_data_size> Integer type, the total length of acknowledged data.
+<recv_data_size> Integer type, the total length of received data
+--- PAGE 352 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 351 / 684
+<err> Integer type, the result of operation.
+0 is success, other value is failure, please refer to Chapter 15.3.2 for details
+<err_info> String type, displays the cause of occurring error, please refer to Chapter 3
+for details.
+Examples
+AT+CIPACK=?
++CIPACK: (0-9)
+OK
+AT+CIPACK=0
++CIPACK: 10,10,5
+OK
+15.2.17 AT+CDNSGIP Query the IP Address of Given Domain Name
+AT+CDNSGIP is used to query the IP address of given domain name.
+AT+CDNSGIP Query the IP Address of Given Domain Name
+Test Command
+AT+CDNSGIP=?
+Response
+OK
+Write Command
+AT+CDNSGIP=<domain name>
+Response
+1)If the given domain name has related IP, response:
++CDNSGIP: 1,<domain name>,<IP address>
++CDNSGIP: 2,<domain name>,<IP address>
+[…]
+OK
+2)If the given name has no related IP, response:
++CDNSGIP: 0,<dns error code>
+ERROR
+3)Others:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time default: 6s
+Reference -
+--- PAGE 353 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 352 / 684
+Defined Values
+<domain name> String type (string should be included in quotation marks), indicates the
+domain name. The maximum length of domain name is 254.
+Valid characters allowed in the domain name area include a-z, A-Z, 0-9,
+"-" (hyphen)and ".". A domain name is made up of one label name or
+more label names separated by "." (eg: AT+CDNSGIP="aa.bb.cc").
+For label names separated by ".", length of each label must be no more
+than 63 characters. The beginning character of the domain name and of
+labels should be an alphanumeric character.
+<IP address> String type, indicates the IP address corresponding to the domain name.
+<dns error code> Integer type, indicates the error code.
+10 DNS GENERAL ERROR
+Examples
+AT+CDNSGIP=?
+OK
+AT+CDNSGIP="www.baidu.com"
++CDNSGIP: 1,"www.baidu.com","61.135.169.121"
+OK
+15.2.18 AT+CSOCKSETPN Set active PDP context's profile
+This command sets default active PDP context's profile number and type. When we activate PDP by using
+AT+NETOPEN command, we need use the default profile number and type.,and the context of this profile is
+set by AT+CGDCONT command.
+AT+CSOCKSETPN Set acitve PDP context's profile
+Test Command
+AT+CSOCKSETPN=?
+Response
++CSOCKSETPN: 1,(1,6)
+OK
+Read Command
+AT+CSOCKSETPN?
+Response
++CSOCKSETPN: <profile_num>,<ip_family>
+OK
+Write Command
+AT+CSOCKSETPN=<profile_nu
+Response
+1)If the parameter is correct, response:
+--- PAGE 354 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 353 / 684
+m>[,<ip_family>] OK
+2)If the parameter is wrong,or NETOPEN is already active,
+response:
+ERROR
+Parameter Saving Mode NO_SAVE
+Maximum Response Time default: 9000ms
+Reference -
+Defined Values
+<profile_num> Packet Data Protocol context’s profile number. Range is 1-6.
+<ip_family> Packet Data Protocol type
+1 IPV4
+6 IPV6
+The A7600 series(1601) cannot change the configuration file number of the PDP context;
+<profile_num> can only be set to 1.
+Examples
+AT+CSOCKSETPN=?
++CSOCKSETPN: 1,(1,6)
+OK
+AT+CSOCKSETPN?
++CSOCKSETPN: 1,1
+OK
+AT+CSOCKSETPN=1,6
+OK
+15.2.19 AT+CTCPKA Configure TCP heartbeat
+This command is used to set TCP heartbeat parameters. Set this up after we activate PDP by using
+AT+NETOPEN command.
+NOTE
+--- PAGE 355 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 354 / 684
+AT+CTCPKA Configure TCP heartbeat
+Test Command
+AT+CTCPKA=?
+Response
+OK
+Read Command
+AT+CTCPKA?
+Response
++CTCPKA:
+<keepalive>,<keepidle>,<keepcount>,<keepinterval>
+OK
+Write Command
+AT+CTCPKA=<keepalive>,<kee
+pidle>,<keepcount>[,<keepinter
+val>]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Maximum Response Time default: 9000ms
+Reference -
+Defined Values
+<keepalive > Set TCP keepalive option.
+0 Disable TCP keep alive mechanism
+1 Enable TCP keep alive mechanism
+<keepidle> The unit is minute. If there is no data interaction within this period, the
+probe is performed. (1-120)
+<keepcount> Number of probe retries. If all times out, the connection is considered
+Invalid.(1-10)
+<keepinterval> The unit is minute. Interval for sending probe packets during probe.
+(1-100)
+Examples
+AT+CTCPKA=1,2,5,1
+OK
+AT+CTCPKA?
++CTCPKA: 1,2,5,1
+OK
+15.2.20 AT+CDNSCFG Configure Domain Name Server
+This command is used to configure Domain Name Server.
+--- PAGE 356 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 355 / 684
+AT+CDNSCFG Configure Domain Name Server
+Test Command
+AT+CDNSCFG=?
+Response
++CDNSCFG: ("Primary DNS"),("Secondary DNS"),type
+OK
+Read Command
+AT+CDNSCFG?
+Response
+1)If successfully:
+Primary IPv4 DNS: <pri_dns>,Secondary IPv4 DNS: <pri_dns>
+Primary IPv6 DNS: <pri_dns>,Secondary IPv6 DNS: <pri_dns>
+OK
+2)If failed:
+ERROR
+Write Command
+AT+CDNSCFG=<pri_dns>[,<sec
+_dns>][,<type>]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Maximum Response Time default: 9000ms
+Reference -
+Defined Values
+<pri_dns> A string parameter which indicates the IP address of the primary
+domain name server.
+<sec_dns> A string parameter which indicates the IP address of the
+secondary domain name server.
+<type> 0 Set the server for the ipv4 network
+1 Set the server for the ipv6 network
+Examples
+AT+CDNSCFG?
+Primary IPv4 DNS: 183.230.126.224,Secondary IPv4
+DNS: 183.230.126.225
+Primary IPv6 DNS: 2409:8060:20EA:101::1,Secondary
+IPv6 DNS: 2409:8060:20EA:201::1
+OK
+AT+CDNSCFG=183.230.126.224,183.230.126.225,0
+OK
+--- PAGE 357 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 356 / 684
+15.2.21 AT+CSOC Set some features of the data service
+This command is used to set some features of the data service. Only supports in Cat1 modules.
+AT+CSOC Set some features of the data service
+Test Command
+AT+CSOC=?
+Response
+OK
+Read Command
+AT+CSOC?
+Response
++CSOC: "Tcp srxt",<srxt>,<tcp_sync_backoff>
++CSOC: "Tcp rxt",<rtx>, <tcp_backoff>
++CSOC: "Mss",<mtu>
++CSOC: "RecvWin",<win>
++CSOC:
+"DnsTmr",<dnsMaxWaitTime>,<dnsMaxRetry>,<dns_wait_tmr>
++CSOC: "SendWin",<send_win>
+OK
+Write Command
+AT+CSOC="Tcp
+srxt",<tcp_sync_backoff>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+CSOC="Tcp
+rxt",<tcp_backoff>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+CSOC="Mss",<mtu>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+CSOC="RecvWin",<win>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+CSOC="DnsTmr",<dns_
+wait_tmr>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+--- PAGE 358 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 357 / 684
+Write Command
+AT+CSOC="SendWin",<send
+_win>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<srxt> Maximum number of TCP SYN packets retransmitted.
+The maximum value is 12. The default is 6.
+<tcp_sync_backoff> Set the interval for TCP SYN packet retransmission.
+tcp_sync_backoff[13]. defaults to {1, 1, 2, 3, 3, 6, 12, 24, 48, 96, 120,
+120, 120}
+<rtx> Maximum number of TCP data packets retransmitted.
+The maximum value is 12. The default is 6.
+<tcp_backoff> Set the interval for TCP data package retransmission.
+tcp_backoff_default [13]. defaults to { 1, 1, 2, 2, 3, 4, 5, 6, 7, 7, 7, 7, 7}
+<mtu> Integer type,Maximum value 1500, minimum value 640.
+<win> TCP Sliding Window. Range is 1460-131070. (Range is 1460-92288
+in ASR 1803S)
+<dnsMaxWaitTime> Maximum timeout for DNS resolution retries
+<dnsMaxRetry> Maximum number of DNS resolution retries
+Note: The value ranges from 2 to 8.
+<dns_wait_tmr> Set the DNS retry interval.Unit is second.
+Dns_wait_tmr [8] defaults to {2, 3, 4, 8, 8, 8, 8, 8}.
+Note: The first interval cannot be less than 2 seconds.
+<send_win> TCP send buffer Window.
+Examples
+AT+CSOC?
++CSOC: "Tcp srxt",6,1,1,2,3,3,6,12,24,48,96,120,120,120
++CSOC: "Tcp rxt",6,1,1,2,2,3,4,5,6,7,7,7,7,7
++CSOC: "Mss",1500
++CSOC: "RecvWin",64240
++CSOC: "DnsTmr",5,2,2,3,4,8,8,8,8,8
++CSOC: "SendWin",11680
+OK
+--- PAGE 359 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 358 / 684
+AT+CSOC="DnsTmr","2,2,0,0,0,0,0,0"
+OK
+15.2.22 AT+CIPCFG Configure Parameters of TCP
+AT+CIPCFG is used to configure parameters of TCP. You can specify the PDP context for links.
+AT+CIPCFG Configure Parameters of TCP
+Test Command
+AT+CIPCFG=?
+Response
++CIPCFG:"transwaittm",(5-1000)
++CIPCFG:"DATAECHO","ON/OFF"
+OK
+Read Command
+AT+CIPCFG?
+Response
++CIPCFG: "transwaittm",<transwaittime>
++CIPCFG: "DATAECHO",<dataecho>
+OK
+Write Command
+AT+CIPCFG="transwaittm
+",<transwaittime>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+CIPCFG="DATAECHO",<
+dataecho>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+CIPCFG="CID",<cid>
+/*cid for all links.*/
+Response
+1)If optional parameter are omitted, query the current configuration:
++CIPCFG: "CID",<cid>
+OK
+2)Specify optional parameters to set cid for TCP(all links use this
+specified cid):
+If parameter format is right:
+OK
+If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+CIPCFG="SCID"[,<link_n
+um>,<cid>]
+/*cid for the specified link.*/
+Response
+1)If only the second optional parameter are omitted, query the current
+configuration for the specified link:
++CIPCFG: "SCID",<link_num>,<cid>
+--- PAGE 360 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 359 / 684
+OK
+2) If both the first and the second optional parameters are omitted,
+query the current configuration for all links:
++CIPCFG: "SCID",0,<cid>
++CIPCFG: "SCID",1,<cid>
+…
++CIPCFG: "SCID",9,<cid>
+OK
+3)Specify optional parameters to set cid for the specified link:
+If parameter format is right:
+OK
+If parameter format is not right or other errors occur:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<transwaittime> Set the transparent transmission timeout waiting time, integer type.
+Range 5-1000ms, default value is 100ms.
+<dataecho> Set the echo of data content sent by CIPSEND, String type. Default
+value is ON.
+ON Turn on echo
+OFF Turn off echo
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+Examples
+AT+CIPCFG=?
++CIPCFG:"transwaittm",(5-1000)
++CIPCFG:"DATAECHO","ON/OFF"
+OK
+AT+CIPCFG?
++CIPCFG: "transwaittm",100
++CIPCFG: "DATAECHO",ON
+OK
+AT+CIPCFG="DATAECHO",OFF
+--- PAGE 361 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 360 / 684
+OK
+AT+CIPCFG="SCID",5,2
+OK
+AT+CIPCFG="SCID",5
++CIPCFG: "SCID",5,2
+OK
+AT+CIPCFG="SCID"
++CIPCFG: "SCID",0,1
++CIPCFG: "SCID",1,1
++CIPCFG: "SCID",2,1
++CIPCFG: "SCID",3,1
++CIPCFG: "SCID",4,1
++CIPCFG: "SCID",5,2
++CIPCFG: "SCID",6,1
++CIPCFG: "SCID",7,1
++CIPCFG: "SCID",8,1
++CIPCFG: "SCID",9,1
+OK
+AT+CIPCFG="CID",6
+OK
+AT+CIPCFG="CID"
++CIPCFG: "CID",6
+OK
+1. Do not mix the configuration of “CID” and “SCID” when configuring the <cid> parameter. Select one
+of the preceding methods to configure CID parameters.
+15.2.23 AT+CIPSENDSTR Send HEX String Data
+This command is used to send hex string data, and is not suitable for the "UDP server" and "TCP server"
+types of Socket services.
+AT+CIPSENDSTR Send HEX String Data
+Test Command
+AT+CIPSENDSTR=?
+Response
++CIPSENDSTR: (0-9),<hex_string>
+OK
+Write Command
+AT+CIPSENDSTR=<link_num
+Response
+If the data is successfully sent
+NOTE
+--- PAGE 362 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 361 / 684
+>,<hex_string> OK
++CIPSENDSTR: <link_num>,<data_len>
+Others:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<link_num> Integer type, identifies a connection. Range is 0-9.
+<hex_string> String type, hex string, the max length is 500.
+<data_len> Integer type, length of hex_string sent.
+Examples
+AT+CIPSENDSTR=?
++CIPSENDSTR: (0-9),<hex_string>
+OK
+AT+CIPOPEN=0,"TCP","183.230.174.137",6044
+OK
++CIPOPEN: 0,0
+AT+CIPSENDSTR=0,"4142434445"
+OK
++CIPSENDSTR: 0,5
+15.2.24 AT+CIPSETAPN Set up the PDP/APN channels to be used
+It can be set at any time. If the relevant functions have been activated, the connection needs to be closed to
+take effect.
+AT+CIPSETAPN Set up the PDP/APN channels
+Test Command
+AT+CIPSETAPN=?
+Response
+OK
+Write Command
+AT+CIPSETAPN=<link_num>,
+<cid>
+Response
+If set successfully:
+OK
+Others:
+--- PAGE 363 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 362 / 684
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<link_num> Integer type, identifies a connection. Range is 0-9.
+<cid> (PDP Context Identifier)a numeric parameter which specifies a
+particular PDP context definition. Range is 1-6.
+15.3 Command Result Codes
+15.3.1 Description of <err_info>
+The fourth parameter <errMode> of AT+CIPCCFG (TODO)is used to determine how <err_info> is
+displayed.
+If <errMode> is set to 0, the <err_info> is displayed with numeric value.
+If <errMode>is set to 1, the <err_info> is displayed with string value.
+The default is displayed with string value.
+Numeric Value String Value
+0 Connection time out
+1 Bind port failed
+2 Port overflow
+3 Create socket failed
+4 Network is already opened
+5 Network is already closed
+6 No clients connected
+7 No active client
+8 Network not opened
+9 Client index overflow
+10 Connection is already created
+11 Connection is not created
+12 Invalid parameter
+13 Operation not supported
+14 DNS query failed
+15 TCP busy
+16 Net close failed for socket opened
+17 Sending time out

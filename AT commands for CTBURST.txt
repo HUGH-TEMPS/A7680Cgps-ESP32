@@ -1,0 +1,97 @@
+--- PAGE 603 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 602 / 684
+AT Commands for CTBURST
+27.1 Overview of AT Commands for CTBURST
+Command Description
+AT+CTBURST The RF TX Burst Test
+27.2 Supports the 1802 platform.
+27.3 Supports the 1601,1603,1606 and 1803 platforms.
+27.2 Detailed Description of AT Commands for CTBURST(CAT4)
+27.2.1 AT+CTBURST The RF TX Burst Test
+AT+CTBURST The RF TX Burst Test
+Test Command
+AT+CTBURST=?
+Response
++CTBURST=0-2,0-142,1-65535,-5000-3500, 0-5
+OK
+Write Command
+AT+CTBURST=<option>,<b
+and>,<power>,<gsmband>,
+<para>
+Response
+1)LTE RF TX successfully:
+*RADIOPOWER: 0
+OK
++CTBURST: 0
+NOTE
+--- PAGE 604 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 603 / 684
+2)GSM RF TX successfully:
+*RADIOPOWER: 0
++CTBURST: 0
+*GSMTR:-31355
+OK
+RF TX failed:
+*RADIOPOWER: 0
++CME ERROR: unknown error
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<option> 0 – default.
+<band> 1 – LTE frequency = 18300.
+2 – LTE frequency = 18900.
+3 – LTE frequency = 19500.
+4 – LTE frequency = 20175.
+5 – LTE frequency = 20525.
+6 – LTE frequency = 20700.
+7 – LTE frequency = 21100.
+8 – LTE frequency = 21625.
+17 – LTE frequency = 23790.
+20 – LTE frequency = 24300.
+38 – LTE frequency = 38000.
+39 – LTE frequency = 38450.
+40 – LTE frequency = 39150.
+101 – GSM TX.
+<power> 0 – LTE max power.
+1 – LTE 10 dBm.
+9 – LTE turn off TX.
+<gsmband> 0 – GSM 900.
+1 – GSM 1800.
+2 – GSM 1900.
+3 – GSM 850.
+4 – WCDMA band1.
+--- PAGE 605 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 604 / 684
+5 – WCDMA band2.
+7 – WCDMA band5.
+8 – WCDMA band8.
+9 – GSM turn off TX.
+<para> 0 – GSM TX.
+9 – GSM turn off TX.
+Examples
+//Example of GSM TX
+AT+CFUN=0
++SIMCARD: NOT AVAILABLE
++CGEV: ME DETACH
+OK
+*RADIOPOWER: 0
+AT+CTBURST=0,101,0,1,0 //GSM 1800 MHZ Maximum power emission
+*RADIOPOWER: 0
++CTBURST:0
+*GSMTR:-31355
+OK
+AT+CTBURST=0,101,0,9,9 //GSM turn off emission.
+*RADIOPOWER: 0
++CTBURST:0
+*GSMTR:-31355
+OK
+//Example of LTE TX
+AT+CFUN=0
++SIMCARD: NOT AVAILABLE
++CGEV: ME DETACH
+OK
+*RADIOPOWER: 0

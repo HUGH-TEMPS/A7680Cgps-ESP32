@@ -1,0 +1,435 @@
+--- PAGE 520 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 519 / 684
+Max Response Time 9000ms
+Reference -
+Defined Values
+<prodname> The production of GNSS,there are CASIC and UNICORECOMM
+currently.
+<model> The product model of GNSS.
+<vers> The firewarm version of GNSS.
+Examples
+AT+CGNSSPROD=?
+OK
+AT+CGNSSPROD
+PRODUCT: CASIC
+OK
+AT+CGNSSPROD
+PRODUCT: UNICORECOMM,UC6226NIS,R3.2.10.0Build8016
+OK
+AT+CGNSSPROD
+ERROR
+--- PAGE 521 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 520 / 684
+AT Commands for WIFI
+25.1 Overview of AT Commands for WIFI
+Command Description
+AT+CWSTASCAN Scan WIFI network
+AT+CWSTASCANEX Scan WIFI network extension command
+AT+CWSTASCANSYN Asynchronous control command of scan wifi networK
+AT+CWMAP Open/Close WIFI
+AT+CWSSID SSID setting
+AT+CWAUTH Authentication setting
+AT+CWMOCH 80211 mode and channel setting
+AT+CWISO Client isolation setting
+AT+CWMACADDR Get MAC address
+AT+CWNETCNCT Query the connection to the network
+25.2 Detailed Description of AT Commands for WIFI
+The ASR1803S platform does not support wifi scanning commands: AT+CWSTASCAN,
+AT+CWSTASCANEX, AT+CWSTASCANSYN.
+Wifi scanning function description:
+a) Wifi scanning is not supported in dual-SIM dual-standby mode.
+b) Wifi scanning is a low-priority task, which is executed only in the idle state where there is no phone call,
+no network search, and no data transmission.
+25.2.1 AT+CWSTASCAN Scan WIFI network
+AT+CWSTASCAN Scan WIFI network
+Test Command
+AT+CWSTASCAN=?
+Response
++CWSTASCAN: (0-1)
+--- PAGE 522 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 521 / 684
+OK
+Read Command
+AT+CWSTASCAN?
+Response
++CWSTASCAN: <flag_show_signal>
+OK
+Write Command
+AT+CWSTASCAN=<flag_sh
+ow_signal>
+Response
+1)if the mode is 0 or 1:
+OK
+2)
+ERROR
+Execution Command
+AT+CWSTASCAN
+Response
++CWSTASCAN:
+[
+<bssid>,<channel_num>,[signal]
+[……]]
+OK
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<flag_show_signal> 0 Don’t show the signal level.
+1 Show the signal level. It’s the default value.
+<bssid> The MAC address of external wireless network.
+<channel_num> The channel number of external wireless network.
+<signal> The signal level of external wireless network.
+Examples
+AT+CWSTASCAN=?
++CWSTASCAN: (0-1)
+OK
+AT+CWSTASCAN=1
+OK
+AT+CWSTASCAN?
++CWSTASCAN: 1
+OK
+AT+CWSTASCAN
+--- PAGE 523 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 522 / 684
++CWSTASCAN:
+50:FA:84:AF:C8:B9,11,-61
+86:40:BB:00:2E:AD,11,-65
+1C:15:1F:55:56:7A,1,-76
+B0:D5:9D:AF:57:A1,6,-79
+30:7B:AC:6C:F9:B0,1,-81
+OK
+25.2.2 AT+CWSTASCANEX Scan WIFI network extension command
+AT+CWSTASCANEX Scan WIFI network extension command
+Test Command
+AT+CWSTASCANEX=?
+Response
++CWSTASCANEX: (0-1),(1-3),(4-10),(0-255),(0-1)
+OK
+Read Command
+AT+CWSTASCANEX?
+Response
++CWSTASCANEX:
+<flag_show_signal>,<scan_round_num>,<scan_max_bssid_num
+>,<scan_timeout>,<scan_priority>
+OK
+Write Command
+AT+CWSTASCANEX=<flag_
+show_signal>[,<scan_roun
+d_num>[,<scan_max_bssid
+_num>[,<scan_timeout>[,<s
+can_priority>]]]]
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CWSTASCANEX
+Response
++CWSTASCANEX:
+[
+<bssid>,<channel_num>,[signal]
+[… …]]
+OK
+Parameter Saving Mode -
+--- PAGE 524 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 523 / 684
+Max Response Time -
+Reference
+Defined Values
+<flag_show_signal> 0 Don’t show the signal level.
+1 Show the signal level. It’s the default value.
+<scan_round_num> The range is 1-3, means the number of rounds of WIFI scan.
+<scan_max_bssid_num> The range is 4-10, maximum number of bssid per WIFI scan.
+<scan_timeout> The range is 0-255, timeout.
+<scan_priority> The range is 0-1, priority.
+<bssid> The MAC address of external wireless network.
+<channel_num> The channel number of external wireless network.
+<signal> The signal level of external wireless network.
+Examples
+AT+CWSTASCANEX=?
++CWSTASCANEX: (0-1),(1-3),(4-10),(0-255),(0-1)
+OK
+AT+CWSTASCANEX=1,3,4,25,0
+OK
+AT+CWSTASCANEX?
++CWSTASCANEX: 1,3,4,25,0
+OK
+AT+CWSTASCANEX
++CWSTASCANEX:
+08:4F:0A:CA:45:80,6,-64
+92:32:4B:9F:E2:EB,1,-66
+08:4F:0A:CA:45:40,1,-79
+1C:15:1F:FD:C7:6C,6,-83
+OK
+--- PAGE 525 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 524 / 684
+25.2.3 AT+CWSTASCANSYN Asynchronous control command of scan wifi network
+AT+CWSTASCANSYN Asynchronous control command of scan wifi network
+Test Command
+AT+CWSTASCANSYN=?
+Response
++CWSTASCANSYN: (0-1)
+OK
+Write Command
+AT+CWSTASCANSYN=<op>
+[,<scan_para>]
+Response
+1) If op==1 and parameter format is right, response 0 indicates the
+end of the scan response
+OK
+[+CWSTASCANSYN: <mac_addr>,<channel_number>,<rssi>
+,[… …]]
++CWSTASCANSYN: 0
+2) If op==0 and parameter format is right,
+OK
+3)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<op> 0 Stop scan wifi network.
+1 Start scan wifi network.
+<scan_para> 0 Scan without parameters.
+1 Scan with parameters that was set by +CWSTASCANEX.
+<mac_addr> The MAC address of external wireless network.
+<channel_number> The channel number of external wireless network.
+<rssi> The signal level of external wireless network.
+Examples
+AT+CWSTASCANSYN=?
++CWSTASCANSYN: (0-1)
+OK
+AT+CWSTASCANSYN=1
+OK
+--- PAGE 526 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 525 / 684
++CWSTASCANSYN: "08:4F:0A:CA:45:80",6,-64
++CWSTASCANSYN: "92:32:4B:9F:E2:EB",1,-66
++CWSTASCANSYN: "1C:15:1F:FD:C7:6C",6,-83
++CWSTASCANSYN: 0
+AT+CWSTASCANSYN=0
+OK
+AT+CWSTASCANEX=1,1,4,25,0
+OK
+AT+CWSTASCANSYN=1,1
+OK
++CWSTASCANSYN: "08:4F:0A:CA:45:80",6,-64
++CWSTASCANSYN: "92:32:4B:9F:E2:EB",1,-66
++CWSTASCANSYN: "1C:15:1F:FD:C7:6C",6,-83
++CWSTASCANSYN: 0
+25.2.4 AT+CWMAP Open/Close WIFI
+AT+CWMAP Open/Close WIFI
+Test Command
+AT+CWMAP=?
+Response
++CWMAP:(0-1)
+OK
+Read Command
+AT+CWMAP?
+Response
++CWMAP:<flag>
+OK
+Write Command
+AT+CWMAP=<flag>
+Response
+1)if the mode is 0 or 1:
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+--- PAGE 527 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 526 / 684
+Defined Values
+<flag > 0 Close WIFI
+1 Open WIFI
+Examples
+AT+CWMAP?
++CWMAP:1
+OK
+AT+CWMAP=0
+OK
+25.2.5 AT+CWSSID SSID setting
+AT+CWSSID SSID setting
+Read Command
+AT+CWSSID?
+Response
++ CWSSID:<ssid>
+OK
+Write Command
+AT+CWSSID=<ssid>
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<ssid> new ssid string
+1. The max length of <ssid> is 128 bytes when the <ssid> include
+only ASCII characters.
+The default value is Mrvl-uAP-X-XXX.
+Examples
+AT+CWSSID?
+--- PAGE 528 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 527 / 684
++CWSSID:Mrvl-uAP-X-C7FC
+OK
+25.2.6 AT+CWAUTH Authentication setting
+AT+ CWAUTH Authentication setting
+Read Command
+AT+CWAUTH=?
+Response
++CWAUTH:<auth>,<encrypt>[,<password>]
+OK
+Write Command
+AT+CWAUTH=<auth>,<encr
+ypt>[,<password>]
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<auth> 0 – open/share
+1 – open
+2 – share
+3 – wpa
+4 – wpa2
+5 – wpa/wpa2
+<encrypt> 0 – null
+1 – WEP
+2 – TKIP
+3 – AES
+<password> password string, the length is 5 or betwwen 8 to 64. The char in the
+password is only allow the ASCII’s decimal code betwwen 32 to 126.
+The parameter need to meet the following conditions:
+1. If (auth = 0) then (encrypt = 0)
+1. If (auth = 1) then (encrypt = 1)
+2. If (auth = 2) then (encrypt = 1)
+NOTE
+--- PAGE 529 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 528 / 684
+3. If (auth >=3) then (encrypt >=2)
+4. If(encrypt = 0) then (password is null)
+5. If(encrypt = 1) then
+{
+1) password can’t be set null
+2) password format: (5 ASCII character) or (10 hexadecimal number) or(13 ASCII character)
+or(26 hexadecimal number)
+}
+6. if(encrypt >= 2) then
+{
+1) password can’t be set null
+2) password format: (8~63 ASCII character or 64 hexadecimal number)
+}
+Examples
+AT+CWAUTH?
++CWAUTH:0,1, "11111"
+OK
+AT+CWAUTH?
++CWAUTH:5,4, "12345678"
+OK
+AT+CWAUTH=0,0
+OK //Auth:open/share encrypt:null
+AT+CWAUTH=1,1,"11111"
+OK //Auth:open encrypt: WEP
+AT+CWAUTH=2,1,"12345"
+OK //Auth:share encrypt: WEP
+//(ASCII character password:12345)
+AT+CWAUTH=2,1,"3132333435"
+OK //Auth:share encrypt:WEP
+//(sixteen hexadecimal number: password 12345)
+AT+CWAUTH=5,4,"abcd1234"
+OK //Auth:WPA/WPA2 encrypt:TIKP-AES
+--- PAGE 530 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 529 / 684
+25.2.7 AT+CWMOCH 80211 mode and channel setting
+AT+CWMAP mode and channel setting
+Read Command
+AT+CWMOCH?
+Response
++CWMOCH:<mode>,<channel>
+OK
+Write Command
+AT+CWMOCH=<mode>,<ch
+annel>
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<mode> 2 – b 2.4G mode
+3 – b/g 2.4G mode
+4 – b/g/n 2.4G mode
+<channel> 0 – auto select
+1~11 – 2.4Gmode channel number
+Examples
+AT+CWMOCH?
++CWMOCH:4,0
+OK
+AT+CWMOCH=3,1
+OK
+25.2.8 AT+CWISO Client isolation setting
+AT+CWISO Client isolation setting
+Test Command
+AT+CWISO=?
+Response
++CWISO:(0-1)
+--- PAGE 531 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 530 / 684
+OK
+Read Command
+AT+CWISO?
+Response
++CWMOCH:<mode>,<channel>
+OK
+Write Command
+AT+CWISO=<isolation>
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<isolation> 0 Close
+1 Open
+Examples
+AT+CWISO?
++CWISO:1
+OK
+AT+CWISO=0
+OK
+25.2.9 AT+CWMACADDR Get MAC address
+AT+CWISO Client isolation setting
+Test Command
+AT+CWMACADDR=?
+Response
+[<number>,<mac_addr>
+[… …]]
+OK
+Parameter Saving Mode -
+Max Response Time -
+Reference

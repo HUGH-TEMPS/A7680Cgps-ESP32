@@ -1,0 +1,2058 @@
+--- PAGE 496 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 495 / 684
+OK
+Write Command
+/*Setting FOTA service status*/
+AT+CAPFOTA=<on/off>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<on/off> The service status on/off, the default value is 0.
+0 Close FOTA program
+1 Active FOTA program
+The function will take effect immediately.
+Examples
+AT+CAPFOTA=?
++CAPFOTA: (0-1)
+OK
+AT+CAPFOTA?
++CAPFOTA: 0
+OK
+AT+CAPFOTA=1
+OK
+23.2.2 AT+CSCFOTA Configure parameters and download upgrade package
+AT+CSCFOTA Configure parameters and download upgrade package
+Write Command
+AT+CSCFOTA=<OEM>,<models
+>,<product ID>,<product
+Secret>,<target version>
+Response
+1)If successfully:
+OK
+If it can be downloaded:
++CSCFOTA: 2
++CSCFOTA: 3
+If download partial is finished:
+--- PAGE 497 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 496 / 684
++CSCFOTA: 0
+If there is no new version detected:
++CSCFOTA: 5
+If detect version failed:
++CSCFOTA: <err>
+If it cannot be downloaded:
++CSCFOTA: <err>
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<OEM> The name of project design company. This name must be the same as
+the OEM created on the cloud platform. Otherwise, it will cause
+upgrade failed.
+<models> The name of the device model. This name must be the same as the
+device model created on the cloud platform. Otherwise, it will cause
+upgrade failed.
+<productID> The product ID that must be the same as the product ID generated on
+the cloud platform.
+<productSecret> The product secret is used to confirm the identity and usage rights of
+the user. It must be the same as the product secret generated on the
+cloud platform.
+<target version> The version that needs to be upgraded to. This version is published by
+the cloud platform.
+Examples
+AT+CSCFOTA="SIMCom","A7600C","1540907004","f9bbb0d76f894da090b6b69253616561","A760
+0C_A39_190327_V1.00"
+OK
++CSCFOTA: 2
++CSCFOTA: 3
++CSCFOTA: 0
+--- PAGE 498 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 497 / 684
+23.3 Command Result Codes
+23.3.1 Command Result Report Codes
+Result codes Description
+2 Check version is finished
+3 Download is finished
+4 Download partial finished
+5 No new version
+23.3.2 Description of <err>
+<err> Description
+0 OK
+1 unknown error (contact supplier)
+301 No enough memory
+302 Invalid parameter
+303 Invalid operation
+304 IO failed
+305 IO timeout
+306 Download file verification failed
+307 got canceled
+308 Interface nesting error
+401 Invalid device information
+402 Invalid platform information
+403 Missing device information
+404 Version number is not configured
+405 Internal error (contact supplier)
+501 Invalid URL
+502 Unable to resolve domain name
+503 cannot connect to the server
+504 Invalid request, server returned error
+505 Not in range
+506 HTTP POST request error
+507 Re-download start error
+--- PAGE 499 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 498 / 684
+508 Operation is aborted
+509 Operation not completed
+510 Too many retargeting times
+511 Unable to get data from SOCKET
+512 Error sending data via SOCKET
+513 Error receiving data via SOCKET
+514 Invalid SOCKET connection
+--- PAGE 500 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 499 / 684
+AT Commands for GNSS
+24.1 Overview of AT Commands for GNSS
+Command Description
+AT+CGNSSPWR GNSS power control and AP-Flash control
+AT+CGPSCOLD Cold start GPS
+AT+CGPSWARM Warm start GPS
+AT+CGPSHOT Hot start GPS
+AT+CGNSSIPR Configure the baud rate of UART3 and GPS module
+AT+CGNSSMODE Configure GNSS support mode
+AT+CGNSSNMEA Configure NMEA sentence type
+AT+CGPSNMEARATE Set NMEA output rate
+AT+CGPSFTM Start GPS test mode
+AT+CGPSINFO Get GPS fixed position information
+AT+CGNSSINFO Get GNSS fixed position information
+AT+CGNSSCMD Send command to GNSS
+AT+CGNSSTST Send data received from UART3 to NMEA port
+AT+CGNSSPORTSWITCH Select the output port for NMEA sentence
+AT+CAGPS Get AGPS data from the AGNSS server for assisted positioning
+AT+CGNSSPROD Get the production of GNSS
+24.2 Detailed Description of AT Commands for GNSS
+24.2.1 AT+CGNSSPWR GNSS power control, AP-Flash control and Dynamic Load
+control
+In ASR1603 and ASR1803, this command can control the GNSS module by pulling up/down the power pin,
+and it can also control whether the GNSS module can quickly hot start the AP-Flash. If you only want to
+enable/disable GNSS control, please execute AT+CGNSSPWR=1 or AT+CGNSSPWR=0. If you want to
+--- PAGE 501 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 500 / 684
+enable GNSS and want to use AP_Flash fast hot start mode, please execute AT+CGNSSPWR=1,1 or
+AT+CGNSSPWR=0,1.
+When using AP_Flash fast hot start mode, you need to execute AT+CGNSSPWR=0,1 to store the
+positioning data in the module after the GNSS is set to the upper position for the first time. When
+AT+CGNSSPWR=1,1 is executed next time, the positioning data will be loaded into GNSS again.
+.If you want to enable GNSS and want to use GNSS dynamic_load, please execute AT+CGNSSPWR=1,1,1
+or AT+CGNSSPWR=1,0,1,The third parameter defaults to 1 and it is optional
+In ASR1601, this command can only control the GNSS module by pulling up/down the power pin.
+AT+CGNSSPWR GNSS power control and AP-Flash control
+Test Command
+AT+CGNSSPWR=?
+Response
++CGNSSPWR:
+<GNSS_Power_status>,<AP_Flash_status>,<GNSS
+_dynamic_load>
+OK
+Read Command
+AT+CGNSSPWR?
+Response
++CGNSSPWR:
+<GNSS_Power_status>,<AP_Flash_status>,<GNSS
+_dynamic_load>
+OK
+Write Command
+AT+CGNSSPWR=<GNSS_Powe
+r_status>[,<AP_Flash_status>]
+[,<GNSS _dynamic_load>]
+Response
+1)If successfully:
+OK
+2)if GNSS can work properly:
++CGNSSPWR: READY!
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<GNSS_Power_status> 0 Close GNSS
+1 Active GNSS
+The function will take effect immediately.
+<AP_Flash_status> 0 Close GNSS AP_Flash fast hot start mode
+1 Active GNSS AP_Flash fast hot start mode
+The function will take effect immediately.
+<GNSS _dynamic_load> 0 Close GNSS _dynamic_load
+1 Active GNSS _dynamic_load
+The function will take effect immediately.
+--- PAGE 502 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 501 / 684
+1. In ASR1601, only the GNSS_Power_status field is supported.
+2. In ASR1603, GNSS will take about 9 seconds to updata the version of GNSS, please see
+"+CGNSSPWR: READY!" before controlling the GNSS.
+3. AP_Flash_status is supported after 27/9/21.
+4. "+CGNSSPWR: READY! " is supported after 27/9/21.
+5. A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+6. In 160X baseline, 1603 module whose GPS chip is ASR5311 only has one parameter of
+CGNSSPWR. The way to get GPS chip version is to send AT+CGNSSPROD.
+7. 1803S module whose GPS chip is ASR5311 has only one parameter which is used to control GNSS
+power.
+Examples
+AT+CGNSSPWR=?
++CGNSSPWR: (0,1),(0,1),(0,1)
+OK
+AT+CGNSSPWR?
++CGNSSPWR: 1,1,1
+OK
+AT+CGNSSPWR=1,1,1
+OK
++CGNSSPWR: READY!
+24.2.2 AT+CGNSSTST Send data received from UART3 to NMEA port
+AT+CGNSSTST is used to print raw GPS data to the NMEA port.
+AT+CGNSSTST Send data received from UART3 to NMEA port
+Test Command
+AT+CGNSSTST=?
+Response
++CGNSSTST: (0,1)
+OK
+Read Command
+AT+CGNSSTST?
+Response
++CGNSSTST: <on/off>
+NOTE
+--- PAGE 503 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 502 / 684
+OK
+Write Command
+AT+CGNSSTST=<on/off>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<on/off> 0 Stop sending data received from UART3 to NMEA port.
+1 Start sending data received from UART3 to NMEA port.
+The function will take effect immediately.
+If you want to get NMEA data by NMEA port, you should to excute
+AT+CGNSSTST=1 first.
+Examples
+AT+CGNSSTST=?
++CGNSSTST: (0,1)
+OK
+AT+CGNSSTST?
++CGNSSTST: 0
+OK
+AT+CGNSSTST=1
+OK
+24.2.3 AT+CGPSCOLD Cold start GPS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSCOLD Cold start GPS
+Execution Command
+AT+CGPSCOLD
+Response
+OK
+Parameter Saving Mode NO_SAVE
+--- PAGE 504 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 503 / 684
+Max Response Time 9000ms
+Reference -
+Examples
+AT+CGPSCOLD
+OK
+24.2.4 AT+CGPSWARM Warm start GPS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSCOLD Warm start GPS
+Execution Command
+AT+CGPSWARM
+Response
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+1.This command is valid on the ASR1603 projects and ASR1803S projects.
+2. A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+Examples
+AT+CGPSWARM
+OK
+24.2.5 AT+CGPSHOT Hot start GPS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSHOT Hot start GPS
+Execution Command Response
+NOTE
+--- PAGE 505 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 504 / 684
+AT+CGPSHOT OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Examples
+AT+CGPSHOT
+OK
+24.2.6 AT+CGNSSIPR Configure the baud rate of UART3 and GPS module
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSIPR Configure the baud rate of UART3 and GPS module
+Test Command
+AT+CGNSSIPR=?
+Response
++CGNSSIPR: (list of supported <baud-rate>s)
+OK
+Read Command
+AT+CGNSSIPR?
+Response
++CGNSSIPR: <baud-rate>
+OK
+Write Command
+AT+CGNSSIPR=<baud-rate>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Execution Command
+AT+CGNSSIPR
+Response
+Set default value
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<baud-rate> 9600
+115200
+--- PAGE 506 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 505 / 684
+230400
+The function will take effect immediately.
+1. The baud-rate is supported by the ASR1601 projects:
+4800,9600,19200,38400,57600,115200
+2. In the ASR1603 projects and ASR1803S project, the baud rate defaults to 115200 after GPS dynamic
+loading and upgrading the firmware, and 9600 without GPS dynamic loading.
+3. A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+4. 1803S module whose GPS chip is ASR 5311, only 115200 baud rates are supported.
+Examples
+AT+CGNSSIPR=?
++CGNSSIPR: (9600,115200,230400)
+OK
+AT+CGNSSIPR?
++CGNSSIPR: 9600
+OK
+AT+CGNSSIPR=9600
+OK
+24.2.7 AT+CGNSSMODE Configure GNSS support mode
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSMODE Configure GNSS support mode
+Test Command
+AT+CGNSSMODE=?
+Response
++CGNSSMODE: (1-7)
+OK
+Read Command
+AT+CGNSSMODE?
+Response
++CGNSSMODE: <mode>
+OK
+Write Command
+AT+CGNSSMODE=<mode>
+Response
+1)If successfully:
+NOTE
+--- PAGE 507 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 506 / 684
+OK
+2)If failed:
+ERROR
+Execution Command
+AT+CGNSSMODE
+Response
+Set default value 3
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<mode> 1 GPS L1 + BDS B1 + QZSS
+2 BDS B1
+3 GPS L1+QZSS
+The mode is supported in foreign module:
+1 GPS L1+SBAS+QZSS
+2 BDS B1
+3 GPS+GLONASS+GALILEO+SBAS+QZSS
+4 GPS+BDS+GALILEO
+The function will take effect immediately.
+1.The GPS mode configuration is different from different GPS chip, you can input AT+CGNSSPROD to
+get the information of GPS chip including UNIC and ASR 5311.
+2.The mode is supported by most A7670 projects in foreign module whose GPS chip is UNIC:
+1 GPS L1+SBAS+QZSS
+2 BDS B1
+3 GPS+GLONASS+GALILEO+SBAS+QZSS
+4 GPS+BDS+GALILEO+SBAS+QZSS
+3.The mode is supported in the A7680 project and 7673_V2.01_PCB and 7670_V2.01_PCB whose
+GPS chip is ASR 5311, and 1803S some projects also use 5311 GPS chip:
+1 GPS
+2 BDS
+3 GPS+BDS
+4 GLONASS
+5 GPS+GLONASS
+6 BDS+GLONASS
+7 GPS+BDS+GLONASS
+NOTE
+--- PAGE 508 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 507 / 684
+Examples
+AT+CGNSSMODE=?
++CGNSSMODE: (1-3)
+OK
+AT+CGNSSMODE?
++CGNSSMODE: 1
+OK
+AT+CGNSSMODE=1
+OK
+24.2.8 AT+CGNSSNMEA Configure NMEA sentence type
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSNMEA Configure NMEA sentence type
+Test Command
+AT+CGNSSNMEA=?
+Response
++CGNSSNMEA: (0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1)
+OK
+Read Command
+AT+CGNSSNMEA?
+Response
++CGNSSNMEA: 1,0,1,1,1,0,0,0
+OK
+Write Command
+AT+CGNSSNMEA=[nGGA,[nGL
+L,[nGSA,[nGSV,[nRMC,[nVTG,[
+nZDA,[nGST]]]]]]]]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+[nGGA,[nGLL,[nGSA,[nGSV,
+[nRMC,[nVTG,[nZDA,[nGST,
+]]]]]]]]
+The range of n is 0-1. It means that the sentence is output every n
+times, 0 means no output, null means to save the original
+configuration.
+--- PAGE 509 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 508 / 684
+nGGA GGA output rate,default is 1
+nGLL GLL output rate,default is 0
+nGSA GSA output rate,default is 1
+nGSV GSV output rate,default is 1
+nRMC RMC output rate,default is 1
+nVTG VTG output rate,default is 0
+nZDA ZDA output rate,default is 0
+nGST GST output rate,default is 0
+The function will take effect immediately.
+The NMEA fields are supported by the ASR1601 projects:
+nGGA GGA output rate,default is 1
+nGLL GLL output rate,default is 0
+nGSA GSA output rate,default is 1
+nGSV GSV output rate,default is 1
+nRMC RMC output rate,default is 1
+nVTG VTG output rate,default is 0
+nZDA ZDA output rate,default is 0
+nANT ANT output rate,default is 0
+nDHV DHV output rate,default is 0
+nLPS LPS output rate,default is 0(nonsupport)
+res1 reserved,default is 0
+res2 reserved,default is 0
+nUTC UTC output rate,default is 0(nonsupport)
+nGST GST output rate,default is 0
+A7670C-BASS_DTU uses 1601 GPS chip, and the syntax rules are the same as 1601GNSS.
+Examples
+AT+CGNSSNMEA=?
++CGNSSNMEA: (0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1),(0-1)
+OK
+AT+CGNSSNMEA?
++CGNSSNMEA: 1,0,1,1,1,0,0,0
+OK
+AT+CGNSSNMEA=1,0,0,0,0,0,0,0
+OK
+NOTE
+--- PAGE 510 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 509 / 684
+The NMEA fields are supported by the ASR1603 projects and ASR1803S projects:
+The range of n is 0-5. It means that the sentence is output every n times, 0 means no output, null
+means to save the original configuration.
+nGGA GGA output rate,default is 1
+nGLL GLL output rate,default is 1
+nGSA GSA output rate,default is 1
+nGSV GSV output rate,default is 1
+nRMC RMC output rate,default is 1
+nVTG VTG output rate,default is 1
+nZDA ZDA output rate,default is 0
+nGST GST output rate,default is 0
+24.2.9 AT+CGPSNMEARATE Set NMEA output rate
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSNMEARATE Set NMEA output rate
+Test Command
+AT+CGPSNMEARATE=?
+Response
++CGPSNMEARATE: (1,2,4,5,10)
+OK
+Read Command
+AT+CGPSNMEARATE?
+Response
++CGPSNMEARATE: <rate>
+OK
+Write Command
+AT+CGPSNMEARATE=<rate>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Execution Command
+AT+CGPSNMEARATE
+Response
+Set default value 1
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+NOTE
+--- PAGE 511 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 510 / 684
+Defined Values
+<rate> 1 1Hz, one anchor point is output per second
+2 2Hz, two anchor points is output per second
+5 5Hz, five anchor points is output per second
+The function will take effect immediately.
+1. 1803S module whose GPS chip is ASR 5311, 1-5Hz is supported.
+Examples
+AT+CGPSNMEARATE=?
++CGPSNMEARATE: (1,2,5)
+OK
+AT+CGPSNMEARATE?
++CGPSNMEARATE: 1
+OK
+AT+CGPSNMEARATE=2
+OK
+24.2.10 AT+CGPSFTM Start GPS test mode
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSFTM Start GPS test mode
+Test Command
+AT+CGPSFTM=?
+Response
+OK
+Read Command
+AT+CGPSFTM?
+Response
++CGPSFTM: 0/1
+OK
+Write Command
+AT+CGPSFTM=<on/off>
+Response
+1)If successfully:
+OK
+NOTE
+--- PAGE 512 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 511 / 684
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<on/off> 0 Close test mode
+1 Start test mode
+The function will take effect immediately.
+1.GBGSV field will replace BDGSV field after dynamic loading is complete in ASR1603 and ASR1803
+Series projects.
+2. GAGSV field will supported by the ASR1603 and ASR1803 Series projects after dynamic loading is
+complete.
+3. GLGSV and GAGSV field will supported by the ASR1603 and ASR1803 Series projects in foreign
+modules after dynamic loading is complete.
+Examples
+AT+CGPSFTM?
++CGPSFTM: 0
+OK
+AT+CGPSFTM=1
+OK
++GLGSV,78,20.6,66,25.6,77,21.6,79,21.9,67,26.2,
+68,23.6
++GPGSV,10,36.3,12,33.5,14,26.5,15,27.0,18,30.6
+,20,29.4,21,14.9,24,32.8,25,30.6,31,29.1,32,27.0
++BDGSV,201,28.7,204,29.0,206,27.3,207,25.9,20
+9,25.0,210,18.5
+24.2.11 AT+CGPSINFO Get GPS fixed position information
+NOTE
+--- PAGE 513 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 512 / 684
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGPSINFO Get GPS fixed position information
+Test Command
+AT+CGPSINFO=?
+Response
++CGPSINFO: (0-255)
+OK
+Read Command
+AT+CGPSINFO?
+Response
++CGPSINFO: <time>
+OK
+Write Command
+AT+CGPSINFO=<time>
+Response
+1)If successfully:
+OK
++CGPSINFO: [<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC
+time>],[<alt>],[<speed>],[<course>]
+2)If <time>=0:
+OK
+3)If failed:
+ERROR
+Execution Command
+AT+CGPSINFO
+Response
++CGPSINFO: [<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC
+time>],[<alt>],[<speed>],[<course>]
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<time> The rang is 0-255, unit is second. after set <time> will report the GPS
+information every the seconds.
+The function will take effect immediately.
+<lat> Latitude of current position. Output format is ddmm.mmmmmm.
+<N/S> N/S Indicator, N=north or S=south.
+<log> Longitude of current position. Output format is dddmm.mmmmmm.
+<E/W> E/W Indicator, E=east or W=west.
+<date> Date. Output format is ddmmyy.
+<UTC time> UTC Time. Output format is hhmmss.ss.
+<alt> MSL Altitude. Unit is meters.
+<speed> Speed Over Ground. Unit is knots.
+<course> Course. Degrees.
+--- PAGE 514 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 513 / 684
+Examples
+AT+CGPSINFO=?
++CGPSINFO: (0-255)
+OK
+AT+CGPSINFO?
++CGPSINFO: 0
+OK
+AT+CGPSINFO
++CGPSINFO:3113.343286,N,12121.234064,E,250311,072809.33,44.1,0.0,0
+OK
+24.2.12 AT+CGNSSINFO Get GNSS fixed position information
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSINFO Get GNSS fixed position information
+Test Command
+AT+CGNSSINFO=?
+Response
++CGNSSINFO: (0-255)
+OK
+Read Command
+AT+CGNSSINFO?
+Response
++CGNSSINFO: <time>
+OK
+Write Command
+AT+CGNSSINFO=<time>
+Response
+1)If successfully:
+OK
++CGNSSINFO:
+[<mode>],[<GPS-SVs>],[BEIDOU-SVs],[<GLONASS-SVs>],[<
+GALILEO-SVs>],[<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UT
+C-time>],[<alt>],[<speed>],[<course>],[<PDOP>],[HDOP],[VD
+OP]
+2)If <time>=0:
+OK
+3)If failed:
+ERROR
+--- PAGE 515 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 514 / 684
+Execution Command
+AT+CGNSSINFO
+Response
++CGNSSINFO:
+[<mode>],[<GPS-SVs>],[BEIDOU-SVs],[<GLONASS-SVs>],[<
+GALILEO-SVs>],
+[<lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC-time>],[<alt>],[
+<speed>],[<course>],[<PDOP>],[HDOP],[VDOP]
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<time> The rang is 0-255, unit is second. after set <time> will report the
+GNSS information every the seconds.
+The function will take effect immediately.
+<mode> Fix mode 2=2D fix 3=3D fix
+<GPS-SVs> GPS satellite visible numbers
+<BEIDOU-SVs> BEIDOU satellite visible numbers
+<GLONASS-SVs> GLONASS satellite visible numbers
+<GALILEO-SVs> GALILEO satellite visible numbers
+<lat> Latitude of current position.Output format is dd.ddddd
+<N/S> N/S Indicator, N=north or S=south.
+<log> Longitude of current position. Output format is ddd.ddddd
+<E/W> E/W Indicator, E=east or W=west.
+<date> Date. Output format is ddmmyy.
+<UTC-time> UTC Time. Output format is hhmmss.ss.
+<alt> MSL Altitude. Unit is meters.
+<speed> Speed Over Ground. Unit is knots.
+<course> Course. Degrees.
+<PDOP> Position Dilution Of Precision.
+<HDOP> Horizontal Dilution Of Precision.
+<VDOP> Vertical Dilution Of Precision.
+Examples
+AT+CGNSSINFO=?
++CGNSSINFO: (0-255)
+OK
+--- PAGE 516 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 515 / 684
+AT+CGNSSINFO?
++CGNSSINFO: 0
+OK
+AT+CGNSSINFO
++CGNSSINFO:
+2,09,05,00,3113.330650,N,12121.262554,E,131117,091918.00,32.9,0.0,255.0,1.1,0.8,0.7
+OK
+AT+CGNSSINFO (if not fix, will report null)
++CGNSSINFO:,,,,,,,,,,,,,,,
+OK
+In the ASR1603 and ASR1803S platforms, the domestic version of +CGNSSINFO reported information
+as follows: +CGNSSINFO:
+[<mode>],[<GPS-SVs>],[BEIDOU-SVs],[<lat>],[<N/S >],[<log>],[<E/W>],[<date>],[<UTC-time>],[<alt>],[
+<speed>],[<course>],[ <PDOP>],[HDOP],[VDOP]. [<valid-SVs>]
+The information reported by the foreign version of +CGNSSINFO is as follows: +CGNSSINFO:
+[<mode>],[<GPS-SVs>], [BEIDOU-SVs], [<GLONASS-SVs>], [<GALILEO-SVs>],[<
+lat>],[<N/S>],[<log>],[<E/W>],[<date>],[<UTC-time>],[<alt>],[<speed> ],[<course>],[<PDOP>],[HDOP],[
+VDOP].
+24.2.13 AT+CGNSSCMD Send command to GNSS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSCMD Send command to GNSS
+Test Command
+AT+CGNSSCMD=?
+Response
++CGNSSCMD: "CmdString"
+OK
+Write Command
+AT+CGNSSCMD=<CmdString>
+Response
+1)If send OK:
+OK
+2)If send false:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+NOTE
+--- PAGE 517 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 516 / 684
+Defined Values
+<CmdString> Command string, max length of string is 510 or 62 (seen in note)
+For example: if you want to send "$PCAS02,1000*2E<CR><LF>"
+command to GNSS.
+You can use:
+AT+CGNSSCMD="$PCAS02,1000*2E"
+Or:
+AT+CGNSSCMD="245043415330322C313030302A3245"
+Examples
+AT+CGNSSCMD=?
++CGNSSCMD: "CmdString"
+OK
+AT+CGNSSCMD="$PCAS02,1000*2E"
+OK
+The max length of command string is different from software baseline: 042 baseline is 510, above 110
+baseline is 62.
+24.2.14 AT+CGNSSPORTSWITCH Select the output port for NMEA sentence
+This command is valid after the URC reports “+CGNSSPWR: READY!”. AT+CGNSSTST=1 is used to
+output original NMEA data to USB NMEA port or UART port.
+AT+CGNSSPORTSWITCH Select the output port for NMEA sentence
+Test Command
+AT+CGNSSPORTSWITCH=?
+Response
++CGNSSPORTSWITCH: (0,1),(0,1)
+OK
+Read Command
+AT+CGNSSPORTSWITCH?
+Response
++CGNSSPORTSWITCH:
+<parse_data_port>,<nmea_data_port>
+NOTE
+--- PAGE 518 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 517 / 684
+OK
+Write Command
+AT+CGNSSPORTSWITCH=<par
+se_data_port>[,<nmea_data_po
+rt>]
+Response
+1)If send OK:
+OK
+2)If send false:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<parse_data_port> 0 output the parsed data of NMEA to USB AT port.
+1 output the parsed data of NMEA to UART port.
+<nmea_data_port> 0 output raw NMEA data to USB NMEA port.
+1 output raw NMEA data to UART port.
+Examples
+AT+CGNSSPORTSWITCH=?
++CGNSSPORTSWITCH: (0,1),(0,1)
+OK
+AT+CGNSSPORTSWITCH=0,1
+OK
+24.2.15 AT+CAGPS Get AGPS data from the AGNSS server for assisted
+positioning
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CAGPS Get AGPS data from the AGNSS server for assisted positioning
+Execution Command
+AT+CAGPS
+Response
+1)If successfully:
+OK
++AGPS: success.
+2)If failed:
+ERROR
+3)If failed:
+--- PAGE 519 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 518 / 684
+OK
++AGPS: <error code>.
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<error code> 101 open socket unsuccessfully.
+102 get the AGNSS server unsuccessfully.
+103 connect to AGNSS server unsuccessfully.
+104 write information to socket unsuccessfully.
+105 read AGPS data from socket unsuccessfully.
+106 get the AGNSS data unsuccessfully.
+107 send the AGNSS data unsuccessfully.
+Examples
+AT+CAGPS
+OK
++AGPS: success.
+24.2.16 AT+CGNSSPROD Get the production of GNSS
+This command is valid after the URC reports “+CGNSSPWR: READY!”.
+AT+CGNSSPROD Get the production of GNSS
+Test Command
+AT+CGNSSPROD=?
+Response
+OK
+Execution Command
+AT+CGNSSPROD
+Response
+1)If successfully:
+PRODUCT: <prodname>,<model>,<vers>
+OK
+2)If the GNSS is power off:
+ERROR
+Parameter Saving Mode NO_SAVE
+--- PAGE 520 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 519 / 684
+Max Response Time 9000ms
+Reference -
+Defined Values
+<prodname> The production of GNSS,there are CASIC and UNICORECOMM
+currently.
+<model> The product model of GNSS.
+<vers> The firewarm version of GNSS.
+Examples
+AT+CGNSSPROD=?
+OK
+AT+CGNSSPROD
+PRODUCT: CASIC
+OK
+AT+CGNSSPROD
+PRODUCT: UNICORECOMM,UC6226NIS,R3.2.10.0Build8016
+OK
+AT+CGNSSPROD
+ERROR
+--- PAGE 521 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 520 / 684
+AT Commands for WIFI
+25.1 Overview of AT Commands for WIFI
+Command Description
+AT+CWSTASCAN Scan WIFI network
+AT+CWSTASCANEX Scan WIFI network extension command
+AT+CWSTASCANSYN Asynchronous control command of scan wifi networK
+AT+CWMAP Open/Close WIFI
+AT+CWSSID SSID setting
+AT+CWAUTH Authentication setting
+AT+CWMOCH 80211 mode and channel setting
+AT+CWISO Client isolation setting
+AT+CWMACADDR Get MAC address
+AT+CWNETCNCT Query the connection to the network
+25.2 Detailed Description of AT Commands for WIFI
+The ASR1803S platform does not support wifi scanning commands: AT+CWSTASCAN,
+AT+CWSTASCANEX, AT+CWSTASCANSYN.
+Wifi scanning function description:
+a) Wifi scanning is not supported in dual-SIM dual-standby mode.
+b) Wifi scanning is a low-priority task, which is executed only in the idle state where there is no phone call,
+no network search, and no data transmission.
+25.2.1 AT+CWSTASCAN Scan WIFI network
+AT+CWSTASCAN Scan WIFI network
+Test Command
+AT+CWSTASCAN=?
+Response
++CWSTASCAN: (0-1)
+--- PAGE 522 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 521 / 684
+OK
+Read Command
+AT+CWSTASCAN?
+Response
++CWSTASCAN: <flag_show_signal>
+OK
+Write Command
+AT+CWSTASCAN=<flag_sh
+ow_signal>
+Response
+1)if the mode is 0 or 1:
+OK
+2)
+ERROR
+Execution Command
+AT+CWSTASCAN
+Response
++CWSTASCAN:
+[
+<bssid>,<channel_num>,[signal]
+[……]]
+OK
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<flag_show_signal> 0 Don’t show the signal level.
+1 Show the signal level. It’s the default value.
+<bssid> The MAC address of external wireless network.
+<channel_num> The channel number of external wireless network.
+<signal> The signal level of external wireless network.
+Examples
+AT+CWSTASCAN=?
++CWSTASCAN: (0-1)
+OK
+AT+CWSTASCAN=1
+OK
+AT+CWSTASCAN?
++CWSTASCAN: 1
+OK
+AT+CWSTASCAN
+--- PAGE 523 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 522 / 684
++CWSTASCAN:
+50:FA:84:AF:C8:B9,11,-61
+86:40:BB:00:2E:AD,11,-65
+1C:15:1F:55:56:7A,1,-76
+B0:D5:9D:AF:57:A1,6,-79
+30:7B:AC:6C:F9:B0,1,-81
+OK
+25.2.2 AT+CWSTASCANEX Scan WIFI network extension command
+AT+CWSTASCANEX Scan WIFI network extension command
+Test Command
+AT+CWSTASCANEX=?
+Response
++CWSTASCANEX: (0-1),(1-3),(4-10),(0-255),(0-1)
+OK
+Read Command
+AT+CWSTASCANEX?
+Response
++CWSTASCANEX:
+<flag_show_signal>,<scan_round_num>,<scan_max_bssid_num
+>,<scan_timeout>,<scan_priority>
+OK
+Write Command
+AT+CWSTASCANEX=<flag_
+show_signal>[,<scan_roun
+d_num>[,<scan_max_bssid
+_num>[,<scan_timeout>[,<s
+can_priority>]]]]
+Response
+1)
+OK
+2)
+ERROR
+Execution Command
+AT+CWSTASCANEX
+Response
++CWSTASCANEX:
+[
+<bssid>,<channel_num>,[signal]
+[… …]]
+OK
+Parameter Saving Mode -
+--- PAGE 524 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 523 / 684
+Max Response Time -
+Reference
+Defined Values
+<flag_show_signal> 0 Don’t show the signal level.
+1 Show the signal level. It’s the default value.
+<scan_round_num> The range is 1-3, means the number of rounds of WIFI scan.
+<scan_max_bssid_num> The range is 4-10, maximum number of bssid per WIFI scan.
+<scan_timeout> The range is 0-255, timeout.
+<scan_priority> The range is 0-1, priority.
+<bssid> The MAC address of external wireless network.
+<channel_num> The channel number of external wireless network.
+<signal> The signal level of external wireless network.
+Examples
+AT+CWSTASCANEX=?
++CWSTASCANEX: (0-1),(1-3),(4-10),(0-255),(0-1)
+OK
+AT+CWSTASCANEX=1,3,4,25,0
+OK
+AT+CWSTASCANEX?
++CWSTASCANEX: 1,3,4,25,0
+OK
+AT+CWSTASCANEX
++CWSTASCANEX:
+08:4F:0A:CA:45:80,6,-64
+92:32:4B:9F:E2:EB,1,-66
+08:4F:0A:CA:45:40,1,-79
+1C:15:1F:FD:C7:6C,6,-83
+OK
+--- PAGE 525 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 524 / 684
+25.2.3 AT+CWSTASCANSYN Asynchronous control command of scan wifi network
+AT+CWSTASCANSYN Asynchronous control command of scan wifi network
+Test Command
+AT+CWSTASCANSYN=?
+Response
++CWSTASCANSYN: (0-1)
+OK
+Write Command
+AT+CWSTASCANSYN=<op>
+[,<scan_para>]
+Response
+1) If op==1 and parameter format is right, response 0 indicates the
+end of the scan response
+OK
+[+CWSTASCANSYN: <mac_addr>,<channel_number>,<rssi>
+,[… …]]
++CWSTASCANSYN: 0
+2) If op==0 and parameter format is right,
+OK
+3)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<op> 0 Stop scan wifi network.
+1 Start scan wifi network.
+<scan_para> 0 Scan without parameters.
+1 Scan with parameters that was set by +CWSTASCANEX.
+<mac_addr> The MAC address of external wireless network.
+<channel_number> The channel number of external wireless network.
+<rssi> The signal level of external wireless network.
+Examples
+AT+CWSTASCANSYN=?
++CWSTASCANSYN: (0-1)
+OK
+AT+CWSTASCANSYN=1
+OK
+--- PAGE 526 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 525 / 684
++CWSTASCANSYN: "08:4F:0A:CA:45:80",6,-64
++CWSTASCANSYN: "92:32:4B:9F:E2:EB",1,-66
++CWSTASCANSYN: "1C:15:1F:FD:C7:6C",6,-83
++CWSTASCANSYN: 0
+AT+CWSTASCANSYN=0
+OK
+AT+CWSTASCANEX=1,1,4,25,0
+OK
+AT+CWSTASCANSYN=1,1
+OK
++CWSTASCANSYN: "08:4F:0A:CA:45:80",6,-64
++CWSTASCANSYN: "92:32:4B:9F:E2:EB",1,-66
++CWSTASCANSYN: "1C:15:1F:FD:C7:6C",6,-83
++CWSTASCANSYN: 0
+25.2.4 AT+CWMAP Open/Close WIFI
+AT+CWMAP Open/Close WIFI
+Test Command
+AT+CWMAP=?
+Response
++CWMAP:(0-1)
+OK
+Read Command
+AT+CWMAP?
+Response
++CWMAP:<flag>
+OK
+Write Command
+AT+CWMAP=<flag>
+Response
+1)if the mode is 0 or 1:
+OK
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+--- PAGE 527 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 526 / 684
+Defined Values
+<flag > 0 Close WIFI
+1 Open WIFI
+Examples
+AT+CWMAP?
++CWMAP:1
+OK
+AT+CWMAP=0
+OK
+25.2.5 AT+CWSSID SSID setting
+AT+CWSSID SSID setting
+Read Command
+AT+CWSSID?
+Response
++ CWSSID:<ssid>
+OK
+Write Command
+AT+CWSSID=<ssid>
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<ssid> new ssid string
+1. The max length of <ssid> is 128 bytes when the <ssid> include
+only ASCII characters.
+The default value is Mrvl-uAP-X-XXX.
+Examples
+AT+CWSSID?
+--- PAGE 528 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 527 / 684
++CWSSID:Mrvl-uAP-X-C7FC
+OK
+25.2.6 AT+CWAUTH Authentication setting
+AT+ CWAUTH Authentication setting
+Read Command
+AT+CWAUTH=?
+Response
++CWAUTH:<auth>,<encrypt>[,<password>]
+OK
+Write Command
+AT+CWAUTH=<auth>,<encr
+ypt>[,<password>]
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<auth> 0 – open/share
+1 – open
+2 – share
+3 – wpa
+4 – wpa2
+5 – wpa/wpa2
+<encrypt> 0 – null
+1 – WEP
+2 – TKIP
+3 – AES
+<password> password string, the length is 5 or betwwen 8 to 64. The char in the
+password is only allow the ASCII’s decimal code betwwen 32 to 126.
+The parameter need to meet the following conditions:
+1. If (auth = 0) then (encrypt = 0)
+1. If (auth = 1) then (encrypt = 1)
+2. If (auth = 2) then (encrypt = 1)
+NOTE
+--- PAGE 529 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 528 / 684
+3. If (auth >=3) then (encrypt >=2)
+4. If(encrypt = 0) then (password is null)
+5. If(encrypt = 1) then
+{
+1) password can’t be set null
+2) password format: (5 ASCII character) or (10 hexadecimal number) or(13 ASCII character)
+or(26 hexadecimal number)
+}
+6. if(encrypt >= 2) then
+{
+1) password can’t be set null
+2) password format: (8~63 ASCII character or 64 hexadecimal number)
+}
+Examples
+AT+CWAUTH?
++CWAUTH:0,1, "11111"
+OK
+AT+CWAUTH?
++CWAUTH:5,4, "12345678"
+OK
+AT+CWAUTH=0,0
+OK //Auth:open/share encrypt:null
+AT+CWAUTH=1,1,"11111"
+OK //Auth:open encrypt: WEP
+AT+CWAUTH=2,1,"12345"
+OK //Auth:share encrypt: WEP
+//(ASCII character password:12345)
+AT+CWAUTH=2,1,"3132333435"
+OK //Auth:share encrypt:WEP
+//(sixteen hexadecimal number: password 12345)
+AT+CWAUTH=5,4,"abcd1234"
+OK //Auth:WPA/WPA2 encrypt:TIKP-AES
+--- PAGE 530 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 529 / 684
+25.2.7 AT+CWMOCH 80211 mode and channel setting
+AT+CWMAP mode and channel setting
+Read Command
+AT+CWMOCH?
+Response
++CWMOCH:<mode>,<channel>
+OK
+Write Command
+AT+CWMOCH=<mode>,<ch
+annel>
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<mode> 2 – b 2.4G mode
+3 – b/g 2.4G mode
+4 – b/g/n 2.4G mode
+<channel> 0 – auto select
+1~11 – 2.4Gmode channel number
+Examples
+AT+CWMOCH?
++CWMOCH:4,0
+OK
+AT+CWMOCH=3,1
+OK
+25.2.8 AT+CWISO Client isolation setting
+AT+CWISO Client isolation setting
+Test Command
+AT+CWISO=?
+Response
++CWISO:(0-1)
+--- PAGE 531 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 530 / 684
+OK
+Read Command
+AT+CWISO?
+Response
++CWMOCH:<mode>,<channel>
+OK
+Write Command
+AT+CWISO=<isolation>
+Response
+OK
+or
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<isolation> 0 Close
+1 Open
+Examples
+AT+CWISO?
++CWISO:1
+OK
+AT+CWISO=0
+OK
+25.2.9 AT+CWMACADDR Get MAC address
+AT+CWISO Client isolation setting
+Test Command
+AT+CWMACADDR=?
+Response
+[<number>,<mac_addr>
+[… …]]
+OK
+Parameter Saving Mode -
+Max Response Time -
+Reference
+--- PAGE 532 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 531 / 684
+Defined Values
+<number> 0 – host mac addr
+1 – client mac addr
+… – client mac addr
+<mac_addr> Device mac address
+Examples
+AT+CWMACADDR?
+0,00:0A:F5:88:88:8F
+1,74:23:44:8f:64:fd
+OK
+25.2.10 AT+CWCLICNT Get client number connected to the WIFI
+AT+CWISO Client isolation setting
+Read Command
+AT+CWCLICNT?
+Response
++CWCLICNT: <cnt>
+OK
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<cnt> the connected client count, range is from 0 to 32.
+Examples
+AT+CWCLICNT?
++CWCLICNT: 1
+OK
+--- PAGE 533 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 532 / 684
+AT Commands for Bluetooth
+26.1 Overview of AT Commands for Bluetooth
+Command Description
+AT+BLEPOWER Power on/off Ble Device
+AT+BLESTATUS Inquiry current BLE connect status
+AT+BLEHOST Get or Set host name
+AT+BLEADDR Get or Set ble address
+AT+BLESREG Register GATT Server
+AT+BLESDREG Deregister GATT Server
+AT+BLESSAD Add a service
+AT+BLESSRM Remove a service
+AT+BLESSCAD Add a characteristic to an existed service
+AT+BLESSCRM Remove a characteristic
+AT+BLESSDAD Add a descriptor to an existed characteristic
+AT+BLESSDRM Remove a descriptor
+AT+BLESSSTART Start a server
+AT+BLESSSTOP Stop a server
+AT+BLESSETADVDATA Set adverting package
+AT+BLESCLRADVDATA Clear adverting package
+AT+BLESSETADVPARAM Set adverting parameters
+AT+BLESLSTART Start advertising
+AT+BLESLSTOP Stop advertising
+AT+BLEADV Set adverting parameters
+AT+BLEDISCONN Disconnect BLE connection
+AT+BLESIND Send an indication to a client
+AT+BLESNTY Send a notice to a client
+AT+BLESRSP Send a Response to a Client’S Read or Write Operation
++BLESRREQ Read request received from remote device
++BLESWREQ Write request received from remote device
++BLESCON Notify When a Connection’s Status Change
++BLEMTU Exchange mtu request received from remote device
+AT+BLECREG Register GATT Client
+--- PAGE 534 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 533 / 684
+AT+BLECDREG Deregister GATT Client
+AT+BLESCAN Scan Surrounding BLE Device
++BLESCANRST Notify When Find a BLE Device
+AT+BLECGDT Get Device Type
+AT+BLECCON Connect GATT Client to Remote LE/Dual-mode Device
+AT+BLECDISC Disconnect GATT Client to Remote LE/Dual-mode Device
+AT+BLECSS Search Peer’s Service
+AT+BLECGC Search Peer’s Characteristic
+AT+BLECGD Search Peer’s Characteristic Descriptor
+AT+BLECRC Read Peer’s Characteristic
+AT+BLECWC Write Peer’s Characteristic
+AT+BLECRD Read Peer’s Descriptor
+AT+BLECWD Write Peer’s Descriptor
++BLECNTY Notify When Get a Notication from Peer’s Device
++BLECIND Notify When Get a Indication from Peer’s Device
+AT+BTPOWER Open/Close BT Device
+AT+BTHOST Get/Set BT Device Name
+AT+BTADDR Get/Set BT Device Address
+AT+BTSCAN Scan BT Device
+AT+BTIOCAP Get/Set BT Device IO Capability
+AT+BTPAIR Pair With Other BT Device
+AT+BTUNPAIR Unpair With The Paired BT Device
+AT+BTPAIRED Get Paired BT Device
+AT+BTSPPSRV Active/Deactive Local SPP Service
+AT+BTSPPPROF Get Remote BT Device SPP Service Status
+AT+BTSPPCONN Establish/Release SPP Connection
+AT+BTSPPSEND SPP Send Data
++BTSPPRECV SPP Receive Data
+Currently, only A7678 Series support AT commands for BLE. ASR1603_011_051 version SDK support
+AT command for BT.
+26.2 Detailed Description of AT Commands for BLE
+The client and server can be created and used at the same time, but only one connection is supported.
+NOTE
+--- PAGE 535 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 534 / 684
+26.2.1 AT+BLEPOWER Power on/off Ble Device
+AT+BLEPOWER=1 is used to power on ble device. You must execute AT+BLEPOWER=1 before any other
+ble related operations.
+AT+BLEPOWER Power on/off Ble Device
+Test Command
+AT+BLEPOWER=?
+Response
+OK
+Read Command
+AT+BLEPOWER?
+Response
++BLEPOWER: <status>
+OK
+Or
+ERROR
+Write Command
+AT+BLEPOWER=<op>
+Response
+OK
+Or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 12000ms
+Reference -
+Defined Values
+<status> This parameter has the following two values:
+0 the current device is closed.
+1 the current device is open.
+<op> This parameter has the following two values:
+0 power off the ble device
+1 power on the ble device
+Examples
+AT+BLEPOWER=?
+OK
+AT+BLEPOWER=1
+OK
+When the Bluetooth is turned off, the client information is cleared and the connection status of the
+server is reset.
+NOTE
+--- PAGE 536 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 535 / 684
+26.2.2 AT+BLESTATUS Inquiry Current BLE Connect Status
+AT+BLESTATUS Inquiry Current BLE Connect Status
+Test Command
+AT+BLESTATUS=?
+Response
+OK
+Read Command
+AT+BLESTATUS?
+Response
+If ble has no connection:
+OK
+else:
++BLESTATUS: <conn_id>,<gatts_type>,<user_id>,<addr>
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<conn_id> The connection id of current connection
+<gatts_type> The values are as follows:
+0 None.
+1 Gatt Server.
+2 Gatt Client.
+<user_id> User id of GATT server, or the name of the GATT server.A Hex value
+string, each char of it should in set { ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’}.Length is 8.
+<addr> Address of the peer device.
+Examples
+AT+BLESTATUS=?
+OK
+AT+BLESTATUS?
++BLESTATUS: 0,1,ABCDEF00,c0:65:29:48:56:ef
+OK
+--- PAGE 537 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 536 / 684
+26.2.3 AT+BLEHOST Inquiry and Set Host Device Name
+AT+BLEHOST Inquiry and Set Host Device Name
+Test Command
+AT+BLEHOST=?
+Response
+OK
+Read Command
+AT+BLEHOST?
+Response
++BLEHOST: <name>,<address>
+OK
+Write Command
+AT+BLEHOST=<name>
+Response
+OK
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<name> Device name, max length of it is 18 bytes
+<address> Device address
+Examples
+AT+BLEHOST=?
+OK
+AT+BLEHOST?
++BLEHOST: SIMCOM BLE,"df:45:e6:29:65:c0"
+OK
+AT+BLEHOST="SIMCOM BLE"
+OK
+26.2.4 AT+BLEADDR Inquiry and Set Device Address
+AT+BLEADDR Inquiry and Set Device Address
+Test Command
+AT+BLEADDR=?
+Response
+OK
+Read Command
+AT+BLEADDR?
+Response
++BLEADDR: <address>
+--- PAGE 538 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 537 / 684
+OK
+Write Command
+AT+BLEADDR=<address>
+Response
++BLEADDR: <address>
+OK
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<address> Device address
+Examples
+AT+BLEADDR=?
+OK
+AT+BLEADDR?
++BLEADDR: "df:45:e6:29:65:c0"
+OK
+AT+BLEADDR="C0:00:00:00:00:01"
++BLEADDR: "c0:00:00:00:00:01"
+OK
+26.2.5 AT+BLESREG Register GATT Server
+AT+BLESREG Register GATT Server
+Test Command
+AT+BLESREG=?
+Response
+OK
+Read Command
+AT+BLESREG?
+Response
+If the server has already been registered, response
++BLESREG: <server_index>,<user_id>
+…
++BLESREG: <server_index>,<user_id>
+OK
+else only response
+--- PAGE 539 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 538 / 684
+OK
+Execution Command
+AT+BLESREG
+Response
++BLESREG: <server_index>,<user_id>
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<server_index> Server index, the number of registered servers is limited to 64.
+<user_id> User id of GATT server, or the name of the GATT server.
+A Hex value string. Each char of it should in set
+{ ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+Examples
+AT+BLESREG=?
+OK
+AT+BLESREG
++BLESREG: 0, ABCDEF50
+OK
+AT+BLESREG?
++BLESREG: 0,ABCDEF50
+OK
+26.2.6 AT+BLESDREG Deregister GATT Server
+AT+BLESDREG Deregister GATT Server
+Test Command
+AT+BLESDREG=?
+Response
+OK
+Read Command
+AT+BLESDREG?
+Response
+OK
+Write Command
+AT+BLESDREG=<server_index
+Response
++BLESDREG: <server_index>,<user_id>
+--- PAGE 540 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 539 / 684
+>
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<server_index> Server index
+<user_id> User id of GATT server, or the name of the GATT server.
+A Hex value string. Each char of it should in set
+{ ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+Examples
+AT+BLESDREG=?
+OK
+AT+BLESDREG?
+OK
+AT+BLESDREG=0
++BLESDREG: 0,ABCDEF00
+OK
+26.2.7 AT+BLESSAD Add a Service
+AT+BLESSAD Add a Service
+Test Command
+AT+BLESSAD=?
+Response
+OK
+Read Command
+AT+BLESSAD?
+Response
+If the server has already been registered, response
++BLESSAD:
+<service_index>,<user_id>,<uuid>,<is_primary>,<inst>,<serv
+ice_handle>
+…
++BLESSAD:
+<service_index>,<user_id>,<uuid>,<is_primary>,<inst>,<serv
+ice_handle>
+--- PAGE 541 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 540 / 684
+OK
+else only response
+OK
+Write Command
+AT+BLESSAD=<server_index>,
+<uuid>,<num_handles>,<is_pri
+mary>,<inst>
+Response
++BLESSAD:
+<service_index>,<user_id>,<uuid>,<is_primary>,<inst>,<serv
+ice_handle>
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<server_index> Server Index. Generated when the server is created.
+<service_index> Service Index, the number of registered services is limited to 64.
+<user_id> User id of GATT server, or the name of the GATT server.
+A Hex value string. Each char of it should in set
+{ ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+<uuid> The uuid of the service. Max length is 32.
+<num_handles> Reserve.
+<is_primary> The values are as follows:
+1 primary service.
+<inst> Reserve.
+<service_handle> The handle of this service. Dec format.
+Examples
+AT+BLESSAD=?
+OK
+AT+BLESSAD=0,"1802",30,1,0
++BLESSAD: 0,ABCDEF50,1802,1,0,0
+OK
+AT+BLESSAD?
++BLESSAD: 0,ABCDEF50,1802,1,0,0
+OK
+--- PAGE 542 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 541 / 684
+26.2.8 AT+BLESSRM Remove a Service
+AT+BLESSRM Remove a Service
+Test Command
+AT+BLESSRM=?
+Response
+OK
+Read Command
+AT+BLESSRM?
+Response
+OK
+Write Command
+AT+BLESSRM=<service_index>
+Response
++BLESSRM:
+<service_index>,<user_id>,<uuid>,<service_handle>
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<service_index> Service Index
+<user_id> User id of GATT server, or the name of the GATT server.
+A Hex value string. Each char of it should in set
+{ ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+<uuid> The UUID of the service, a string with hex value, length is 4.
+<service_handle> The handle of this service. Dec format.
+Examples
+AT+BLESSRM=?
+OK
+AT+BLESSRM?
+OK
+AT+BLESSRM=0
++BLESSRM: 0,ABCDEF50,1802,0
+OK
+--- PAGE 543 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 542 / 684
+26.2.9 AT+BLESSCAD Add a Characteristic to an Existed Service
+AT+BLESSCAD Add a Characteristic to an Existed Service
+Test Command
+AT+BLESSCAD=?
+Response
+OK
+Read Command
+AT+BLESSCAD?
+Response
+If the server has already been registered, response
++BLESSCAD:
+<char_index>,<user_id>,<char_uuid>,<inst>,<prop>,<permis
+sion>,<char_handle>
+…
++BLESSCAD:
+<char_index>,<user_id>,<char_uuid>,<inst>,<prop>,<permis
+sion>,<char_handle>
+OK
+else only response
+OK
+Write Command
+AT+BLESSCAD=<service_inde
+x>,<char_uuid>,<inst>,<pro
+p>,<permission>
+Response
++BLESSCAD:
+<char_index>,<user_id>,<char_uuid>,<inst>,<char_handle>
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<service_index> Service Index
+<char_index> Characteristic index, the number of registered characteristics is limited
+to 64.
+<user_id> User id of GATT server, or the name of the GATT server. A Hex value
+string. Each char of it should in set { ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+<char_uuid> The UUID of the characteristic. Max length is 32.
+<inst> Not use.
+<prop> The characteristic’s properties. It should be a combination of the
+following values:
+1 Broadcast
+2 Read
+--- PAGE 544 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 543 / 684
+4 Write without response
+8 Write
+16 Notify
+32 Indicate
+64 Authenticated Signed Writes
+128 Extended properties
+<permission> Permission of this characteristic.
+It should be a combination of the following values:
+Read 1
+Write 2
+<char_handle> The handle of this Characteristic. Dec format.
+Examples
+AT+BLESSCAD=?
+OK
+AT+BLESSCAD=0,"2A06",4,38,3
++BLESSCAD: 0,ABCDEF50,2A06,4,0
+OK
+AT+BLESSCAD?
++BLESSCAD: 0,ABCDEF50,2A06,4,38,3,0
+OK
+26.2.10 AT+BLESSCRM Remove a Characteristic
+AT+BLESSCRM Remove a Characteristic
+Test Command
+AT+BLESSCRM=?
+Response
+OK
+Write Command
+AT+BLESSCRM=<char_index>
+Response
++BLESSCRM:
+<char_index>,<user_id>,<char_uuid>
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+--- PAGE 545 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 544 / 684
+Defined Values
+<char_index> Characteristic index
+<user_id> User id of GATT server, or the name of the GATT server. A Hex value
+string. Each char of it should in set { ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+<char_uuid> The UUID of the characteristic, a string with hex value, length is 4.
+Examples
+AT+BLESSCRM=?
+OK
+AT+BLESSCRM=0
++BLESSCRM: 0,ABCDEF50,2A06
+OK
+26.2.11 AT+BLESSDAD Add a Descriptor to an Existed Characteristic
+AT+BLESSDAD Add a Descriptor to an Existed Characteristic
+Test Command
+AT+BLESSDAD=?
+Response
+OK
+Read Command
+AT+BLESSDAD?
+Response
+If the server has already been registered, response
++BLESSDAD:
+<desc_index>,<char_uuid> ,<desc_uuid>,<inst>,<desc_handl
+e>
+…
++BLESSDAD:
+<desc_index>,<char_uuid> ,<desc_uuid>,<inst>,<desc_handl
+e>
+OK
+else only response
+OK
+Write Command
+AT+BLESSDAD=<char_index
+>,<desc_uuid>,<inst>,<pe
+rmission>
+Response
++BLESSDAD:
+<desc_index>,<char_uuid> ,<desc_uuid>,<inst>,<desc_handl
+e>
+OK
+--- PAGE 546 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 545 / 684
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<char_index> Characteristic index
+<desc_index> Descriptor Index
+<char_uuid> The UUID of the characteristic, max length is 32.
+<desc_uuid> The UUID of the descriptor, the rules as follows:
+1.can’t add multiple the same descriptor to a characteristic.
+2.can’t add descriptor to a characteristic if server is already active.
+3.max length is 32.
+4.available value is 2900,2901,2902,2903,2904,2905.
+<inst> Not use.
+<permission> Permission of this characteristic. Dec format.
+It should be a combination of the following values:
+Read 1
+Write 2
+<desc_handle> Handle of this descriptor. Dec format.
+Examples
+AT+BLEPOWER=1
+OK
+AT+BLESREG?
+OK
+AT+BLESREG
++BLESREG: 0,ABCDEF00
+OK
+AT+BLESSAD?
+OK
+AT+BLESSAD=0,"1603",30,1,4
++BLESSAD: 0,ABCDEF00,1603,1,4,0
+OK
+--- PAGE 547 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 546 / 684
+AT+BLESSCAD=0,"8901",4,54,3
++BLESSCAD: 0,ABCDEF00,8901,0,0
+OK
+AT+BLESSDAD=0,"2901",4,0
++BLESSDAD: 0,8901,2901,0,0
+OK
+AT+BLESSDAD=0,"2902",4,0
++BLESSDAD: 1,8901,2902,0,0
+OK
+AT+BLESSDAD=0,"2901",4,0
+ERROR
+AT+BLEADV=0,1,1,1,0
++BLEADV: ABCDEF00
+OK
+AT+BLESSSTART=0,0
++BLESSSTART: 0,ABCDEF00,0
+OK
+AT+BLESLSTART=0
++BLESLSTART: 0,ABCDEF00
+OK
+AT+BLESSDAD=0,"2903",4,0
+ERROR
+26.2.12 AT+BLESSDRM Remove a Descriptor
+AT+BLESSDRM Add a Descriptor to an Existed Service
+Test Command
+AT+BLESSDRM=?
+Response
+OK
+--- PAGE 548 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 547 / 684
+Write Command
+AT+BLESSDRM=<desc_index>
+Response
++BLESSDRM: <desc_index>,<desc_uuid>
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<desc_index> Descriptor Index
+<desc_uuid> The UUID of the descriptor, a string with hex value, length is 4.
+Examples
+AT+BLESSDRM=?
+OK
+AT+BLESSDRM=0
++BLESSDRM: 0,0210
+OK
+26.2.13 AT+BLESSSTART Start a Server
+AT+BLESSSTART Start a Server
+Test Command
+AT+BLESSSTART=?
+Response
+OK
+Read Command
+AT+BLESSSTART?
+Response
+If no started device:
+OK
+Else
++BLESSSTART:
+<server_index>,<user_id>,<server_ble_link_handle>
+OK
+Write Command
+AT+BLESSSTART=<server_ind
+ex>,<transport>
+Response
++BLESSSTART:
+<server_index>,<user_id>,<server_ble_link_handle>
+--- PAGE 549 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 548 / 684
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<server_index> Server index. Generated when the server is created.
+<transport> Not use.
+<user_id> User id of GATT server, or the name of the GATT server. A Hex value
+string. Each char of it should in set { ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+<server_ble_link_handle> The ble link handle of this server. Dec format.
+Examples
+AT+BLESSSTART=?
+OK
+AT+BLESSSTART=0,0
++BLESSSTART: 0,ABCDEF50,0
+OK
+26.2.14 AT+BLESSSTOP Stop a Server
+AT+BLESSSTOP Stop a Server
+Test Command
+AT+BLESSSTOP=?
+Response
+OK
+Read Command
+AT+BLESSSTOP?
+Response
+OK
+Write Command
+AT+BLESSSTOP=<server_inde
+x>
+Response
++BLESSSTOP:
+<server_index>,<user_id>,<server_ble_link_handle>
+OK
+or
+ERROR
+--- PAGE 550 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 549 / 684
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<server_index> Server index. Generated when the server is created.(server should
+stop after ble advertising stop)
+<user_id> User id of GATT server, or the name of the GATT server.A Hex value
+string. Each char of it should in set { ‘0’~‘9’,‘a’~‘f’,‘A’~‘F’ }. Length is 8.
+<server_ble_link_handle> The ble link handle of this server. Dec format.
+Examples
+AT+BLEPOWER=1
+OK
+AT+BLESREG?
+OK
+AT+BLESREG
++BLESREG: 0,ABCDEF00
+OK
+AT+BLESSAD?
+OK
+AT+BLESSAD=0,"1603",30,1,4
++BLESSAD: 0,ABCDEF00,1603,1,4,0
+OK
+AT+BLESSCAD=0,"8901",4,54,3
++BLESSCAD: 0,ABCDEF00,8901,0,0
+OK
+AT+BLESSDAD=0,"2901",4,0
++BLESSDAD: 0,8901,2901,0,0
+OK
