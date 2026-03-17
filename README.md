@@ -27,6 +27,19 @@ A sophisticated ESP32-based GPS tracking system utilizing the **A7680C 4G LTE + 
 
 ---
 
+## 📚 Libraries Required
+
+Ensure the following libraries are installed in your Arduino IDE:
+
+1. **Adafruit MPU6050** (by Adafruit) — For 6-axis IMU sensing.
+2. **Adafruit Unified Sensor** (by Adafruit) — Base dependency for MPU6050.
+3. **DFRobotDFPlayerMini** (by DFRobot) — To interface with the MP3 player module.
+4. **Wire** — Built-in for I2C communication.
+5. **HardwareSerial** — Built-in for UART communication.
+
+
+---
+
 ## 📌 Pin Configuration
 
 ### ESP32 Pin Mapping
