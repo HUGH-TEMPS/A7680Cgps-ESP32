@@ -72,7 +72,7 @@
 //                     GLOBALS
 // ═══════════════════════════════════════════════════════════════
 
-String sendAT(String command, unsigned long timeout);
+String sendAT(String command, unsigned long timeout = 5000);
 HardwareSerial SerialAT(2);  // UART2 — default pins ARE 16,17 (modem pins)
 HardwareSerial mp3Serial(1); // UART1 — remapped to 26,27 (no conflict)
 DFRobotDFPlayerMini dfPlayer;
@@ -115,159 +115,11 @@ unsigned long lastGpsLostTime  = 0;
 // Device ID for API
 const char* DEVICE_ID = "SPC-004";
 
-// Build and send HTTP GET to the provided API using current bearer
-// Returns true on 200 OK, false otherwise. Requires NETOPEN active.
-bool sendHttpLocation(float lat, float lon, float accuracyMeters) {
-  // Ensure data and NETOPEN for HTTP service
-  if (!ensureInternetConnection()) {
-    Serial.println("[HTTP] No internet; skipping HTTP send");
-    return false;
-  }
-
-  // Close any previous HTTP profile
-  sendAT("AT+HTTPTERM", 5000);
-  delay(200);
-  String r;
-  bool ok = true;
-
-  // Init HTTP service
-  r = sendAT("AT+HTTPINIT", 8000);
-  if (r.indexOf("OK") == -1) {
-    Serial.println("[HTTP] HTTPINIT failed: " + r);
-    ok = false;
-  }
-
-  // Set CID 1 (PDP context 1)
-  if (ok) sendAT("AT+HTTPPARA=\"CID\",1", 3000);
-
-  // Build URL
-  String url = "http://gateway.ejeepdev.site/spc/api/v1/Live_Location.php?action=insert";
-  url += "&device_id="; url += DEVICE_ID;
-  url += "&latitude=";  url += String(lat, 6);
-  url += "&longitude="; url += String(lon, 6);
-  url += "&accuracy=";  url += String(accuracyMeters, 1);
-
-  // Set URL
-  if (ok) {
-    r = sendAT(String("AT+HTTPPARA=\"URL\",\"") + url + "\"", 8000);
-    if (r.indexOf("OK") == -1) {
-      Serial.println("[HTTP] Set URL failed: " + r);
-      ok = false;
-    }
-  }
-
-  // Do GET
-  if (ok) {
-    r = sendAT("AT+HTTPACTION=0", 8000);
-    // Wait for URC "+HTTPACTION: 0,<status>,<len>"
-    String urc = "";
-    unsigned long t0 = millis();
-    while (millis() - t0 < 15000) {
-      while (SerialAT.available()) urc += (char)SerialAT.read();
-      if (urc.indexOf("+HTTPACTION:") != -1) break;
-      delay(100);
-    }
-    Serial.println("[HTTP] URC: " + urc);
-    int idx = urc.indexOf("+HTTPACTION: 0,");
-    if (idx != -1) {
-      int c1 = urc.indexOf(',', idx + 15);
-      int status = -1;
-      if (c1 != -1) status = urc.substring(idx + 15, c1).toInt();
-      if (status == 200) {
-        Serial.println("[HTTP] 200 OK sent: " + url);
-        sendAT("AT+HTTPTERM", 5000);
-        return true;
-      } else {
-        Serial.println("[HTTP] Non-200 status: " + String(status));
-      }
-    } else {
-      Serial.println("[HTTP] No HTTPACTION URC");
-    }
-  }
-
-  // Cleanup and fail
-  sendAT("AT+HTTPTERM", 5000);
-  return false;
-}
-
-// Build and send HTTP GET to SOS endpoint with IMU data.
-// Returns true only if HTTP 200 and response body contains "OK" or "success".
-bool sendHttpSOS(float ax, float ay, float az, float gx_dps, float gy_dps, float gz_dps) {
-  if (!ensureInternetConnection()) {
-    Serial.println("[HTTP][SOS] No internet; skipping SOS send");
-    return false;
-  }
-
-  // Close any previous HTTP session
-  sendAT("AT+HTTPTERM", 5000);
-  delay(200);
-  String r;
-  bool ok = true;
-
-  // Init HTTP
-  r = sendAT("AT+HTTPINIT", 8000);
-  if (r.indexOf("OK") == -1) {
-    Serial.println("[HTTP][SOS] HTTPINIT failed: " + r);
-    ok = false;
-  }
-
-  if (ok) sendAT("AT+HTTPPARA=\"CID\",1", 3000);
-
-  // Build URL
-  String url = "http://gateway.ejeepdev.site/spc/api/v1/SOS_Alert.php?action=insert";
-  url += "&device_id="; url += DEVICE_ID;
-  url += "&alert_type=fall";
-  url += "&accel_x="; url += String(ax, 2);
-  url += "&accel_y="; url += String(ay, 2);
-  url += "&accel_z="; url += String(az, 2);
-  url += "&gyro_x=";  url += String(gx_dps, 1);
-  url += "&gyro_y=";  url += String(gy_dps, 1);
-  url += "&gyro_z=";  url += String(gz_dps, 1);
-
-  if (ok) {
-    r = sendAT(String("AT+HTTPPARA=\"URL\",\"") + url + "\"", 8000);
-    if (r.indexOf("OK") == -1) {
-      Serial.println("[HTTP][SOS] Set URL failed: " + r);
-      ok = false;
-    }
-  }
-
-  bool http200 = false;
-  if (ok) {
-    r = sendAT("AT+HTTPACTION=0", 8000);
-    String urc = "";
-    unsigned long t0 = millis();
-    while (millis() - t0 < 15000) {
-      while (SerialAT.available()) urc += (char)SerialAT.read();
-      if (urc.indexOf("+HTTPACTION:") != -1) break;
-      delay(100);
-    }
-    Serial.println("[HTTP][SOS] URC: " + urc);
-    int idx = urc.indexOf("+HTTPACTION: 0,");
-    if (idx != -1) {
-      int c1 = urc.indexOf(',', idx + 15);
-      int status = -1;
-      if (c1 != -1) status = urc.substring(idx + 15, c1).toInt();
-      http200 = (status == 200);
-    }
-  }
-
-  bool bodyOK = false;
-  if (ok && http200) {
-    // Read body and check for OK/success tokens
-    String body = sendAT("AT+HTTPREAD", 15000);
-    String bodyLower = body; bodyLower.toLowerCase();
-    if (bodyLower.indexOf("ok") != -1 || bodyLower.indexOf("success") != -1) {
-      bodyOK = true;
-    }
-    Serial.println("[HTTP][SOS] Body: " + body);
-  }
-
-  sendAT("AT+HTTPTERM", 5000);
-  bool res = ok && http200 && bodyOK;
-  Serial.println(res ? "[HTTP][SOS] Sent successfully" : "[HTTP][SOS] Send failed");
-  return res;
-}
+// Forward declarations for functions defined later in the file
+bool ensureInternetConnection();
+GpsData parseCgpsInfo(String raw);
+bool sendHttpLocation(float lat, float lon, float accuracyMeters);
+bool sendHttpSOS(float ax, float ay, float az, float gx_dps, float gy_dps, float gz_dps);
 
 void printHardwareInfo() {
   Serial.println("===== A7680C HARDWARE INFO =====");
@@ -1052,6 +904,146 @@ String getLBSLocation(int specificMode = -1) {
 //   source = "none";
 //   return "";
 // }
+
+
+// -------------------------------------------------------------------
+// Send HTTP GET for Live_Location (proven from test code)
+// -------------------------------------------------------------------
+bool sendHttpLocation(float lat, float lon, float accuracyMeters) {
+  if (!ensureInternetConnection()) {
+    Serial.println("[HTTP] No internet - skip location send");
+    return false;
+  }
+
+  sendAT("AT+HTTPTERM", 5000);
+  delay(200);
+
+  String r = sendAT("AT+HTTPINIT", 10000);
+  if (r.indexOf("OK") == -1) {
+    Serial.println("[HTTP] HTTPINIT failed");
+    return false;
+  }
+  delay(500);
+
+  String url = "http://gateway.ejeepdev.site/spc/api/v1/Live_Location.php?action=insert";
+  url += "&device_id=" + String(DEVICE_ID);
+  url += "&latitude=" + String(lat, 6);
+  url += "&longitude=" + String(lon, 6);
+  url += "&accuracy=" + String(accuracyMeters, 1);
+
+  r = sendAT("AT+HTTPPARA=\"URL\",\"" + url + "\"", 8000);
+  if (r.indexOf("OK") == -1) {
+    Serial.println("[HTTP] URL set failed");
+    sendAT("AT+HTTPTERM", 5000);
+    return false;
+  }
+
+  sendAT("AT+HTTPACTION=0", 30000);
+
+  // Wait for URC
+  String urc = "";
+  unsigned long t0 = millis();
+  while (millis() - t0 < 45000) {
+    while (SerialAT.available()) urc += (char)SerialAT.read();
+    if (urc.indexOf("+HTTPACTION:") != -1) break;
+    delay(10);
+  }
+  urc.trim();
+  Serial.println("[HTTP Location] URC: " + urc);
+
+  int idx = urc.indexOf("+HTTPACTION: 0,");
+  if (idx == -1) {
+    Serial.println("[HTTP Location] No URC - likely 706 or timeout");
+    sendAT("AT+HTTPTERM", 5000);
+    return false;
+  }
+
+  String params = urc.substring(idx + 15);
+  int c1 = params.indexOf(',');
+  int status = params.substring(0, c1).toInt();
+
+  if (status == 200) {
+    Serial.println("[HTTP Location] Success (200 OK)");
+    sendAT("AT+HTTPTERM", 5000);
+    return true;
+  } else {
+    Serial.println("[HTTP Location] Failed - status: " + String(status));
+    sendAT("AT+HTTPTERM", 5000);
+    return false;
+  }
+}
+
+// -------------------------------------------------------------------
+// Send HTTP GET for SOS_Alert (proven from test code)
+// -------------------------------------------------------------------
+bool sendHttpSOS(float ax, float ay, float az, float gx_dps, float gy_dps, float gz_dps) {
+  if (!ensureInternetConnection()) {
+    Serial.println("[HTTP] No internet - skip SOS send");
+    return false;
+  }
+
+  sendAT("AT+HTTPTERM", 5000);
+  delay(200);
+
+  String r = sendAT("AT+HTTPINIT", 10000);
+  if (r.indexOf("OK") == -1) {
+    Serial.println("[HTTP] HTTPINIT failed");
+    return false;
+  }
+  delay(500);
+
+  String url = "http://gateway.ejeepdev.site/spc/api/v1/SOS_Alert.php?action=insert";
+  url += "&device_id=" + String(DEVICE_ID);
+  url += "&alert_type=fall";
+  url += "&accel_x=" + String(ax, 2);
+  url += "&accel_y=" + String(ay, 2);
+  url += "&accel_z=" + String(az, 2);
+  url += "&gyro_x=" + String(gx_dps, 1);
+  url += "&gyro_y=" + String(gy_dps, 1);
+  url += "&gyro_z=" + String(gz_dps, 1);
+
+  r = sendAT("AT+HTTPPARA=\"URL\",\"" + url + "\"", 8000);
+  if (r.indexOf("OK") == -1) {
+    Serial.println("[HTTP] URL set failed");
+    sendAT("AT+HTTPTERM", 5000);
+    return false;
+  }
+
+  sendAT("AT+HTTPACTION=0", 30000);
+
+  String urc = "";
+  unsigned long t0 = millis();
+  while (millis() - t0 < 45000) {
+    while (SerialAT.available()) urc += (char)SerialAT.read();
+    if (urc.indexOf("+HTTPACTION:") != -1) break;
+    delay(10);
+  }
+  urc.trim();
+  Serial.println("[HTTP SOS] URC: " + urc);
+
+  int idx = urc.indexOf("+HTTPACTION: 0,");
+  if (idx == -1) {
+    Serial.println("[HTTP SOS] No URC - likely 706 or timeout");
+    sendAT("AT+HTTPTERM", 5000);
+    return false;
+  }
+
+  String params = urc.substring(idx + 15);
+  int c1 = params.indexOf(',');
+  int status = params.substring(0, c1).toInt();
+
+  if (status == 200) {
+    Serial.println("[HTTP SOS] Success (200 OK)");
+    sendAT("AT+HTTPTERM", 5000);
+    return true;
+  } else {
+    Serial.println("[HTTP SOS] Failed - status: " + String(status));
+    sendAT("AT+HTTPTERM", 5000);
+    return false;
+  }
+}
+
+
 // ═══════════════════════════════════════════════════════════════
 //    GET LOCATION WITH SOURCE — GNSS first, then LBS fallback
 //    Returns "lat,lon" ONLY when we have real coordinates
@@ -1632,7 +1624,10 @@ void loop() {
     Serial.println(">> Sending fall SMS: " + fallMsg);
     bool fallSmsSent = sendSMS(PHONE_NUMBER, fallMsg);
     Serial.println(fallSmsSent ? ">> Fall SMS sent" : ">> Fall SMS failed");
-
+    Serial.println("[HTTP] Pre-send check:");
+      sendAT("AT+CSQ", 3000);
+      sendAT("AT+CGPADDR=1", 3000);
+      sendAT("AT+NETOPEN?", 3000);
     // Sample IMU and send SOS via HTTP once per fall
     sensors_event_t aEv, gEv, tEv;
     if (mpuReady) {
@@ -1719,6 +1714,11 @@ void loop() {
     GpsData gps = parseCgpsInfo(raw);
 
     if (gps.valid) {
+
+      Serial.println("[HTTP] Pre-send check:");
+        sendAT("AT+CSQ", 3000);
+        sendAT("AT+CGPADDR=1", 3000);
+        sendAT("AT+NETOPEN?", 3000);
       // Send immediate HTTP when a fresh GNSS fix is obtained
       sendHttpLocation(gps.latitude, gps.longitude, 5.0);
 
@@ -1738,6 +1738,14 @@ void loop() {
       Serial.println("  Maps:  https://maps.google.com/?q=" +
                      String(gps.latitude, 6) + "," + String(gps.longitude, 6));
       Serial.println("────────────────────────────────");
+
+      // Send to API immediately on fresh fix
+      bool locOk = sendHttpLocation(gps.latitude, gps.longitude, 5.0);
+      if (locOk) {
+        Serial.println(">> Live location sent to API");
+      } else {
+        Serial.println(">> Live location send failed");
+      }
 
     } else {
       // Track how long GPS has been lost
