@@ -1,0 +1,900 @@
+--- PAGE 381 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 380 / 684
+16.4 Unsolicited Result Codes
+URC Description
++HTTP_PEER_CLOSED It’s a notification message. While received, it means the
+connection has been closed by server.
++HTTP_NONET_EVENT[,cid] It’s a notification message. While received, it means now the
+network is unavailable. If using AT+HTTPINIT=<cid>to start HTTP,
+the URC carries the cid parameter
+--- PAGE 382 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 381 / 684
+AT Commands for FTP(S)
+17.1 Overview of AT Commands for FTP(S)
+Command Description
+AT+CFTPSSTART Start FTP(S)service
+AT+CFTPSSTOP Stop FTP(S)Service
+AT+CFTPSLOGIN Login to a FTP(S)server
+AT+CFTPSLOGOUT Logout a FTP(S)server
+AT+CFTPSLIST List the items in the directory on FTP(S)server
+AT+CFTPSMKD Create a new directory on FTP(S)server
+AT+CFTPSRMD Delete a directory on FTP(S)server
+AT+CFTPSCWD Change the current directory on FTP(S)server
+AT+CFTPSPWD Get the current directory on FTP(S)server
+AT+CFTPSDELE Delete a file on FTP(S)server
+AT+CFTPSGETFILE Download a file from FTP(S)server to module
+AT+CFTPSPUTFILE Upload a file from module to FTP(S)server
+AT+CFTPSGET Get a file from FTP(S)server to serial port
+AT+CFTPSPUT Put a file to FTP(S)server through serial port
+AT+CFTPSSIZE Get the file size on FTP(S)server
+AT+CFTPSSINGLEIP Set FTP(S)data socket address type
+AT+CFTPSTYPE Set the transfer type on FTP(S)server
+AT+CFTPSSLCFG Set the SSL context id for FTPS session
+AT+CFTPSMODE Set Active or Passive FTP Mode
+17.2 Detailed Description of AT Commands for FTP(S)
+17.2.1 AT+CFTPSSTART Start FTP(S)service
+--- PAGE 383 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 382 / 684
+AT+CFTPSSTART is used to start FTP(S)service by activating PDP context. You must execute
+AT+CFTPSSTART before any other FTP(S)related operations.
+AT+CFTPSSTART Start FTP(S)service
+Test Command
+AT+CFTPSSTART=?
+Response
++CFTPSSTART: (1-n)
+OK
+Execution Command
+AT+CFTPSSTART
+Response
+1)
+OK
++CFTPSSTART: <errcode>
+2)
+ERROR
+Write Command
+AT+CFTPSSTART=<cid>
+Response
+OK
++CFTPSSTART: <errcode>,<cid>
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<errcode> The result of start FTP(S)service, 0 is success, others are failure.
+Please refer to errcode list.
+Examples
+AT+CFTPSSTART
+OK
++CFTPSSTART: 0
+AT+CFTPSSTART=1
+OK
++CFTPSSTART: 0,1
+--- PAGE 384 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 383 / 684
+17.2.2 AT+CFTPSSTOP Stop FTP(S)Service
+AT+CFTPSSTOP is used to stop FTP(S)service by deactivating PDP context When you are no longer using
+the FTP(S)service, use this command.
+AT+CFTPSSTOP Stop FTP(S)Service
+Test Command
+AT+CFTPSSTOP=?
+Response
++CFTPSSTOP: (1-n)
+OK
+Execution Command
+AT+CFTPSSTOP
+Response
+1)
+OK
++CFTPSSTOP: <errcode>
+2)
+ERROR
+Write Command
+AT+CFTPSSTOP=<cid>
+Response
+1)
+OK
++CFTPSSTOP: <errcode>,<cid>
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<errcode> The result of stop FTP(S)service, 0 is success, others are failure.
+Please refer to errcode list.
+Examples
+AT+CFTPSSTOP
+--- PAGE 385 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 384 / 684
+OK
++CFTPSSTOP: 0
+AT+CFTPSSTOP=1
+OK
++CFTPSSTOP: 0,1
+17.2.3 AT+CFTPSLOGIN Login to a FTP(S)server
+AT+CFTPSLOGIN is used to login to a FTP(S)server, you can login to a FTP server by set parameter
+<server_type> to 0, login to an implicit FTPS server by set <server_type> to 3 and login to an explicit FTPS
+server by set <server_type> to1 or 2. About <sever_type>, more details please refer to Defined Values
+<server_type>.
+AT+CFTPSLOGIN Login to a FTP(S)server
+Test Command
+AT+CFTPSLOGIN=?
+Response
++CFTPSLOGIN:
+"ADDRESS",(1-65535),"USERNAME","PASSWORD"[,(0-3)]
+OK
+Read Command
+AT+CFTPSLOGIN?
+Response
+1) i If the status is not logged in
++CFTPSLOGIN: 0
+OK
+2) If it is logged in
++CFTPSLOGIN: 1
+OK
+3)
+ERROR
+Write Command
+AT+CFTPSLOGIN=<host>,<port
+>,<username>,<password>[<se
+rver_type>]
+Response
+1)
+OK
++CFTPSLOGIN: 0
+2)
+OK
++CFTPSLOGIN: <errcode>
+3)
+--- PAGE 386 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 385 / 684
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<host> Host address, string type, maximum length is 128
+<port> The host listening port for FTP(S), the range is from 1 to 65535
+<username> FTP(S)user name, string type, maximum length is 128
+<password> The user password, string type, maximum length is 128
+<servet_type> FTP(S)server type, numeric, from 0-3, default is 3
+0 FTP server.
+1 Explicit FTPS server with AUTH SSL.
+2 Explicit FTPS server with AUTH TLS.
+3 Implicit FTPS server.
+<errcode> The result code of the FTP/FTPS login. 0 is success. Others are
+failure, please refer to chapter 17.3.
+Examples
+AT+CFTPSLOGIN=?
++CFTPSLOGIN:
+"ADDRESS",(1-65535),"USERNAME","PASSWORD"[,(0-3)]
+OK
+AT+CFTPSLOGIN?
++CFTPSLOGIN: 0
+OK
+AT+CFTPSLOGIN="serveraddr",21,"username","password",0
+OK
++CFTPSLOGIN: 0
+17.2.4 AT+CFTPSLOGOUT Logout a FTP(S)server
+AT+CFTPSLOGOUT is used to logout a FTP(S)sever, make sure you login a FTP(S)sever before you
+execute AT+CFTPSLOGOUT command.
+--- PAGE 387 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 386 / 684
+AT+CFTPSLOGOUT Logout a FTP(S)server
+Test Command
+AT+CFTPSLOGOUT=?
+Response
+OK
+Execute Command
+AT+CFTPSLOGOUT
+Response
+1)
+OK
++CFTPSLOGOUT: 0
+2)
+OK
++CFTPSLOGOUT: <errcode>
+3)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<errcode> The result code of the FTP/FTPS logout. 0 is success. Others are
+failure, please refer to chapter 17.3.
+Examples
+AT+CFTPSLOGOUT=?
+OK
+AT+CFTPSLOGOUT
+OK
++CFTPSLOGOUT: 0
+When you want to stop the FTP(S)service,please use AT+CFTPSLOGOUT to log out of the
+FTP(S)server,then use AT+CFTPSSTOP to stop FTP,if you only use AT+CFTPSSTOP,it will report
+ERROR.
+NOTE
+--- PAGE 388 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 387 / 684
+17.2.5 AT+CFTPSLIST List the items in the directory on FTP(S)server
+This command is used to list the items in the specified directory on FTP(S)server. Module will output the
+items to serial port when list items successfully. Make sure that you have login to FTP(S)server
+successfully.
+AT+CFTPSLIST List the items in the directory on FTP(S)server
+Test Command
+AT+CFTPSLIST=?
+Response
+OK
+Write Command
+AT+CFTPSLIST=<dir>
+Response
+1)
+OK
++CFTPSLIST: DATA,<len>
+…
++CFTPSLIST: 0
+2)
+OK
++CFTPSLIST: <errcode>
+3)
+ERROR
+4)
++CFTPSLIST: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<dir> The directory to be created, string type, maximum length is 112.
+<errcode> The result of create directory, 0 is success, others are failure, please
+refer to chapter 17.3
+<len> The server All files and related information in the directory.
+Examples
+AT+CFTPSLIST="/"
+OK
+--- PAGE 389 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 388 / 684
++CFTPSLIST: DATA,175
+-rw-r--r-- 1 ftp ftp 121 Mar 11 16:24 124.txt
+drwxr-xr-x 1 ftp ftp 0 Jan 13 2020
+TEST113
+drwxr-xr-x 1 ftp ftp 0 Jan 19 2020
+TEST1155
++CFTPSLIST: 0
+17.2.6 AT+CFTPSMKD Create a new directory on FTP(S)server
+AT+CFTPSMKD is used to create a new directory on a FTP(S)server. Please make sure login to the
+FTP(S)server successfully before create a directory.
+AT+CFTPSMKD Create a new directory on FTP(S)server
+Test Command
+AT+CFTPSMKD=?
+Response
++CFTPSMKD: "DIR"
+OK
+Write Command
+AT+CFTPSMKD=<dir>
+Response
+1)
+OK
++CFTPSMKD: 0
+2)
+OK
++CFTPSMKD: <errcode>
+3)
+ERROR
+4)
++CFTPSMKD: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<dir> The directory to be created, string type, maximum length is 112.
+--- PAGE 390 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 389 / 684
+<errcode> The result of create directory, 0 is success, others are failure, please
+refer to chapter 17.3
+Examples
+AT+CFTPSMKD=?
++CFTPSMKD: "DIR"
+OK
+AT+CFTPSMKD="test"
+OK
++CFTPSMKD: 0
+17.2.7 AT+CFTPSRMD Delete a directory on FTP(S)server
+AT+CFTPSRMD is used to delete a directory on FTP(S)server, please make sure login to the FTP(S)server
+successfully before delete a directory.
+AT+CFTPSRMD Delete a directory on FTP(S)server
+Test Command
+AT+CFTPSRMD=?
+Response
++CFTPSRMD: "DIR"
+OK
+Write Command
+AT+CFTPSRMD=<dir>
+Response
+1)
+OK
++CFTPSRMD: 0
+2)
+OK
++CFTPSRMD: <errcode>
+3)
+ERROR
+4)
++CFTPSRMD: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+--- PAGE 391 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 390 / 684
+Reference
+Defined Values
+<dir> The directory to be deleted, string type, maximum length is 112.
+<errcode> The result of create directory, 0 is success, others are failure, please
+refer to chapter 17.3
+Examples
+AT+CFTPSRMD=?
++CFTPSRMD: "DIR"
+OK
+AT+CFTPSRMD="test"
+OK
++CFTPSRMD: 0
+17.2.8 AT+CFTPSCWD Change the current directory on FTP(S)server
+You can use this command to change the current directory on FTP(S)sever. Make sure you have login to
+FTP(S)server successfully before AT+CFTPSCWD
+AT+CFTPSCWD Change the current directory on FTP(S)server
+Test Command
+AT+CFTPSCWD=?
+Response
++CFTPSCWD: "DIR"
+OK
+Write Command
+AT+CFTPSCWD=<dir>
+Response
+1)
+OK
++CFTPSCWD: 0
+2)
+OK
++CFTPSCWD: <errcode>
+3)
+ERROR
+--- PAGE 392 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 391 / 684
+4)
++CFTPSCWD: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<dir> The directory to be changed, string type, maximum length is 112.
+<errcode> The result of create directory, 0 is success, others are failure, please
+refer to chapter 17.3
+Examples
+AT+CFTPSCWD=?
++CFTPSCWD: "DIR"
+OK
+AT+CFTPSCWD="test"
+OK
++CFTPSCWD: 0
+17.2.9 AT+CFTPSPWD Get the current directory on FTP(S)server
+This command is used to get the current directory on FTPS server. Before AT+CFTPSPWD, please make
+sure you have login to FTP(S)server successfully
+AT+CFTPSPWD Get the current directory on FTP(S)server
+Test Command
+AT+CFTPSPWD=?
+Response
++CFTPSPWD:
+OK
+Execute Command
+AT+CFTPSPWD
+Response
+1)
+OK
++CFTPSPWD: <dir>
+--- PAGE 393 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 392 / 684
+2)
+OK
++CFTPSPWD: <errcode>
+3)
+ERROR
+4)
++CFTPSPWD: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<dir> The directory to be got, string type.
+<errcode> The result of create directory, 0 is success, others are failure, please
+refer to chapter 17.3
+Examples
+AT+CFTPSPWD
+OK
++CFTPSPWD: "/"
+17.2.10 AT+CFTPSDELE Delete a file on FTP(S)server
+You can use AT+CFTPSDELE delete a file on FTP(S)server, please make sure login to the FTP(S)server
+successfully before delete a file.
+AT+CFTPSDELE Delete a file on FTP(S)server
+Test Command
+AT+CFTPSDELE=?
+Response
++CFTPSDELE: "FILENAME"
+OK
+Write Command
+AT+CFTPSDELE=<filename>
+Response
+1)
+OK
+--- PAGE 394 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 393 / 684
++CFTPSDELE: 0
+2)
+OK
++CFTPSDELE: <errcode>
+3)
+ERROR
+4)
++CFTPSDELE: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<filename> The name of the file to be deleted. String type, the maximum length is
+112
+<errcode> The result of create directory, 0 is success, others are failure, please
+refer to chapter 17.3
+Examples
+AT+CFTPSDELE=?
++CFTPSDELE: "FILENAME"
+OK
+AT+CFTPSDELE="testfile"
+OK
++CFTPSDELE: 0
+17.2.11 AT+CFTPSGETFILE Download a file from FTP(S)server to module
+You can download a file from FTP(S)server to module, by setting parameter <dir>, you can select the
+directory where to save the downloaded file. Default the downloaded file will be saved to local storage.
+Make sure that you have login to FTP(S)server successfully before AT+CFTPSGETFILE.
+--- PAGE 395 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 394 / 684
+AT+CFTPSGETFILE Download a file from FTP(S)server to module
+Test Command
+AT+CFTPSGETFILE=?
+Response
++CFTPSGETFILE: "FILEPATH"[,(1-2)]
+OK
+Write Command
+AT+CFTPSGETFILE=<filepath>[
+,<dir>[,<offset>]]
+Response
+1)
+OK
++CFTPSGETFILE: 0
+2)
+OK
++CFTPSGETFILE: <errcode>
+3)
+ERROR
+4)
++CFTPSGETFILE: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<filepath> The remote file path. String type, maximum length is 112
+<dir> The directory to save the downloaded file. Numeric type, range is 1-2,
+default is 1(local storage)
+1 C:/(local storage)
+2 D:/(sd card)
+<offset>
+The value for FTP "REST" command which is used for broken transfer
+when transferring failed last time. If the file is complete, the file length
+is not increased.Numeric type, the range is from 0 to 2147483647.
+Note:If offset is not 0,make sure the file already exists, otherwise it will
+fail.
+Note: This parameter is only supported on the 1603,1606 and
+1803 platforms.
+<errcode> The result code of download file from FTP(s)server. 0 is success,
+others are failure, please refer to chapter 17.3.
+Examples
+--- PAGE 396 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 395 / 684
+AT+CFTPSGETFILE=?
++CFTPSGETFILE: "FILEPATH"[,(1-2)]
+OK
+AT+CFTPSGETFILE="test.txt",1
+OK
++CFTPSGETFILE: 0
+17.2.12 AT+CFTPSPUTFILE Upload a file from module to FTP(S)server
+You can use this command to upload a file to FTP(S)server from module. By setting parameter <dir> you
+can select the directory that contains the file to be uploaded. Make sure that you have login to the
+FTP(S)server successfully before AT+CFTPSPUTFILE.
+AT+CFTPSPUTFILE Upload a file from module to FTP(S)server
+Test Command
+AT+CFTPSPUTFILE=?
+Response
++CFTPSPUTFILE: "FILEPATH"[,(range of supported
+<dir>s),(range of supported <rest_size>s)]
+OK
+Write Command
+AT+CFTPSPUTFILE=<filepath>[
+,<dir>[,<rest_size>]]
+Response
+1)
+OK
++CFTPSPUTFILE: 0
+2)
+OK
++CFTPSPUTFILE: <errcode>
+3)
+ERROR
+4)
++CFTPSPUTFILE: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+--- PAGE 397 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 396 / 684
+<filepath> The remote file path. String type, maximum length is 112
+<dir> The directory that contains the uploaded file. Numeric type, range is
+1-2, default is 1(local storage)
+1 C:/(local storage)
+2 D:/(sd card)
+<rest_size> The value for FTP "REST" command which is used for broken transfer
+when transferring failed last time. If the file is complete, the file length
+is not increased. Numeric type, the range is from 0 to 2147483647.
+<errcode> The result code of download file from FTP(s)server. 0 is success,
+others are failure, please refer to chapter 17.3.
+Examples
+AT+CFTPSPUTFILE=?
++CFTPSPUTFILE: "FILEPATH"[,(1-2),(0-2147483647)]
+OK
+AT+CFTPSPUTFILE="test.txt",1
+OK
++CFTPSPUTFILE: 0
+17.2.13 AT+CFTPSGET Get a file from FTP(S)server to serial port
+You can use this command to get a file from FTP(S)server to serial port.
+AT+CFTPSGET Get a file from FTP(S)server to serial port
+Test Command
+AT+CFTPSGET=?
+Response
++CFTPSGET: "FILEPATH"[,<rest_size>]
+OK
+Write Command
+AT+CFTPSGET=<filepath>[,<re
+st_size>]
+Response
+1)
+OK
++CFTPSGET: DATA,<len>
+…
++CFTPSGET: DATA,<len>
+…
++CFTPSGET: 0
+--- PAGE 398 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 397 / 684
+2)
+OK
++CFTPSGET: <errcode>
+3)
+ERROR
+4)
++CFTPSGET: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<filepath> The remote file path. String type, maximum length is 112.
+<rest_size> The value for FTP "REST" command which is used for broken transfer
+when transferring failed last time. Numeric type, the range is from 0 to
+2147483647
+<len> The actual length of the file read. Integer type, the maximum length of
+each package is 1024.
+<errcode> The result code of download file from FTP(s)server. 0 is success,
+others are failure, please refer to chapter 17.3.
+Examples
+AT+CFTPSGET=?
++CFTPSGET: "FILEPATH"[,<rest_size>]
+OK
+AT+CFTPSGET="test.txt"
+OK
++CFTPSGET: DATA,3
+321
++CFTPSGET: 0
+17.2.14 AT+CFTPSPUT Put a file to FTP(S)server through serial port
+--- PAGE 399 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 398 / 684
+You can put a file to FTP(S)server through serial port. Make sure that you have login to FTP(S)server
+successfully.
+AT+CFTPSPUT Put a file to FTP(S)server through serial port
+Test Command
+AT+CFTPSPUT=?
+Response
++CFTPSPUT: "FILEPATH"[,<data_len>[,<rest_size>]]
+OK
+Write Command
+AT+CFTPSPUT=<filepath>[,<dat
+a_len>[,<rest_size>]]
+Response
+1)if upload file through serial port successfully:
+OK
++CFTPSPUT: 0
+2)if failed before input data:
+ERROR
++CFTPSPUT: <errcode>
+3)if failed after input data:
+OK
++CFTPSPUT: <errcode>
+4)
+ERROR
+5)
++CFTPSPUT: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 600000ms
+Reference
+Defined Values
+<filepath> The remote file path. String type, maximum length is 112.
+<data_len> Numeric type, The length of the data to send, the maximum length is
+2048.if parameter <data_len> is omitted, Each <Ctrl+Z>character
+present in the data flow of serial port when downloading FTP data will
+be coded as <ETX><Ctrl+Z>. Each <ETX> character will be coded as
+<ETX><ETX>. Single <Ctrl+Z> means end of the FTP data. <ETX> is
+0x03, and <Ctrl+Z> is 0x1A.
+<rest_size> The value for FTP "REST" command which is used for broken transfer
+when transferring failed last time. Numeric type, the range is from 0 to
+2147483647
+<errcode> The result code of download file from FTP(s)server. 0 is success,
+--- PAGE 400 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 399 / 684
+others are failure, please refer to chapter 17.3.
+Examples
+AT+CFTPSPUT=?
++CFTPSPUT:
+"FILEPATH"[,<data_len>[,<rest_size>]]
+OK
+AT+CFTPSPUT="test.txt",4
+>
+data
+OK
++CFTPSPUT: 0
+17.2.15 AT+CFTPSSINGLEIP Set FTP(S)data socket address type
+This command is used to set FTPS server data socket IP address type. For some FTP(S)server, it is
+needed to set AT+CFTPSSINGLEIP=1.Please make sure to set AT+CFTPSSINGLEIP before
+AT+CFTPSLOGIN.
+AT+CFTPSSINGLEIP Set FTP(S)data socket address type
+Test Command
+AT+CFTPSSINGLEIP=?
+Response
++CFTPSSINGLEIP: (0,1)
+OK
+Read Command
+AT+CFTPSSINGLEIP?
++CFTPSSINGLEIP: <singleip>
+OK
+Write Command
+AT+CFTPSSINGLEIP=<singleip
+>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CFTPSSINGLEIP: <singleip>
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+--- PAGE 401 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 400 / 684
+Reference
+Defined Values
+<singleip> The FTPS data socket IP address type:
+0 decided by PORT response from FTPS server
+1 the same as the control socket.
+Examples
+AT+CFTPSSINGLEIP=?
++CFTPSSINGLEIP: (0,1)
+OK
+AT+CFTPSSINGLEIP?
++CFTPSSINGLEIP: 0
+OK
+AT+CFTPSSINGLEIP=0
+OK
+17.2.16 AT+CFTPSSIZE Get the file size on FTP(S)server
+You can use this command to get the file size on FTP(S)server. Please make sure you have login to
+FTP(S)server before AT+CFTPSSIZE.
+AT+CFTPSSIZE Get the file size on FTP(S)server
+Test Command
+AT+CFTPSSIZE=?
+Response
++CFTPSSIZE: "FILEPATH"
+OK
+Write Command
+AT+CFTPSSIZE=<filepath>
+Response
+1)
+OK
++CFTPSSIZE: <filesize>
+2)
+ERROR
++CFTPSSIZE: <errcode>
+--- PAGE 402 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 401 / 684
+3)
+ERROR
+4)
++CFTPSSIZE: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<filepath> The remote file path on FTP(S)server. String type, max length is 112
+<filesize> Numeric type, size of the remote file on FTP(S)server
+<errcode> The result of set type, 0 is success, others are failure, please refer to
+chapter 4
+Examples
+AT+CFTPSSIZE=?
++CFTPSSIZE: "FILEPATH"
+OK
+AT+CFTPSSIZE="test"
+OK
++CFTPSSIZE: 3
+17.2.17 AT+CFTPSTYPE Set the transfer type on FTP(S)server
+This command is used to set the transfer type on FTP(S)server, please make sure you have login to
+FTP(S)server before AT+CFTPSTYPE.
+AT+CFTPSTYPE Set the transfer type on FTP(S)server
+Test Command
+AT+CFTPSTYPE=?
+Response
++CFTPSTYPE: (A,I)
+OK
+Read Command
+AT+CFTPSTYPE?
++CFTPSTYPE: <type>
+--- PAGE 403 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 402 / 684
+OK
+Write Command
+AT+CFTPSTYPE=<type>
+Response
+1)
+OK
++CFTPSTYPE: 0
+2)
+OK
++CFTPSTYPE: <errcode>
+3)
+ERROR
+4)
++CFTPSTYPE: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<type> The type of transferring:
+A ASCII
+I Binary
+<errcode> The result of set type, 0 is success, others are failure, please refer to
+chapter 17.3
+Examples
+AT+CFTPSTYPE=?
++CFTPSTYPE: (A,I)
+OK
+AT+CFTPSTYPE?
++CFTPSTYPE: I
+OK
+AT+CFTPSTYPE=A
+OK
++CFTPSTYPE: 0
+--- PAGE 404 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 403 / 684
+17.2.18 AT+CFTPSSLCFG Set the SSL context id for FTPS session
+You can use this command to set the SSL context id for FTPS session.
+AT+CFTPSSLCFG Set the SSL context id for FTPS session
+Test Command
+AT+CFTPSSLCFG=?
+Response
++CFTPSSLCFG: (0,1),(0-9)
+OK
+Write Command
+AT+CFTPSSLCFG=<session_id
+>,<ssl_id>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<session_id> Numeric type, 0 for control session, 1 for data session.
+<ssl_id> Numeric type, SSL context ID during 0-9.
+Examples
+AT+CFTPSSLCFG=?
++CFTPSSLCFG: (0,1),(0-9)
+OK
+AT+CFTPSSLCFG=0,1
+OK
+17.2.19 AT+CFTPSMODE Set Active or Passive FTP Mode
+You can use this command to set Active or Passive FTP Mode.
+--- PAGE 405 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 404 / 684
+AT+CFTPSMODE Set Active or Passive FTP Mode
+Test Command
+AT+CFTPSMODE=?
+Response
++CFTPSMODE: (0,1)
+OK
+Read Command
+AT+CFTPSMODE?
++CFTPSMODE: <mode>
+OK
+Write Command
+AT+CFTPSMODE=<mode>
+Response
+1)
+OK
+2)
+ERROR
+3)
++CFTPSMODE: <errcode>
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<mode> Numeric type
+0 Active FTP mode
+1 Passive FTP mode
+Examples
+AT+CFTPSMODE=?
++CFTPSMODE: (0,1)
+OK
+AT+CFTPSMODE=1
+OK
+AT+CFTPSMODE?
++CFTPSMODE: 1
+OK
+NOTE

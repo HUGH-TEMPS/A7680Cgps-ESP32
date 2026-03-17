@@ -1,0 +1,625 @@
+--- PAGE 650 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 649 / 684
+<received tid>[,<len>,<data>]
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<request or response> The message type of COAP server response.
+<coap_sessionId> The COAP server response which coap session
+<received code> The received code of the message
+<received tid> The received tid of the message
+<len> The response data len.
+<data> The response data.
+--- PAGE 651 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 650 / 684
+AT Commands for SMTPS
+32.1 Overview of AT Commands for SMTPS
+Command Description
+AT+CSMTPSCFG Configure the SMTP context
+AT+CSMTPSSRV Set SMTP server address and port number
+AT+CSMTPSAUTH SMTP server authentication
+AT+CSMTPSFROM Sender address and name
+AT+CSMTPSRCPT Recipient address and name (TO/CC/BCC)
+AT+CSMTPSSUB E-mail subject
+AT+CSMTPSBODY E-mail body
+AT+CSMTPSBCH E-mail body character set
+AT+CSMTPSFILE Select attachment
+AT+CSMTPSSEND Initiate session and send e-mail
+AT+CSMTPSSTOP Force to stop sending e-mail
+AT+CSMTPSCLEAN Clean mail content and setting
+Currently, only ASR1603 and ASR1803S support SMTPS.
+32.2 Detailed Description of AT Commands for SMTPS
+32.2.1 AT+CSMTPSCFG Config the SMTP context
+This command is used to select SMTP ssl context and pdp context. SMTP client will initiate session with the
+specified context to send an e-mail.
+Execution command will set the ssl context and pdp context as default value.
+AT+CSMTPSCFG Config the SMTP context
+NOTE
+--- PAGE 652 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 651 / 684
+Test Command
+AT+CSMTPSCFG=?
+Response
+OK
+Write Command
+/* select the ssl context */
+AT+CSMTPSCFG="sslCtxId
+"[,<sslCtxId>]
+Response
+1)if the “sslCtxId” is default:
++CSMTPSCFG: "sslCtxId",<sslCtxId>
+OK
+2) the “sslCtxId” is not default:
+OK
+3) error
+ERROR
+Write Command
+/* select the pdp context */
+AT+CSMTPSCFG="pdpCtxI
+d"[,<pdpCtxId>]
+Response
+1)the “pdpCtxId” is default:
++CSMTPSCFG: "pdpCtxId",<pdpCtxId>
+OK
+2) the “pdpCtxId” is not default:
+OK
+3) error
+ERROR
+Write Command
+/* select the cid */
+AT+CSMTPSCFG="CID"[,<ci
+d>]
+Response
+1)the “pdpCtxId” is default:
++CSMTPSCFG: "CID",<cid>
+OK
+2) the “CID” is not default:
+OK
+3) error
+ERROR
+Execution Command
+AT+CSMTPSCFG
+Response
+OK
+or
+ERROR
+--- PAGE 653 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 652 / 684
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<sslCtxId> SMTP SSL context id. the default is 0.
+<pdpCtxId> SMTP PDP context id. the default is 1.
+<cid> The range is 1-n,The maximum value n is related to the pdp command
+of the modem.
+Example
+AT+CSMTPSCFG="sslCtxId",0
+OK
+AT+CSMTPSCFG="sslCtxId"
++CSMTPSCFG: "sslCtxId",0
+OK
+AT+CSMTPSCFG=”CID”,
++CSMTPSCFG: "CID",1
+OK
+32.2.2 AT+CSMTPSSRV Set SMTP server address and port number
+This command is used to set SMTP server address and server’s port number. SMTP client will initiate TCP
+session with the specified server to send an e-mail.
+Read command returns current SMTP server address and port number.
+Execution command will clear SMTP server address and set the port number as default value.
+AT+CSMTPSSRV Set SMTP server address and port number
+Test Command
+AT+CSMTPSSRV=?
+Response
+OK
+Read Command
+AT+CSMTPSSRV?
+Response
++CSMTPSSRV: <server>,<port>,<server_type>
+OK
+Write Command
+AT+CSMTPSSRV=<server>,
+<port>[,<server_type>]
+Response
+OK
+or
+--- PAGE 654 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 653 / 684
+ERROR
+Execution Command
+AT+CSMTPSSRV
+Response
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<server> SMTP server address, non empty string with double quotes,
+mandatory and ASCII text string up to 127 characters.
+<port> Port number of SMTP server in decimal format, from 1 to 65535, and
+default port is 465 for SMTP.
+<server_type> The type of server:
+1 – SMTP server.
+2 – SMTPS server with SSL3.0/TLS1.0/TLS1.1/TLS1.2 supported
+3 – SMTPS server with STARTTLS
+Example
+AT+CSMTPSSRV="smtp.server.
+com",425
+OK
+AT+CSMTPSSRV?
++CSMTPSSRV:
+"smtp.server.com",425,2
+OK
+AT+CSMTPSSRV
+OK
+AT+CSMTPSSRV?
++CSMTPSSRV: "",465,2
+OK
+--- PAGE 655 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 654 / 684
+32.2.3 AT+CSMTPSAUTH SMTP server authentication
+This synchronous command is used to control SMTP authentication during connection with SMTP server. If
+SMTP server requires authentication while logging in the server, TE must set the authentication control flag
+and provide user name and password correctly before sending an e-mail.
+Read command returns current SMTP server authentication control flag, if the flag is 0, both <user> and
+<pwd> are empty strings.
+Execution Command clears user name and password.
+AT+CSMTPSAUTH SMTP server authentication
+Test Command
+AT+CSMTPSAUTH=?
+Response
++CSMTPSAUTH: (list of supported <flag>s)
+OK
+Read Command
+AT+CSMTPSAUTH?
+Response
++CSMTPSAUTH: <flag>,<user>,<pwd>
+OK
+Write Command
+AT+CSMTPSAUTH=
+<flag>[,<user>,<pwd>]
+Response
+OK
+or
+ERROR
+Execution Command
+AT+CSMTPSAUTH
+Response
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<flag> SMTP server authentication control flag, integer type.
+0 – SMTP server doesn’t require authentication, factory value.
+1 – SMTP server requires authentication.
+<user> User name to be used for SMTP authentication, non empty string with
+double quotes and up to 127 characters.
+<pwd> Password to be used for SMTP authentication, string with double
+--- PAGE 656 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 655 / 684
+quotes and up to 127 characters.
+NOTE: If <flag> is 0, <user> and <pwd> must be omitted (i.e. only
+<flag> is present).
+Example
+AT+CSMTPSAUTH?
++CSMTPSAUTH: 0, "",""
+OK
+AT+CSMTPSAUTH=1,"username
+","password"
+OK
+AT+CSMTPSAUTH?
++CSMTPSAUTH: 1,"username",
+"password"
+OK
+AT+CSMTPSAUTH
+OK
+AT+CSMTPSAUTH?
++CSMTPSAUTH: 0, "", ""
+OK
+32.2.4 AT+CSMTPSFROM Sender address and name
+This synchronous command is used to set sender’s address and name, which are used to construct e-mail
+header. The sender’s address must be correct if the SMTP server requires.
+Read command returns current sender’s address and name.
+Execution command will clear sender’s address and name.
+AT+CSMTPSFROM Sender address and name
+Test Command
+AT+CSMTPSFROM=?
+Response
+OK
+Read Command
+AT+CSMTPSFROM?
+Response
++CSMTPSFROM: <saddr>,<sname>
+OK
+Write Command
+AT+CSMTPSFROM=
+<saddr>[,<sname>]
+Response
+OK
+or
+--- PAGE 657 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 656 / 684
+ERROR
+Execution Command
+AT+CSMTPSFROM
+Response
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<saddr> E-mail sender address (MAIL FROM), non empty string with double
+quotes, mandatory and ASCII text up to 127 characters. <saddr> will
+be present in the header of the e-mail sent by SMTP client in the field:
+"From: ".
+<sname> E-mail sender name, string with double quotes, and alphanumeric
+ASCII text up to 63 characters. <sname> will be present in the header
+of the e-mail sent by SMTP client in the field: "From: ".
+Example
+AT+CSMTPSFROM="senderadd
+ress@server.com","sendernam
+e"
+OK
+AT+CSMTPSFROM?
++CSMTPSFROM:
+"senderaddress@server.com","
+sendername"
+OK
+AT+CSMTPSFROM
+OK
+AT+CSMTPSFROM?
++CSMTPSFROM: "", ""
+OK
+32.2.5 AT+CSMTPSRCPT Recipient address and name (TO/CC/BCC)
+This synchronous command is used to set recipient address/name and kind (TO/CC/BCC). If only the
+parameter of “kind” is present, the command will clear all recipients of this kind, and if only parameters of
+--- PAGE 658 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 657 / 684
+“kind” and “index” are present, the command will clear the specified recipient.
+Read command returns current recipient address/name and kind list.
+Execution command will clear all recipient information.
+AT+CSMTPSRCPT Recipient address and name (TO/CC/BCC)
+Test Command
+AT+CSMTPSRCPT=?
+Response
++CSMTPSRCPT: (list of supported <kind>s), (list of supported
+<index>s)
+OK
+Read Command
+AT+CSMTPSRCPT?
+Response
+[+CSMTPSRCPT: <kind>,<index>,<raddr>,<rname>
+[<CR><LF>…]]
+OK
+or
+OK
+or
+ERROR
+Write Command
+AT+CSMTPSRCPT=<kind>[,
+<index>[,<raddr>[,<rname>]
+]]
+Response
+OK
+or
+ERROR
+Execution Command
+AT+CSMTPSRCPT
+Response
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<kind> Recipient kind, the kinds of TO and CC are used to construct e-mail
+header in the field: “To: ” or “Cc: ”.
+0 – TO, normal recipient.
+1 – CC, Carbon Copy recipient.
+--- PAGE 659 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 658 / 684
+2 – BCC, Blind Carbon Copy recipient.
+<index> Index of the kind of recipient, decimal format, and from 0 to 4.
+<raddr> Recipient address, non empty string with double quotes, and up to 127
+characters.
+<rname> Recipient name, string type with double quotes, and up to 63
+characters.
+Example
+AT+CSMTPSRCPT=0,0,"rcptadd
+ress_to@server.com",
+"rcptname_to"
+OK
+AT+CSMTPSRCPT?
++CSMTPSRCPT:
+0,0,"rcptaddress_to@server.co
+m","rcptname_to"
+OK
+AT+CSMTPSRCPT=1,0,"rcptadd
+ress_cc@server.com","rcptnam
+e_cc"
+OK
+AT+CSMTPSRCPT?
++CSMTPSRCPT:
+0,0,"rcptaddress_to@server.co
+m","rcptname_to"
++CSMTPSRCPT:
+1,0,"rcptaddress_cc@server.co
+m","rcptname_cc"
+OK
+32.2.6 AT+CSMTPSSUB E-mail subject
+This synchronous command is used to set the subject of e-mail, which is used to construct e-mail header.
+Read command returns current e-mail subject.
+Execution command will clear the subject.
+AT+CSMTPSSUB E-mail subject
+Test Command
+AT+CSMTPSSUB=?
+Response
+OK
+Read Command Response
+--- PAGE 660 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 659 / 684
+AT+CSMTPSSUB? +SMTPSUB: <subject_len>,<subject_character><CR><LF>
+[<subject>]
+OK
+Write Command
+AT+CSMTPSSUB=<subject_
+len>[,<subject_character>]
+Response
+>
+OK
+or
+ERROR
+Execution Command
+AT+CSMTPSSUB
+Response
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 120000ms
+Reference
+Defined Values
+<subject> E-mail subject, string with double quotes, and ASCII text up to 511
+characters. <subject> will be present in the header of the e-mail sent
+by SMTPS client in the field: “Subject: ”. For write command, it can
+input any binary data.
+<subject_len> The length of subject content
+<subject_character> The character set of subject. Default is utf-8.
+Example
+AT+CSMTPSSUB?
++CSMTPSSUB: 0,"UTF-8"
+OK
+AT+CSMTPSSUB=19, "utf-8"
+>THIS IS A TEST MAIL
+OK
+AT+CSMTPSSUB?
++SMTPSSUB: 19,"utf-8"
+THIS IS A TEST MAIL
+--- PAGE 661 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 660 / 684
+OK
+32.2.7 AT+CSMTPSBODY E-mail body
+This command is used to set e-mail body, which will be sent to SMTP server with text format.
+Read command returns current e-mail body. If the process of sending an e-mail is ongoing, the command
+will return “ERROR” directly. Execution command clears email body.
+AT+CSMTPSBODY E-mail body
+Test Command
+AT+CSMTPSBODY=?
+Response
+OK
+Read Command
+AT+CSMTPSBODY?
+Response
++CSMTPSBODY: <body_len><CR><LF>
+[<body>]
+OK
+Write Command
+AT+CSMTPSBODY=<body_l
+en>
+Response
+>
+OK
+Execution Command
+AT+CSMTPSBODY
+Response
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 120000ms
+Reference
+Defined Values
+<body> E-mail body, up to 5120 characters.
+<body_len> The length of email body.
+Example
+AT+CSMTPSBODY=38
+>THIS IS A TEST MAIL FROM
+SIMCOM MODULE
+OK
+AT+CSMTPSBODY?
++CSMTPSBODY: 38
+THIS IS A TEST MAIL FROM
+SIMCOM MODULE
+--- PAGE 662 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 661 / 684
+OK
+32.2.8 AT+CSMTPSBCH E-mail body character set
+This synchronous command is used to set the body character set of e-mail.
+Read command returns current e-mail body character set.
+AT+CSMTPSBCH E-mail body character set
+Test Command
+AT+CSMTPSBCH=?
+Response
+OK
+Read Command
+AT+CSMTPSBCH?
+Response
++CSMTPSBCH: <charset>
+OK
+Write Command
+AT+CSMTPSBCH=<charset
+>
+Response
+OK
+or
+ERROR
+Execute Command
+AT+CSMTPSBCH
+Response
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<charset> E-mail body character, string with double quotes. By default, it is
+“utf-8”. The maximum length is 19 bytes.
+Example
+AT+CSMTPSBCH=?
+OK
+AT+CSMTPSBCH="gb2312"
+OK
+AT+CSMTPSBCH?
++CSMTPSBCH: "gb2312"
+--- PAGE 663 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 662 / 684
+OK
+32.2.9 AT+CSMTPSFILE Select attachment
+The synchronous command is used to select file as e-mail attachment.
+Read command returns current all selected attachments with full path.
+Execution command will clear the selected attachments
+AT+CSMTPSFILE Select attachment
+Test Command
+AT+CSMTPSFILE=?
+Response
++CSMTPSFILE: (list of supported <index>s)
+OK
+Read Command
+AT+CSMTPSFILE?
+Response
+[+CSMTPSFILE: <index>,<filename>,<filesize>
+[<CR><LF>…]]
+OK
+Write Command
+AT+CSMTPSFILE=<index>[,
+<filename>]
+Response
+OK
+or
+[+CSMTPS: <err>]
+ERROR
+Execution Command
+AT+CSMTPSFILE
+Response
+OK
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<index> Index for attachments, from 1 to 10. According to the sequence of
+<index>, SMTP client will encode and send all attachments.
+<filename> String type with double quotes, the name of a file which is under
+current directory (refer to file system commands). SMTP client doesn’t
+allow two attachments with the same file name. (For write command, if
+the file name contains non-ASCII characters, this parameter should
+contain a prefix of {non-ascii}. Note: This is only for SD cards)
+<filesize> File size in decimal format. The total size of all attachments can’t
+--- PAGE 664 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 663 / 684
+exceed 10MB.
+<err> The error information.
+Example
+AT+CSMTPSFILE=1,"E:/file1.txt"
+OK
+AT+CSMTPSFILE=1,{non-ascii}"
+E6B58BE8AF95E99984E4BBB62
+E6A7067"
+OK
+AT+CSMTPSFILE?
++CSMTPSFILE: 1,"E:/file1.txt"
+OK
+AT+CSMTPSFILE=2,"U:/ file2.txt
+"
+OK
+AT+CSMTPSFILE?
++CSMTPSFILE: 1, "E:/file1.txt"
++CSMTPSFILE: 2, "U:/file2.txt"
+OK
+32.2.10 AT+CSMTPSSEND Initiate session and send e-mail
+This asynchronous command is used to initiate TCP/SSL session with SMTP server and send an e-mail
+after all mandatory parameters have been set correctly.
+AT+CSMTPSSEND Initiate session and send e-mail
+Test Command
+AT+CSMTPSSEND=?
+Response
+OK
+Execution Command
+AT+CSMTPSSEND
+Response
+OK
++CSMTPSSEND: <err>
+or
+ERROR
+or
++CSMTPSSEND: <err>
+ERROR
+Parameter Saving Mode NO_SAVE
+--- PAGE 665 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 664 / 684
+Max Response Time 9000ms
+Reference
+Defined Values
+<err> The error information. 0 indicates success. Other values indicate
+failure.
+Example
+AT+CSMTPSSEND
+OK
++CSMTPSSEND: 0
+32.2.11 AT+CSMTPSSTOP Force to stop sending e-mail
+The synchronous command is used to force to stop sending e-mail and close the TCP/SSL session while
+sending an e-mail is ongoing. Otherwise, the command will return “ERROR” directly..
+AT+CSMTPSSTOP Force to stop sending e-mail
+Test Command
+AT+CSMTPSSTOP=?
+Response
+OK
+Execution Command
+AT+CSMTPSSTOP
+Response
+OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Example
+AT+CSMTPSSTOP
+OK
+32.2.12 AT+CSMTPSCLEAN Clean mail content and setting
+The synchronous command is used to clean mail content and setting.
+AT+CSMTPSCLEAN Clean mail content and setting
+Execution Command Response

@@ -1,0 +1,1144 @@
+--- PAGE 436 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 435 / 684
+4)+CMQTTRXEND: <client_index>
+At last, the module will send fourth
+message to user and indicate the
+topic and payload have been
+transmitted completely.
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<cause> The cause of disconnection.
+1 Socket is closed passively.
+2 Socket is reset.
+3 Network is closed.
+<topic_total_len> The length of message topic received from MQTT server. The range is
+from 1 to 1024 bytes.
+<payload_total_len> The length of message body received from MQTT server. The range is
+from 1 to 10240 bytes.
+<sub_topic_len> The sub topic packet length, The sum of <sub_topic_len> is equal to
+<topic_total_len>.
+<sub_topic> The sub topic content.
+<sub_payload_len> The sub message body packet length, The sum of <sub_payload_len>
+is equal to <payload_total_len>.
+<sub_payload> The sub message body content.
+--- PAGE 437 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 436 / 684
+AT Commands for SSL
+19.1 Overview of AT Commands for SSL
+Command Description
+AT+CSSLCFG Configure the SSL Context
+AT+CCERTDOWN Download certificate into the module
+AT+CCERTLIST List certificates
+AT+CCERTDELE Delete certificates
+AT+CCHSET Configure the report mode of sending and receiving data
+AT+CCHMODE Configure the mode of sending and receiving data
+AT+CCHSTART Start SSL service
+AT+CCHSTOP Stop SSL service
+AT+CCHADDR Get the IPv4 address
+AT+CCHSSLCFG Set the SSL context
+AT+CCHCFG Configure the Client Context
+AT+CCHOPEN Connect to server
+AT+CCHCLOSE Disconnect from server
+AT+CCHSEND Send data to server
+AT+CCHRECV Read the cached data that received from the server
+AT+CCERTMOVE Move the cert from file system to cert content
+19.2 Detailed Description of AT Commands for SSL
+19.2.1 AT+CSSLCFG Configure the SSL Context
+AT+CSSLCFG Configure the SSL Context
+Test Command
+AT+CSSLCFG=?
+Response
++CSSLCFG: "sslversion",(0-9),(0-4)
+--- PAGE 438 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 437 / 684
++CSSLCFG: "authmode",(0-9),(0-3)
++CSSLCFG: "ignorelocaltime",(0-9),(0,1)
++CSSLCFG: "negotiatetime",(0-9),(10-300)
++CSSLCFG: "cacert",(0-9),(5-108)
++CSSLCFG: "clientcert",(0-9),(5-108)
++CSSLCFG: "clientkey",(0-9),(5-108)
++CSSLCFG: "password",(0-9),(5-108)
++CSSLCFG: "enableSNI",(0-9),(0,1)
++CSSLCFG: "ignorecertCN",(0-9),(0,1)
+OK
+Read Command
+AT+CSSLCFG?
+Response
++CSSLCFG:
+0,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+1,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+2,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+3,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+4,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+5,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+6,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+7,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+--- PAGE 439 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 438 / 684
+8,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
++CSSLCFG:
+9,<sslversion>,<authmode>,<ignoreltime>,<negotiatetime>,<ca
+_file>,<clientcert_file>,<clientkey_file>,<password_file>,<enabl
+eSNI_flag>,<ignorecertCN_flag>
+OK
+Write Command
+/*Query the configuration of the
+specified SSL context*/
+AT+CSSLCFG=<ssl_ctx_inde
+x>
+Response
++CSSLCFG:
+<ssl_ctxindex>,<sslversion>,<authmode>,<ignoreltime>,<nego
+tiatetime>,<ca_file>,<clientcert_file>,<clientkey_file>,<passwor
+d_file>,<enableSNI_flag>,<ignorecertCN_flag>
+OK
+Write Command
+/*Configure the version of the
+specified SSL context*/
+AT+CSSLCFG="sslversion",<
+ssl_ctx_index>,<sslversion>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the authentication
+mode of the specified SSL
+context*/
+AT+CSSLCFG="authmode",<
+ssl_ctx_index>,<authmode>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the ignore local time
+flag of the specified SSL
+context*/
+AT+CSSLCFG="ignorelocalti
+me",<ssl_ctx_index>,<ignorel
+time>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the negotiate
+timeout value of the specified
+SSL context*/
+AT+CSSLCFG="negotiatetime
+",<ssl_ctx_index>,<negotiatet
+ime>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the server root CA of
+the specified SSL context*/
+AT+CSSLCFG="cacert",<ssl_
+Response
+1)If successfully:
+OK
+2)If failed:
+--- PAGE 440 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 439 / 684
+ctx_index>,<ca_file> ERROR
+Write Command
+/*Configure the client certificate
+of the specified SSL context*/
+AT+CSSLCFG="clientcert",<s
+sl_ctx_index>,<clientcert_file
+>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the client key of the
+specified SSL context*/
+AT+CSSLCFG="clientkey",<s
+sl_ctx_index>,<clientkey_file>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the password of the
+specified SSL context*/
+AT+CSSLCFG="password",<s
+sl_ctx_index>,<password_file
+>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the enableSNI flag
+of the specified SSL context */
+AT+CSSLCFG="enableSNI",<
+ssl_ctx_index>,<enableSNI_fl
+ag>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the ignorecertCN
+flag of the specified SSL context
+*/
+AT+CSSLCFG="ignorecertCN
+",<ssl_ctx_index>,<ignorecert
+CN_flag>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<ssl_ctx_index> The SSL context ID. The range is 0-9.
+<sslversion> The SSL version, the default value is 4.
+0 SSL3.0
+1 TLS1.0
+2 TLS1.1
+3 TLS1.2
+4 All
+--- PAGE 441 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 440 / 684
+The configured version should be support by server. So you should
+use the default value if you are not sure that the version which the
+server supported.
+<authmode> The authentication mode, the default value is 0.
+0 no authentication.
+1 server authentication. It needs the root CA of the server.
+2 server and client authentication. It needs the root CA of the
+server, the cert and key of the client.(If the server does not need to
+authenticate the client ,it is equivalent to value 1.)
+3 client authentication and no server authentication. It needs the
+cert and key of the client.( (If the server does not need to
+authenticate the client ,it is equivalent to value 0.)
+<ignoreltime> The flag to indicate how to deal with expired certificate, the default
+value is 1.
+0 care about time check for certification.
+1 ignore time check for certification
+When set the value to 0, it need to set the right current date and time
+by AT+CCLK when need SSL certification.
+<negotiatetime> The timeout value used in SSL negotiate stage. The range is 10-300
+seconds. The default value is 300.
+<ca_file> The root CA file name of SSL context. The file name must have type
+like ".pem" or ".der". The length of filename is from 5 to 108 bytes.
+If the filename contains non-ASCII characters, the file path
+parameter should contain a prefix of {non-ascii} and the quotation
+mark (The string in the quotation mark should be hexadecimal of the
+filename’s UTF8 code).
+There are two ways to download certificate files to module:
+1. By AT+CCERTDOWN.
+2. By FTPS or HTTPS commands. Please refer to Chapter 16&17 of
+this document.
+<clientcert_file> The client cert file name of SSL context. The file name must have
+type like ".pem" or ".der". The length of filename is from 5 to 108
+bytes.
+If the filename contains non-ASCII characters, the file path
+parameter should contain a prefix of {non-ascii} and the quotation
+mark (The string in the quotation mark should be hexadecimal of the
+filename’s UTF8 code).
+There are two ways to download certificate files to module:
+1. By AT+CCERTDOWN.
+2. By FTPS or HTTPS commands. Please refer to Chapter 16&17 of
+this document.
+<clientkey_file> The client key file name of SSL context. The file name must have
+--- PAGE 442 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 441 / 684
+type like ".pem" or ".der". The length of filename is from 5 to 108
+bytes.
+If the filename contains non-ASCII characters, the file path
+parameter should contain a prefix of {non-ascii} and the quotation
+mark (The string in the quotation mark should be hexadecimal of the
+filename’s UTF8 code).
+There are two ways to download certificate files to module:
+1. By AT+CCERTDOWN.
+2. By FTPS or HTTPS commands. Please refer to Chapter 16&17 of
+this document.
+<password_file> The password file name of SSL context.this is used to decrypt the
+client key. The file name must have type like ".pem" or ".der". The
+length of filename is from 5 to 108 bytes.
+If the filename contains non-ASCII characters, the file path
+parameter should contain a prefix of {non-ascii} and the quotation
+mark (The string in the quotation mark should be hexadecimal of the
+filename’s UTF8 code).
+There are two ways to download certificate files to module:
+1. By AT+CCERTDOWN.
+2. By FTPS or HTTPS commands. Please refer to Chapter 16&17 of
+this document.
+<enableSNI_flag> The flag to indicate that enable the SNI flag or not, the default value
+is 0.
+0 not enable SNI.
+1 enable SNI.
+<ignorecertCN_flag> The flag to indicate that enable the ignorecertCN flag or not, the
+default value is 0.
+0 not enable ignorecertCN.
+1 enable ignorecertCN.
+Examples
+AT+CSSLCFG=?
++CSSLCFG: "sslversion",(0-9),(0-4)
++CSSLCFG: "authmode",(0-9),(0-3)
++CSSLCFG: "ignorelocaltime",(0-9),(0,1)
++CSSLCFG: "negotiatetime",(0-9),(10-300)
++CSSLCFG: "cacert",(0-9),(5-108)
++CSSLCFG: "clientcert",(0-9),(5-108)
++CSSLCFG: "clientkey",(0-9),(5-108)
++CSSLCFG: "password",(0-9),(5-108)
++CSSLCFG: "enableSNI",(0-9),(0,1)
+--- PAGE 443 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 442 / 684
++CSSLCFG: "ignorecertCN",(0-9),(0,1)
+OK
+AT+CSSLCFG?
++CSSLCFG: 0,4,0,1,300,"","","","",0,0
++CSSLCFG: 1,4,0,1,300,"","","","",0,0
++CSSLCFG: 2,4,0,1,300,"","","","",0,0
++CSSLCFG: 3,4,0,1,300,"","","","",0,0
++CSSLCFG: 4,4,0,1,300,"","","","",0,0
++CSSLCFG: 5,4,0,1,300,"","","","",0,0
++CSSLCFG: 6,4,0,1,300,"","","","",0,0
++CSSLCFG: 7,4,0,1,300,"","","","",0,0
++CSSLCFG: 8,4,0,1,300,"","","","",0,0
++CSSLCFG: 9,4,0,1,300,"","","","",0,0
+OK
+AT+CSSLCFG="authmode",0,0
+OK
+AT+CSSLCFG=6
++CSSLCFG: 6,4,0,1,300,"","","","",0,0
+OK
+1.When validating a server certificate, ignore the "Hostname does not match certificate's Common
+Name (CN) field" error.
+(In the case of self-signed certificates or in a development environment, there may be an issue where
+the CN field of the certificate does not match the hostname. In such situations, you can disable the
+validation of the certificate's CN field by setting the "ignorecertCN" field to 1, which will help avoid
+connection issues. However, please note that this action introduces certain security risks and should be
+used with caution.)
+2. The <ignorecertCN> field is currently only supported by the 1803S series.
+19.2.2 AT+CCERTDOWN Download certificate into the module
+AT+CCERTDOWN Download certificate into the module
+Test Command
+AT+CCERTDOWN=?
+Response
++CCERTDOWN: (5-108),(1-10240)
+OK
+NOTE
+--- PAGE 444 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 443 / 684
+Write Command
+AT+CCERTDOWN=<filename>,<
+len>
+Response
+1)If it can be download:
+>
+<input data here>
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<filename> The name of the certificate/key/password file. The file name must have
+type like ".pem" or ".der". The length of filename is from 5 to 108 bytes.
+If the filename contains non-ASCII characters, the file path parameter
+should contain a prefix of {non-ascii} and the quotation mark (The
+string in the quotation mark should be hexadecimal of the filename’s
+UTF8 code).
+For Examples: If you want to download a file with name "中华.pem" in
+UTF8, you’d better convert the "中华.pem" to UTF8 coding
+(&#x4E2D;&#x534E;.pem), then input the hexadecimal
+(262378344532443B262378353334453B2E70656D)of UTF8 coding.
+<len> The length of the file data to send. The range is from 1 to 10240 bytes.
+User should note than every packet data should be no larger than
+3072 bytes.
+Examples
+AT+CCERTDOWN=?
++CCERTDOWN: (5-108),(1-10240)
+OK
+AT+CCERTDOWN="ls.pem",1970
+>
+OK
+--- PAGE 445 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 444 / 684
+19.2.3 AT+CCERTLIST List certificates
+AT+CCERTLIST List certificates
+Execute Command
+AT+CCERTLIST
+Response
+[+CCERTLIST: <file_name>
+[+CCERTLIST: <file_name>]
+…
+]
+OK
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<filename> The certificate/key/password files which has been downloaded to
+the module.
+If the filename contains non-ASCII characters, it will show the
+non-ASCII characters as UTF8 code.
+Examples
+AT+CCERTLIST
++CCERTLIST: "ls.pem"
+OK
+19.2.4 AT+CCERTDELE Delete certificates
+AT+CCERTDELE Delete certificates
+Write Command
+AT+CCERTDELE=<filename>
+Response
+1) If remove the file successfully:
+OK
+2) Else
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+--- PAGE 446 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 445 / 684
+Reference -
+Defined Values
+<filename> The name of the certificate/keypassword file. The file name must
+have type like ".pem" or ".der". The length of filename is from 5 to
+108 bytes.
+If the filename contains non-ASCII characters, the file path
+parameter should contain a prefix of {non-ascii} and the quotation
+mark (The string in the quotation mark should be hexadecimal of the
+filename’s UTF8 code).
+For Examples: If you want to download a file with name "中华.pem",
+you should convert the "中华.pem" to UTF8 coding
+(&#x4E2D;&#x534E;.pem), then input the hexadecimal
+(262378344532443B262378353334453B2E70656D)of UTF8
+coding.
+Examples
+AT+CCERTDELE="ls.pem"
+OK
+19.2.5 AT+CCHSET Configure the report mode of sending and receiving data
+AT+CCHSET is used to configure the mode of sending and receiving data. It must be called before
+AT+CCHSTART.
+AT+CCHSET Configure the report mode of sending and receiving data
+Test Command
+AT+CCHSET=?
+Response
++CCHSET: (0,1),(0,1)
+OK
+Read Command
+AT+CCHSET?
+Response
++CCHSET: <report_send_result>,<recv_mode>
+OK
+Write Command
+AT+CCHSET=<report_send_res
+ult>[,<recv_mode>]
+Response
+1)If successfully:
+OK
+2)If failed:
+--- PAGE 447 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 446 / 684
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<report_send_result> Whether to report result of CCHSEND, the default value is 0:
+0 No.
+1 Yes. Module will report +CCHSEND: <session_id>,<err> to MCU
+when complete sending data.
+<recv_mode> The receiving mode, the default value is 0:
+0 Output the data to MCU whenever received data.
+1 Module caches the received data and notifies MCU with
++CCHEVENT: <session_id>, RECV EVENT.
+MCU can use AT+CCHRECV to receive the cached data (only in
+manual receiving mode).
+Examples
+AT+CCHSET=?
++CCHSET: (0,1),(0,1)
+OK
+AT+CCHSET?
++CCHSET: 0,0
+OK
+AT+CCHSET=1,1
+OK
+19.2.6 AT+CCHMODE Configure the mode of sending and receiving data
+AT+CCHMODE is used to select transparent mode (data mode)or non-transparent mode (command mode).
+The default mode is non-transparent mode. This AT command must be called before calling
+AT+CCHSTART.
+AT+CCHMODE Configure the mode of sending and receiving data
+Test Command Response
+--- PAGE 448 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 447 / 684
+AT+CCHMODE=? +CCHMODE: (0,1)
+OK
+Read Command
+AT+CCHMODE?
+Response
++CCHMODE: <mode>
+OK
+Write Command
+AT+CCHMODE=<mode>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<mode> The mode value:
+0 Normal
+1 Transparent mode
+Examples
+AT+CCHMODE=?
++CCHMODE: (0,1)
+OK
+AT+CCHMODE?
++CCHMODE: 0
+OK
+AT+CCHMODE=1
+OK
+There is only one session in the transparent mode, it’s the first session.
+NOTE
+--- PAGE 449 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 448 / 684
+19.2.7 AT+CCHSTART Start SSL service
+AT+CCHSTART is used to start SSL service by activating PDP context. You must execute AT+CCHSTART
+before any other SSL related operations.
+AT+CCHSTART Start SSL service
+Execute Command
+AT+CCHSTART
+Response
+1)If start SSL service successfully:
+OK
++CCHSTART: 0
+2)If failed:
+ERROR
+3)If failed:
+ERROR
++CCHSTART: <err>
+Write Command
+AT+CCHSTART=<cid>
+Response
+1)If start SSL service successfully:
+OK
++CCHSTART: 0
+2)If failed:
+ERROR
+3)If failed:
+ERROR
++CCHSTART: <err>
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<err> The result code, please refer to the end of this chapter.
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+Examples
+--- PAGE 450 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 449 / 684
+AT+CCHSTART
+OK
++CCHSTART: 0
+AT+CCHSTART=1
+OK
++CCHSTART: 0
+19.2.8 AT+CCHSTOP Stop SSL service
+AT+CCHSTOP is used to stop SSL service.
+AT+CCHSTOP Stop SSL service
+Execute Command
+AT+CCHSTOP
+Response
+1)If stop SSL service successfully:
+OK
++CCHSTOP: 0
+2)If failed:
+ERROR
+Write Command
+AT+CCHSTOP=<cid>
+Response
+1)If stop SSL service successfully:
+OK
++CCHSTOP: 0
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<err> The result code, please refer to the end of this chapter
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+--- PAGE 451 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 450 / 684
+Examples
+AT+CCHSTOP
+OK
++CCHSTOP: 0
+AT+CCHSTOP=1
+OK
++CCHSTOP: 0
+19.2.9 AT+CCHADDR Get the IPv4 address
+AT+CCHADDR is used to get the IPv4 address after calling AT+CCHSTART.
+AT+CCHADDR Get the IPv4 address
+Execute Command
+AT+CCHADDR
+Response
+1)if successfully, response
++CCHADDR: <ip_address>
+OK
+2)if pdp has not been activated, response
+ERROR
+Parameter Saving Mode -
+Max Response Time 12000ms
+Reference -
+Defined Values
+<ip address> A string parameter that identifies the IPv4 address after PDP
+activated.
+Examples
+AT+CCHADDR
++CCHADDR: 10.43.71.130
+OK
+--- PAGE 452 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 451 / 684
+19.2.10 AT+CCHSSLCFG Set the SSL context
+AT+CCHSSLCFG is used to set the SSL context which to be used in the SSL connection. It must be called
+before AT+CCHOPEN and after AT+CCHSTART. The setting will be cleared after AT+CCHOPEN failed or
+AT+CCHCLOSE.
+AT+CCHSSLCFG Set the SSL context
+Test Command
+AT+CCHSSLCFG=?
+Response
++CCHSSLCFG: (0,1),(0-9)
+OK
+Read Command
+AT+CCHSSLCFG?
+Response
++CCHSSLCFG: <session_id>,[<ssl_ctx_index>]
++CCHSSLCFG: <session_id>,[<ssl_ctx_index>]
+OK
+Write Command
+AT+CCHSSLCFG=<session_id>
+,<ssl_ctx_index>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<session_id> The session_id to operate. It’s from 0 to 1. (CCH supports 3
+TLS connections in version 1603 on the 160X baseline,
+please refer to the A1602 & 1606 Series_AT Command
+Manual_XXXX.docx for details)
+<ssl_ctx_index> The SSL context ID which will be used in the SSL
+connection. Refer to the <ssl_ctx_index> of AT+CSSLCFG.
+Examples
+AT+CCHSSLCFG=?
++CCHSSLCFG: (0,1),(0-9)
+--- PAGE 453 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 452 / 684
+OK
+AT+CCHSSLCFG?
++CCHSSLCFG: 0,
++CCHSSLCFG: 1,
+OK
+AT+CCHSSLCFG=0,1
+OK
+If you don’t set the SSL context by this command before connecting to SSL/TLS server by
+AT+CCHOPEN, the CCHOPEN operation will use the SSL context as same as index <session_id> (the
+1st parameter of AT+CCHOPEN)when connecting to the server.
+19.2.11 AT+CCHCFG Configure the Client Context
+AT+CCHCFG is used to set the client session context. It must be called before AT+CCHOPEN and after
+AT+CCHSTART. The setting will be cleared after AT+CCHOPEN failed or AT+CCHCLOSE.
+AT+CCHCFG Configure the Client Context
+Test Command
+AT+CCHCFG=?
+Response
++CCHCFG: "sendtimeout",(0-1),(60-150)
++CCHCFG: "sslctx",(0-1),(0-9)
+OK
+Read Command
+AT+CCHCFG?
+Response
++CCHCFG: 0,<sendtimeout_val>,<sslctx_index>
++CCHCFG: 1,<sendtimeout_val>,<sslctx_index>
+OK
+Write Command
+/*Configure the timeout value of
+the specified client when sending
+data*/
+AT+CCHCFG="sendtimeout",<s
+ession_id>,<sendtimeout_val>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the SSL context index,
+it’s as same as
+Response
+1)If successfully:
+OK
+NOTE
+--- PAGE 454 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 453 / 684
+AT+CCHSSLCFG*/
+AT+CCHCFG="sslctx",<session
+_id>,<sslctx_index>
+2)If failed:
+ERROR
+Write Command
+/*Configure the cid values of all
+clients when a connection is
+created*/
+AT+CCHCFG="CID"[,<cid>]
+Response
+1) When <cid> is omitted:
++CCHCFG: "CID",<cid>
+OK
+2) If the <cid> set successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the cid value of the
+specified client when creating a
+connection*/
+AT+CCHCFG="SCID"[,<session
+_id>][,<cid>]
+Response
+1) When both the <session_id> and <cid> are omitted:
++CCHCFG: "SCID",0,<cid>
++CCHCFG: "SCID",1,<cid>
+OK
+2) When <cid> is omitted:
++ CCHCFG: "SCID",<session_id>,<cid>
+OK
+3)If successfully:
+OK
+4)If failed:
+ERROR
+Max Response Time 120000ms
+Reference -
+Defined Values
+<session_id> The session_id to operate. It’s from 0 to 1. (CCH supports 3 TLS
+connections in version 1603 on the 160X baseline, please refer to the
+A1602 & 1606 Series_AT Command Manual_XXXX.docx for details)
+<sendtimeout_val> The timeout value used in sending data stage. The range is 60-150
+seconds. The default value is 150.
+<sslctx_index> The SSL context ID which will be used in the SSL connection. Refer to
+the <ssl_ctx_index> of AT+CSSLCFG.
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+If neither <session_id> nor <cid> is set, the cid of all sessions are
+queried, If <cid> is not set, the cid of the current session is queried,
+and the default value of cid is 1.
+--- PAGE 455 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 454 / 684
+Examples
+AT+CCHCFG=?
++CCHCFG: "sendtimeout",(0-1),(60-150)
++CCHCFG: "sslctx",(0-1),(0-9)
+OK
+AT+CCHCFG?
++CCHCFG: 0,150,
++CCHCFG: 1,150,
+OK
+AT+CCHCFG="sendtimeout",0,120
+OK
+AT+CCHCFG="sslctx",0,3
+OK
+AT+CCHCFG="SCID"
++CCHCFG: "SCID",0,1
++CCHCFG: "SCID",1,1
+OK
+AT+CCHCFG="SCID",1
++CCHCFG: "SCID",1,1
+OK
+AT+CCHCFG="SCID",0,1
+OK
+AT+CCHCFG="CID",1
+OK
+AT+CCHCFG="CID"
++CCHCFG: "CID",1
+OK
+1. Do not mix the configuration of “CID” and “SCID” when configuring the <cid> parameter. Select one
+of the preceding methods to configure CID parameters.
+NOTE
+--- PAGE 456 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 455 / 684
+19.2.12 AT+CCHOPEN Connect to server
+AT+CCHOPEN is used to connect the server.
+AT+CCHOPEN Connect to server
+Test Command
+AT+CCHOPEN=?
+Response
++CCHOPEN: (0,1),"ADDRESS",(1-65535)[,(1-2)[,(1-65535)]]
+OK
+Read Command
+AT+CCHOPEN?
+Response
+If connect to a server, it will show the connected information.
+Otherwise, the connected information is empty.
++CCHOPEN: 0,<host>,<port>,<client_type>,<bind_port>
++CCHOPEN: 1,<host>,<port>,<client_type>,<bind_port>
+OK
+Write Command
+AT+CCHOPEN=<session_id>,<
+host>,<port>[,<client_type>,[<bi
+nd_port>]]
+Response
+1)If connect successfully:
+OK
++CCHOPEN: <session_id>,0
+2)If connect successfully in transparent mode:
+CONNECT [<text>]
+3)If failed:
+OK
++CCHOPEN: <session_id>,<err>
+4)If failed:
+ERROR
+5)If failed in transparent mode:
+CONNECT FAIL
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<session_id>
+The session index to operate. It’s from 0 to 1. (CCH supports 3
+TLS connections in version 1603 on the 160X baseline, please
+refer to the A1602 & 1606 Series_AT Command
+Manual_XXXX.docx for details)
+<host> The server address, maximum length is 256 bytes.
+<port> The server port which to be connected, the range is from 1 to
+--- PAGE 457 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 456 / 684
+65535.
+<client_type>
+The type of client, default value is 2:
+1 TCP client.
+2 SSL/TLS client.
+<bind_port> The local port for channel, the range is from 1 to 65535.
+<text> CONNECT result code string; the string formats please refer ATX
+command.
+<err> The result code: 0 is success. Other values are failure. Please
+refer to chapter 19.3
+Examples
+AT+CCHOPEN=?
++CCHOPEN: (0,1),"ADDRESS",(1-65535)[,(1-2)[,(1-65535)]]
+OK
+AT+CCHOPEN=0,"183.230.174.137",6043,1
+OK
++CCHOPEN: 0,0
+AT+CCHOPEN?
++CCHOPEN: 0,"183.230.174.137",6043,1,
++CCHOPEN: 1,"",,,
+OK
+If you don’t set the SSL context by AT+CCHSSLCFG before connecting a SSL/TLS server by
+AT+CCHOPEN, it will use the <session_id>( the 1’st parameter of AT+CCHOPEN)SSL context when
+connecting to the server.
+19.2.13 AT+CCHCLOSE Disconnect from server
+AT+CCHCLOSE is used to disconnect from the server.
+AT+CCHCLOSE Disconnect from server
+Write Command Response
+NOTE
+--- PAGE 458 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 457 / 684
+AT+CCHCLOSE=<session_id> 1)If successfully:
+OK
++CCHCLOSE: <session_id>,0
+2)If successfully in transparent mode:
+OK
+CLOSED
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<session_id>
+The session index to operate. It’s from 0 to 1. (CCH supports 3
+TLS connections in version 1603 on the 160X baseline, please
+refer to the A1602 & 1606 Series_AT Command
+Manual_XXXX.docx for details)
+<err> The result code: 0 is success. Other values are failure. Please
+refer to the end of this chapter.
+Examples
+AT+CCHCLOSE=0
+OK
++CCHCLOSE: 0,0
+19.2.14 AT+CCHSEND Send data to server
+AT+CCHSEND Send data to server
+Test Command
+AT+CCHSEND=?
+Response
++CCHSEND: (0,1),(1-2048)
+OK
+Read Command
+AT+CCHSEND?
+Response
++CCHSEND: 0,<unsent_len_0>,1,<unsent_len_1>
+--- PAGE 459 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 458 / 684
+OK
+Write Command
+AT+CCHSEND=<session_id>,<l
+en>
+Response
+1)if parameter is right:
+>
+<input data here>
+When the total size of the inputted data reaches <len>, TA will
+report the following code. Otherwise, the serial port will be
+blocked.
+OK
+2)If parameter is wrong or other errors occur:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<session_id> The session_id to operate. It’s from 0 to 1. (CCH supports 3 TLS
+connections in version 1603 on the 160X baseline, please refer to
+the A1602 & 1606 Series_AT Command Manual_XXXX.docx for
+details)
+<len> The length of data to send. Its range is from 1 to 2048 bytes.
+<unsent_len_0> The data of connection 0 cached in sending buffer which is waiting
+to be sent.
+<unsent_len_1> The data of connection 1 cached in sending buffer which is waiting
+to be sent.
+Examples
+AT+CCHSEND=?
++CCHSEND: (0,1),(1-2048)
+OK
+AT+CCHSEND?
++CCHSEND: 0,0,1,0
+OK
+AT+CCHSEND=0,121
+> GET / HTTP/1.1
+Host: www.baidu.com
+User-Agent: MAUI htp User Agent
+Proxy-Connection: keep-alive
+Content-Length: 0
+--- PAGE 460 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 459 / 684
+OK
+19.2.15 AT+CCHRECV Read the cached data that received from the server
+AT+CCHRECV Read the cached data that received from the server
+Read Command
+AT+CCHRECV?
+Response
++CCHRECV: LEN,<cache_len_0>,<cache_len_1>
+OK
+Write Command
+AT+CCHRECV=<session_id>[,<
+max_recv_len>]
+Response
+1)if parameter is right and there are cached data:
+OK
+[+CCHRECV: DATA,<session_id>,<len>
+…
++CCHRECV: DATA,<session_id>,<len>
+…]
++CCHRECV: <session_id>,<err>
+2)if parameter is not right or any other error occurs:
++CCHRECV: <session_id>,<err>
+ERROR
+3)others:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<session_id> The session id to operate. It’s from 0 to 1. (CCH supports 3 TLS
+connections in version 1603 on the 160X baseline, please refer to
+the A1602 & 1606 Series_AT Command Manual_XXXX.docx for
+details)
+<max_recv_len> Maximum bytes of data to receive in the current AT+CCHRECV
+calling. The value ranges from 0 to 2048.
+0 means it will receive all data from the current cache.
+--- PAGE 461 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 460 / 684
+The default value is 0 and it will receive all of RX data cached for
+session <session_id>.
+It will be not allowed when there is no data in the cache.
+<cache_len_0> The length of RX data cached for connection 0.
+<cache_len_1> The length of RX data cached for connection 1.
+<len> The length of data followed.
+<err> The result code: 0 is success. Other values are failure. Please
+refer to chapter 19.3
+Examples
+AT+CCHRECV?
++CCHRECV: LEN,3072,0
+OK
+AT+CCHRECV=0
+OK
++CCHRECV: DATA,0,1024
+HTTP/1.1 200 OK
+Bdpagetype: 1
+Bdqid: 0x9821f6dd000060aa
+Cache-Control: private
+Connection: keep-alive
+Content-Type: text/html;charset=utf-8
+Date: Tue, 24 Mar 2020 02:27:10 GMT
+Expires: Tue, 24 Mar 2020 02:26:31 GMT
+P3p: CP=" OTI DSP COR IVA OUR IND COM "
+P3p: CP=" OTI DSP COR IVA OUR IND COM "
+Server: BWS/1.1
+Set-Cookie: BAIDUID=F0CD980BA0927350B147AB1064A3423D:FG=1; expires=Thu, 31-Dec-37
+23:55:55 GMT; max-age=2147483647; path=/; domain=.baidu.com
+Set-Cookie: BIDUPSID=F0CD980BA0927350B147AB1064A3423D; expires=Thu, 31-Dec-37 23:55:55
+GMT; max-age=2147483647; path=/; domain=.baidu.com
+Set-Cookie: PSTM=1585016830; expires=Thu, 31-Dec-37 23:55:55 GMT; max-age=2147483647;
+path=/; domain=.baidu.com
+Set-Cookie: BAIDUID=F0CD980BA0927350739AA64356C3CB13:FG=1; max-age=31536000;
+expires=Wed, 24-Mar-21 02:27:10 GMT; domain=.baidu.com; path=/; version=1; comment=bd
+Set-Cookie: BDSVRTM=0; path=/
+Set-Cookie: BD_HOME=1; path=/
+Set-Cookie: H_PS_PSSID=30972_1467_21116_30823; path=/; domain=.baidu.com
+Traceid
++CCHRECV: DATA,0,1024
+--- PAGE 462 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 461 / 684
+: 1585016830040414772210962314397044727978
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+X-Ua-Compatible: IE=Edge,chrome=1
+Transfer-Encoding: chunked
+b5e
+<!DOCTYPE html><!--STATUS OK--><html><head><meta http-equiv="Content-Type"
+content="text/html;charset=utf-8"><meta http-equiv="X-UA-Compatible"
+content="IE=edge,chrome=1"><meta content="always" name="referrer"><meta
+name="theme-color" content="#2932e1"><link rel="shortcut icon" href="/favicon.ico"
+type="image/x-icon" /><link rel="search" type="application/opensearchdescription+xml"
+href="/content-search.xml" title="鐧惧害鎼滅储" /><link rel="icon" sizes="any" mask
+href="//www.baidu.com/img/baidu_85beaf5496f291521eb75ba38eacbd87.svg"><link
+rel="dns-prefetch" href="//dss0.bdstatic.com"/><link rel="dns-prefetch"
+href="//dss1.bdstatic.com"/><link rel="dns-prefetch" href="//ss1.bdstatic.com"/><link
+rel="dns-prefetch" href="//sp0.baidu.com"/><link rel="dns-prefetch" href="//sp1.baidu.com"/><link
+rel="dns-prefetch" href="//sp2.baidu.com"/><title>鐧惧害涓€涓?
++CCHRECV: DATA,0,1024
+紝浣犲氨鐭ラ亾</title><style type="text/css" id="css_index"
+index="index">body,html{height:100%}html{overflow-y:auto}body{font:12px
+arial;background:#fff}body,form,li,p,ul{margin:0;padding:0;list-style:none}#fm,body,form{position:
+relative}td{text-align:left}img{border:0}a{text-decoration:none}a:active{color:#f60}input{border:0;p
+adding:0}.clearfix:after{content:'\20';display:block;height:0;clear:both}.clearfix{zoom:1}#wrapper{p
+osition:relative;min-height:100%}#head{padding-bottom:100px;text-align:center;*z-index:1}#ftCon{
+height:50px;position:absolute;text-align:left;width:100%;margin:0
+auto;z-index:0;overflow:hidden}#ftConw{display:inline-block;text-align:left;margin-left:33px;line-he
+ight:22px;position:relative;top:-2px;*float:right;*margin-left:0;*position:static}#ftConw,#ftConw
+a{color:#999}#ftConw{text-align:center;margin-left:0}.bg{background-image:url(http://ss.bdimg.co
+m/static/superman/img/icons-5859e577e2.png);background-repeat:no-repeat;_background-image:u
+rl(http://ss.bdimg.com/static/superman/img/icon
++CCHRECV: 0,0
++CCHEVENT: 0,RECV EVENT
+If connection is closed by server, the cached data will not be cleaned.
+NOTE
+--- PAGE 463 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 462 / 684
+19.2.16 AT+CCERTMOVE Move the cert from file system to cert content
+AT+CCERTMOVE Move the cert from file system to cert content
+Test Command
+AT+CCERTMOVE=?
+Response
++CCERTMOVE: "FILENAME"
+OK
+Write Command
+AT+CCERTMOVE=<filename>
+Response
+1)if parameter is right and the file need to move is exist:
+OK
+2)if parameter is not right or any other error occurs:
+ERROR
+3)others:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<filename> The filename exist in file system,can be found by AT+FSLS. The
+file name must have type like ".pem" or ".der". The length of
+filename is from 5 to 108 bytes.
+Examples
+AT+CCERTMOVE="baidu.der"
+OK
+19.3 Command Result Codes
+19.3.1 Description of <err>
+Result codes Description

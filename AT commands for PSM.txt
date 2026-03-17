@@ -1,0 +1,279 @@
+--- PAGE 669 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 668 / 684
+Examples
+AT+AUTOREGCFG =?
++AUTOREGCFG: the switch of auto reg is closed
+OK
+AT+AUTOREGCFG?
++AUTOREGCFG: the switch of auto reg is closed
+OK
+AT+AUTOREGCFG="CTCC","ENABLE"
+OK
+AT+AUTOREGCFG?
++AUTOREGCFG: the switch of auto reg is opened
+OK
+A7630 series authentication instructions, no testing required.
+NOTE
+--- PAGE 670 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 669 / 684
+AT Commands for PSM
+34.1 Overview of AT Commands for PSM
+Command Description
+AT*COMCFG Enable cat1_1bis
+AT+CPSMS PSM mode
+AT+MEDCR Set psm time and hw psm
+AT +CEDRXS DRX Setting
+AT+CEDRXRDP eDRX Read Dynamic Parameters
+34.2 Detailed Description of AT Commands for psm
+34.2.1 AT*COMCFG Set cat1_1bis
+AT*COMCFG Set cat1_1bis
+AT*COMCFG Set cat1_1bis
+Test Command
+AT*COMCFG=?
+Response
+*COMCFG:<mode>,<tokens> or
+<UMTS_WB_AMR>,<GSM_WB_AMR>,<VENDOR>,<MAN
+UFACTURE>,<LTE_CATEGORY>,<MULTISLOT_POWERPRO
+FILE>,<LTE_SMS_ONLY>,<EC_SUPPORTED>,<EPCO_SUPP
+ORTED>,<HCCP_SUPPORTED>,<MDRB_SUPPORTED>,<CP_
+BACKOFF>,<NSLP>,<EAB>,<ROHC>,<attachWoPdn>
+OK
+Execution Command
+AT*COMCFG
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference
+--- PAGE 671 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 670 / 684
+Defined Values
+<mode> configure MT info
+0 get MT configuration
+1 set MT configuration
+<UMTS_WB_AMR value> 0 or 1 indicate WB AMR is used in UMTS
+< GSM _WB_AMR value> 0 or 1 indicate WB AMR is used in GSM
+<VENDOR value> vendor info
+0 NONE
+1 ATT
+2 CMCC,
+4 IOT
+8 TELCEL
+16 H3G
+32 VDF
+64 SILVER
+128 ORG
+256 TMOBILE
+512 VERIZON
+1024 HP
+<MANUFACTURE value> manufacture info
+0 NONE
+1 M_SILVER
+< LTECATEGORY value> manufacture info
+1、 Cat1
+2、 Cat1_bis
+<attachWoPdn> Attach without PDN connectivity
+0 enable
+1 disable
+Note: supported by CAT 1 baseline 110 or up-to-date
+Examples
+AT*COMCFG=0,16
+*COMCFG:,,,,1
+OK
+AT*COMCFG=1,,,,1
+OK
+Set lte category cat1
+AT*COMCFG=1,,,,1 Set lte category cat1_bis
+OK
+--- PAGE 672 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 671 / 684
+34.2.2 AT+CPSMS Power saving mode setting
+AT+CPSMS Power saving mode setting
+AT+CPSMS Power saving mode setting
+Test Command
+AT+CPSMS=?
+Response
++CPSMS: (0-2)
+OK
+Read Command Response
+AT+CPSMS?
++CPSMS: <mode>,[<Requested_Periodic-RAU>],[
+<Requested_GPRS-READY-timer>],[<Requested_P
+eriodic-TAU>],[<Requested_Active-Time>]
+OK
+Execution Command
+AT+CPSMS=
+<mode>[,<Requested_Pe
+riodic-RAU>[,<Requested_GPR
+SREADY-timer>[,<Requested_P
+eri
+odic-TAU>[,<Requested_Active
+Time>]]]]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<mode> integer type. Indication to disable or enable the use of PSM in the UE
+0 Disable the use of PSM
+1 Enable the use of PSM
+2 Disable the use of PSM and discard all parameters for PSM or, if
+available, reset to the manufacturer specific default values.
+<Requested_Periodic-RAU> string type; one byte in an 8 bit format. Requested extended
+periodic RAU value (T3312) to be allocated to the UE in
+GERAN/UTRAN. The requested
+extended periodic RAU value is coded as one byte (octet 3) of the
+GPRS Timer 3 information
+element coded as bit format (e.g. "01000111" equals 70 hours). For
+the coding and the value range, see the GPRS Timer 3 IE in 3GPP TS
+24.008 [8] Table 10.5.163a/3GPP TS 24.008. See also 3GPP TS
+23.682 [149] and 3GPP TS 23.060 [47]. The default value, if available,
+is Smanufacturer specific.
+<Requested_GPRS-READY- string type; one byte in an 8 bit format. Requested
+--- PAGE 673 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 672 / 684
+timer> GPRS READY timer value (T3314) to be allocated to the UE in
+GERAN/UTRAN. The
+requested GPRS READY timer value is coded as one byte (octet 2) of
+the GPRS Timer
+information element coded as bit format (e.g. "01000011" equals 3
+decihours or 18 minutes).
+For the coding and the value range, see the GPRS Timer IE in 3GPP
+TS 24.008 [8]
+Table 10.5.172/3GPP TS 24.008. See also 3GPP TS 23.060 [47]. The
+default value, if available, is manufacturer specific.
+<Requested_Periodic-TAU> string type; one byte in an 8 bit format. Requested extended
+periodic TAU value (T3412) to be allocated to the UE in E-UTRAN.
+The requested extended
+periodic TAU value is coded as one byte (octet 3) of the GPRS Timer 3
+information element
+coded as bit format (e.g. "01000111" equals 70 hours). For the coding
+and the value range, see
+the GPRS Timer 3 IE in 3GPP TS 24.008 [8] Table 10.5.163a/3GPP
+TS 24.008. See also
+3GPP TS 23.682 [149] and 3GPP TS 23.401 [82]. The default value, if
+available, is
+manufacturer specific.
+<Requested_Active-Time> string type; one byte in an 8 bit format. Requested Active Time
+value (T3324) to be allocated to the UE. The requested Active Time
+value is coded as one byte
+(octet 3) of the GPRS Timer 2 information element coded as bit format
+(e.g. "00100100" equals
+4 minutes). For the coding and the value range, see the GPRS Timer 2
+IE in
+3GPP TS 24.008 [8] Table 10.5.163/3GPP TS 24.008. See also 3GPP
+TS 23.682 [149],
+3GPP TS 23.060 [47] and 3GPP TS 23.401 [82]. The default value, if
+available, is manufacturer
+specific
+Examples
+AT+CPSMS=1,,,"01101111","00001111"
+OK Set t3412-ext time 30s, t3324 time 30s
+34.2.3 AT+MEDCR Set/Get MEDATA COMM RESERVER
+--- PAGE 674 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 673 / 684
+AT+MEDCR Set/Get MEDATA COMM RESERVER
+Test Command
+AT+MEDCR=?
+Response
++MEDCR
+OK
+Read Command
+AT+MEDCR?
+Response
++MEDCR: <flag>,<position>,<value>
+OK
+Write Command
+AT+
++MEDCR=<flag>,<position>[,<c
+onfigVal>]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+< flag > a numeric parameter which determinates the operation
+0: set operation
+1: get operation
+<position> a numeric parameter, range (0-255)
+8: opt for specific IOT without 4G to fasten registration
+9: opt for no detach/attach for AT*BAND initated 23G NW mode
+change
+10: opt for limit EF update for StartCS/PS
+11: opt for remapping PS cid(default 5) since NW rejects 2nd same
+APN
+12: opt for using invalid KSI(7) in case not power off normally
+13: opt for setting LTE initial APN cid map from ebi/nsapi
+30: opt for control cell change auto-reporting
+46: LTE
+47: UMTS
+48: GSM
+< configVal > a numeric parameter, the configure value of each opt, range (0-255)
+Examples
+AT+MDECR=0,71,2
+OK Set t3412 time 2min
+AT+MEDCR=0,103,1
+OK Enable HW psm
+--- PAGE 675 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 674 / 684
+34.2.4 AT+CEDRXS DRX Setting
+AT+CEDRXS DRX Setting
+Test Command
+AT+ CEDRXS =?
+Response
++CEDRXS: (0-3),(1-5)
+OK
+Read Command Response
+AT+ CEDRXS?
++CEDRXS: <eDrxAct>,[ "<requestedEdrxValue>"]
+OK
+Execution Command
+AT+ CEDRXS = <mode>[,<
+eDrxAct >[,< eDrx >
+]]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+< mode > integer type. Indication to disable or enable the use of Drx in the UE
+0 Disable the use of Drx
+1 Enable the use of Drx
+2 Disable the use of Drx and discard all parameters for Drx or, if
+available, reset to the manufacturer specific default values.
+3 Enable the use of eDrx
+< eDrxAct > integer type. indicates the type of access technology
+0 AcT is not using eDRX
+1 EC- GSM-IoT(A/Gb mode)
+4 GSM(A/Gb mode)
+5 UTRAN(Iu mode)
+6 E-UTRAN(WB-S1 mode)
+7 E-UTRAN(NB-S1 mode)
+< eDrx > string type, indicates the type of eDrx
+< requestedEdrxValue > requested eDRX value, half a byte in a 4 bit format
+Examples
+AT+CEDRXS=?
++CEDRXS: (0-3),(1-5)
+OK

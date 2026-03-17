@@ -1,0 +1,231 @@
+--- PAGE 316 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 315 / 684
+OK
+Read Command
+AT+CFTRXBUF?
+Response
++CFTRXBUF: <buffsize_level>
+OK
+Write Command
+AT+CFTRXBUF=<buffsize_le
+vel>
+Response
+a)If successfully:
+OK
+c)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<buffsize_level> The size of the buffer to transfer files to EFS.
+0 -- 20Kb(20,480 bytes)
+1 -- 40Kb(40,960 bytes)
+Examples
+AT+CFTRXBUF=0
+OK
+AT+CFTRXBUF?
++CFTRXBUF: 0
+OK
+The default buffer size is 20KB, which is sufficient for basic file transfer requirements.When transferring
+large files fails, if you are unwilling to extend the delay time in order to ensure the transfer speed, you
+can increase the buffer size to 40KB, but this may affect multiple application scenarios.
+NOTE
+--- PAGE 317 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 316 / 684
+AT Commands for Internet Service
+14.1 Overview of AT Commands for Internet Service
+Command Description
+AT+CHTPSERV Set HTP server information
+AT+CHTPUPDATE Updating date time using HTP protocol
+AT+CNTP Update system time
+14.2 Detailed Description of AT Commands for Internet Service
+14.2.1 AT+CHTPCFG Configure the HTP Context
+specify PDP context by <cid>.
+AT+CHTPCFG Configure the HTP Context
+Test Command
+AT+CHTPCFG=?
+Response
++CHTPCFG: "CID",(1-n)
+OK
+Write Command
+/*Configure the cid values of all
+clients when a connection is
+created*/
+AT+CHTPCFG="CID"[,<cid>]
+Response
+1) When <cid> is omitted:
++CHTPCFG: "CID",<cid>
+OK
+2) If the <cid> set successfully:
+OK
+3)If failed:
+ERROR
+Defined Values
+--- PAGE 318 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 317 / 684
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+Examples
+AT+CHTPCFG="CID",1
+OK
+14.2.2 AT+CHTPSERV Set HTP server information
+This command is used to add or delete HTP server information. There are maximum 16 HTP servers.
+AT+CHTPSERV Set HTP server information
+Test Command
+AT+CHTPSERV=?
+Response
++CHTPSERV: "ADD","HOST",(1-65535),(0-1)[,"PROXY",(1-65535)]
++CHTPSERV: "DEL",(0-15)
+OK
+Read Command
+AT+CHTPSERV?
+Response
+1)
+OK
+2)
++CHTPSERV:
+<index><host>,<port>,<http_version>[,<proxy>,<proxy_port>]
+…
++CHTPSERV: <index><host>,<port>[,<proxy>,<proxy_port>]
+OK
+Write Command
+AT+CHTPSERV=<cmd>,<ho
+st_or_idx>[,<port>,<http_ver
+sion>[,<proxy>,<proxy_port
+>]]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<cmd> This command to operate the HTP server list.
+--- PAGE 319 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 318 / 684
+"ADD" add a HTP server item to the list
+"DEL" delete a HTP server item from the list
+<host_or_idx> If the <cmd> is “ADD”, this field is the same as <host>, length is 1-255;
+If the <cmd> is “DEL”, this field is the index of the HTP server item to
+be deleted from the list.
+<host> The HTP server address, length is 1-255.
+<port> The HTP server port, the range is (1-65535).
+<http_version> The HTTP version of the HTP server:
+0 HTTP 1.0
+1 HTTP 1.1
+<proxy> The proxy address, length is 1-255.
+<proxy_port> The port of the proxy, the range is (1-65535).
+<index> The HTP server index.
+Examples
+AT+CHTPSERV="ADD","www.google.com",80,1
+OK
+14.2.3 AT+CHTPUPDATE Updating date time using HTP protocol
+This command is used to updating date time using HTP protocol.
+AT+CHTPUPDATE Updating date time using HTP protocol
+Test Command
+AT+CHTPUPDATE=?
+Response
+OK
+Read Command
+AT+CHTPUPDATE?
+Response
++CHTPUPDATE: <status>
+OK
+Execute Command
+AT+CHTPUPDATE
+Response
+1)If successfully:
+OK
++CHTPUPDATE: <err>
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+--- PAGE 320 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 319 / 684
+Defined Values
+<status> The status of HTP module:
+Updating HTP module is synchronizing date time
+NULL HTP module is idle now
+<err> The result of the HTP updating
+Examples
+AT+CHTPUPDATE
+OK
++CHTPUPDATE: 0
+14.2.4 AT+CNTPCFG Configure the NTP Context
+specify PDP context by <cid>
+AT+CHTPCFG Configure the HTP Context
+Test Command
+AT+CNTPCFG=?
+Response
++CNTPCFG: "CID",(1-n)
+OK
+Write Command
+/*Configure the cid values of all
+clients when a connection is
+created*/
+AT+CNTPCFG="CID"[,<cid>]
+Response
+1) When <cid> is omitted:
++CNTPCFG: "CID",<cid>
+OK
+2) If the <cid> set successfully:
+OK
+3)If failed:
+ERROR
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+--- PAGE 321 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 320 / 684
+Examples
+AT+CNTPCFG="CID",1
+OK
+14.2.5 AT+CNTP Update system time
+This command is used to update system time with NTP server.
+AT+CNTP Update system time
+Test Command
+AT+CNTP=?
+Response
++CNTP: "HOST",(-96~96)
+OK
+Read Command
+AT+CNTP?
+Response
++CNTP: <host>,<timezone>
+OK
+Write Command
+AT+CNTP=<host>[,<timezon
+e>]
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Execute Command
+AT+CNTP
+Response
+1)If successfully:
+OK
++CNTP: <err>
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<host> NTP server address, length is 0-255.
+<timezone> Local time zone,the range is (-96 to 96), default value is 32.
+Examples

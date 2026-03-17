@@ -1,0 +1,131 @@
+--- PAGE 489 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 488 / 684
+3: 256fs
+4: 512fs
+5: 1024fs
+6: 2048fs
+Examples
+AT+CPCMRATION=?
++CPCMRATION: (0-6)
+OK
+AT+CPCMRATION=1
+OK
+AT+CPCMRATION?
++CPCMRATION: 1
+OK
+NOT
+pcm clock combination mode, the proportion between sampling clock and bit clock, as follows:
+Ration=32 if fync=8k，bclk=8*32 ;if fync=16k,bclk=16*32
+Ration=64
+Ration=28
+Ration=256 if fync=8k ,bclk=8*256=2.048Mhz (default)
+Ration=512
+Ration=1024
+Ration=2048
+AT+CPCMCLKWB Set sampling clock(fync),AT+CPCMRATION Set the ratio of BCLK to fync, so
+bclk=fync*ration .ration has only these fixed values, so different combinations can choose different
+ration
+NOTE
+--- PAGE 490 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 489 / 684
+AT Commands for FOTA
+22.1 Overview of AT Command for FOTA
+Command Description
+AT+CFOTA Start FOTA Service
+AT+LFOTA Start Local FOTA Service
+Currently, only CAT1 modules support at commands for FOTA.
+22.2 Detailed Description of AT Command for FOTA
+22.2.1 AT+CFOTA Start FOTA service
+AT+CFOTA Start FOTA Service
+Write Command
+AT+CFOTA=<channel>,<mo
+de>,<destination_ip/url>,<us
+ername>,<password>,<https
+_sni>
+Response
+1)
+<CR><LF>OK<CR><LF>
++CFOTA: <err>
+2)
+<CR><LF>ERROR: <err><CR><LF>
+Parameter Saving Mode NO_SAVE
+Max Response Time -
+Reference -
+NOTE
+--- PAGE 491 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 490 / 684
+Defined Values
+<channel> 0–5 means the channel number
+<mode> 0 FTP way
+1 HTTP way
+<destination_ip:port/url> The remote site server’s IP address or URL address.
+IP address should be in the format of the dotted decimal notation:
+XXX.XXX.XXX.XXX.
+URL address should be ASCII characters, the maxmum of the
+length is 256 bytes.
+NOTE: If <port> are omitted, the default FTP port is 21 and the default
+HTTP port is 80.
+<username> The login user name, it should be ASCII characters, and the maxmum
+of the length is 128 bytes.
+<password> The login password, it should be ASCII characters, and the maxmum
+of the length is 128 bytes.
+<https_sni> 0 Disable
+1 Enable
+NOTE: Optional parameters, The default is 0, Only baseline 1603 042
+and 124 and above are supported.
+Examples
+AT+CFOTA=0,0,"183.230.174.137:6047/fbf_dfota.bin",simcom,simcom
++CFOTA: FOTA,START
++CFOTA: DOWNLOADING:17
++CFOTA: DOWNLOADING:50
++CFOTA: DOWNLOADING:83
++CFOTA: DOWNLOADING:99
++CFOTA: DOWNLOADING:100
+AT+CFOTA=0,1," 183.230.174.137:6022/bin/fbf_dfota.bin",simcom,simcom
++CFOTA: FOTA,START
++CFOTA: DOWNLOADING:17
++CFOTA: DOWNLOADING:50
+--- PAGE 492 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 491 / 684
++CFOTA: DOWNLOADING:83
++CFOTA: DOWNLOADING:99
++CFOTA: DOWNLOADING:100
+22.2.2 AT+LFOTA Start Local Fota Service
+AT+LFOTA Start Local Fota Service
+Test Command
+AT+LFOTA=?
+Response
++LFOTA: <0-1>,<File Size>
+OK
+Read Command
+AT+LFOTA?
+Response
+1)if data pass check
++LFOTA: 1
+OK
+2)if data doesn’t pass check
++LFOTA: 0
+OK
+3)if data has not transfer yet. It will be initial value -1
++LFOTA: -1
+OK
+Write Command
+AT+LFOTA=<ops>,<File
+Size>
+Response
+1)If successfully:
+>
+OK
+2)If failed:
+>
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values

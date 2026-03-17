@@ -1,0 +1,616 @@
+--- PAGE 365 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 364 / 684
+the URC carries the cid parameter, and
+each cid link reports an independent
+URC.
++IPCLOSE: <client_index>,<close_reason> Socket is closed passively.
+<client_index> is the link number.
+<close_reason>:
+0 Closed by local, active
+1 Closed by remote, passive
+2 Closed for sending timeout or DTR
+off
++CLIENT:
+<link_num>,<server_index>,<client_IP>:<port>
+TCP server accepted a new socket
+client, the index is<link_num>, the TCP
+server index is <server_index>. The
+peer IP address is <client_IP>, the peer
+port is <port>.
+--- PAGE 366 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 365 / 684
+AT Commands for HTTP(S)
+16.1 Overview of AT Commands for HTTP(S)
+Command Description
+AT+HTTPINIT Start HTTP service
+AT+HTTPTERM Stop HTTP Service
+AT+HTTPPARA Set HTTP Parameters value
+AT+HTTPACTION HTTP Method Action
+AT+HTTPHEAD Read the HTTP Header Information of Server Response
+AT+HTTPREAD Read the response information of HTTP Server
+AT+HTTPDATA Input HTTP Data
+AT+HTTPPOSTFILE Send HTTP Request to HTTP(S)server by File
+AT+HTTPREADFILE Receive HTTP Response Content to a file
+16.2 Detailed Description of AT Commands for HTTP(S)
+16.2.1 AT+HTTPINIT Start HTTP Service
+AT+HTTPINIT is used to start HTTP service by activating PDP context. You must execute AT+HTTPINIT
+before any other HTTP related operations.
+AT+HTTPINIT Start HTTP Service
+Test Command
+AT+HTTPINIT=?
+Response
++HTTPINIT: (1-n)
+OK
+Execute Command
+AT+HTTPINIT
+Response
+1)If start HTTP service successfully:
+OK
+--- PAGE 367 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 366 / 684
+2)If failed:
+ERROR
+Write Command
+AT+HTTPINIT=<cid>
+Response
+1)
+OK
++HTTPINIT: <errcode>,<cid>
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<errcode> The result of start HTTP(S)service, 0 is success, others are failure.
+Please refer to errcode list.
+Examples
+AT+HTTPINIT
+OK
+AT+HTTPINIT=1
+OK
++HTTPINIT: 0,1
+16.2.2 AT+HTTPTERM Stop HTTP Service
+AT+HTTPTERM is used to stop HTTP service.
+AT+HTTPTERM Stop HTTP Service
+Test Command
+AT+HTTPTERM=?
+Response
++HTTPTERM: (1-n)
+--- PAGE 368 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 367 / 684
+OK
+Execute Command
+AT+HTTPTERM
+Response
+1)If stop HTTP service successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+AT+HTTPTERM=<cid>
+Response
+1)
+OK
++HTTPTERM: <errcode>,<cid>
+2)
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<errcode> The result of stop HTTP(S)service, 0 is success, others are failure.
+Please refer to errcode list.
+Examples
+AT+HTTPTERM
+OK
+AT+HTTPTERM=1
+OK
++HTTPTERM: 0,1
+16.2.3 AT+HTTPPARA Set HTTP Parameters value
+AT+HTTPPARA is used to set HTTP parameters value. When you want to access to a HTTP server, you
+should input <value> like http://’server’/’path’:’tcpPort’. In addition, https://’server’/’path’:’tcpPort’ is used to
+--- PAGE 369 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 368 / 684
+access to a HTTPS server.
+AT+HTTPPARA Set HTTP Parameters value
+Test Command
+AT+HTTPPARA=?
+Response
+OK
+Write Command
+AT+HTTPPARA="URL",<url>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+HTTPPARA="CONNECTTO"
+,<conn_timeout>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+HTTPPARA="RECVTO",<re
+cv_timeout>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+HTTPPARA="CONTENT",<c
+ontent_type>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+HTTPPARA="ACCEPT",<ac
+cept-type>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+HTTPPARA="SSLCFG",<ssl
+cfg_id>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+HTTPPARA="USERDATA",<
+user_data>
+Response
+1)If parameter format is right:
+OK
+2)If parameter format is not right or other errors occur:
+ERROR
+Write Command
+AT+HTTPPARA="READMODE",
+<readmode>
+Response
+1)If parameter format is right:
+OK
+--- PAGE 370 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 369 / 684
+2)If parameter format is not right or other errors occur:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<url> URL of network resource.String,start with "http://" or"https://"
+a)http://’server’ :’tcpPort’ /’path’.
+b)https://’server’ :’tcpPort’ /’path’.
+"server" DNS domain name or IP address
+"path" path to a file or directory of a server
+"tcpPort" http default value is 80,https default value is 443.(can be
+omitted)
+<conn_timeout> Timeout for accessing server, Numeric type, range is 20-120s, default
+is 120s.
+<recv_timeout> Timeout for receiving data from server, Numeric type range is 2s-120s,
+default is 20s.
+<content_type> This is for HTTP "Content-Type" tag, String type, max length is 256,
+and default is "text/plain".
+<accept-type> This is for HTTP "Accept-type" tag, String type, max length is 256, and
+default is "*/*".
+<sslcfg_id> This is setting SSL context id, Numeric type, range is 0-9. Default is
+0.Please refer to Chapter 19 of this document.
+<user_data> The customized HTTP header information. String type, max length is
+256.( For ASR1603 platforms, the maximum length is 600)
+<readmode> For HTTPREAD, Numeric type, it can be set to 0 or 1. If set to 1, you
+can read the response content data from the same position repeatly.
+The limit is that the size of HTTP server response content should be
+shorter than 1M.Default is 0.
+When you want to use content-type mutipart/form-data to transfer data, you should set
+AT+HTTPPARA="CONTENT","mutipart/form-data" .And we will construct boundary header.
+Examples
+AT+HTTPPARA="URL","http://www.baidu.com"
+OK
+NOTE
+--- PAGE 371 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 370 / 684
+16.2.4 AT+HTTPACTION HTTP Method Action
+AT+HTTPACTION is used to perform a HTTP Method. You can use HTTPACTION to send a get/post
+request to a HTTP/HTTPS server.
+AT+HTTPACTION HTTP Method Action
+Test Command
+AT+HTTPACTION=?
+Response
++HTTPACTION: (0-4)
+(in ASR1603_042 the return is
++HTTPACTION: (0-5)
+)
+OK
+Write Command
+AT+HTTPACTION=<method>
+Response
+1)If parameter format is right:
+OK
++HTTPACTION: <method>,<statuscode>,<datalen>
+2)If parameter format is right but server connected unsuccessfully:
+OK
++HTTPACTION: <method>,<errcode>,<datalen>
+3)If parameter format is not right or other errors occur:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<method> HTTP method specification:
+0 GET
+1 POST
+2 HEAD
+3 DELETE
+4 PUT
+(in ASR1603_042 add method: 5 PATCH)
+<statuscode> Please refer to the end of this chapter
+<datalen> The length of data received
+--- PAGE 372 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 371 / 684
+Examples
+AT+HTTPACTION=?
++HTTPACTION: (0-4)
+OK
+AT+HTTPACTION=0
+OK
++HTTPACTION: 0,200,104220
+16.2.5 AT+HTTPHEAD Read the HTTP Header Information of Server Response
+AT+HTTPHEAD is used to read the HTTP header information of server response when module receives the
+response data from server.
+AT+HTTPHEAD Read the HTTP Header Information of Server Response
+Test Command
+AT+HTTPHEAD=?
+Response
+OK
+Execute Command
+AT+HTTPHEAD
+Response
+1)If read the header information successfully:
++HTTPHEAD: <data_len>
+<data>
+OK
+2)If read failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<data_len> The length of HTTP header
+<data> The header information of HTTP response
+Examples
+AT+HTTPHEAD
++HTTPHEAD: 653
+--- PAGE 373 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 372 / 684
+HTTP/1.1 200 OK
+Content-Type: text/html
+Connection: keep-alive
+X-Cache: MISS from PDcache-04:opinion.people.com.cn
+Date: Tue, 24 Mar 2020 03:12:09 GMT
+Powered-By-ChinaCache: HIT from CNC-WB-b-D24
+Powered-By-ChinaCache: HIT from CNC-WV-b-D1C
+ETag: W/"5b7379f5-57e9"
+x-cc-via: CNC-WB-b-D24[H,1], CNC-WV-b-D1C[H,62]
+d-cc-upstream: CNC-WV-b-D1C
+CACHE: TCP_HIT
+Vary: Accept-Encoding
+Last-Modified: Wed, 15 Aug 2018 00:55:17 GMT
+Expires: Tue, 24 Mar 2020 03:17:09 GMT
+x-cc-req-id: f4b9e1793697d1ef2950f530aeec4519
+Content-Length: 22505
+Age: 0
+Accept-Ranges: bytes
+Server: nginx
+X-Frame-Options: ALLOW-FROM .*
+CC_CACHE: TCP_REFRESH_HIT
+OK
+16.2.6 AT+HTTPREAD Read the response information of HTTP Server
+After sending HTTP(S)GET/POST requests, you can retrieve HTTP(S)response information from
+HTTP(S)server via UART/USB port by AT+HTTPREAD. When the <datalen> of "+HTTPACTION:
+<method>,<statuscode>,<datalen>" is not equal to 0, You can execute
+AT+HTTPREAD=<start_offset>,<byte_size> to read out data to port. If parameter <byte_size> is set
+greater than the size of data saved in buffer, all data in cache will output to port.
+AT+HTTPREAD Read the response information of HTTP Server
+Test Command
+AT+HTTPREAD=?
+Response
+OK
+Read Command
+AT+HTTPREAD?
+Response
+1)If check successfully:
++HTTPREAD: LEN,<len>
+OK
+2)If failed (no more data other error):
+ERROR
+Write Command Response
+--- PAGE 374 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 373 / 684
+AT+HTTPREAD=[<start_offset>,
+]<byte_size>
+1)If read the response info successfully:
+OK
++HTTPREAD: <data_len>
+<data>
++HTTPREAD: 0
+If <byte_size> is bigger than the data size received, module will
+only return actual data size.
+2)If read failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time 120000ms
+Reference -
+Defined Values
+<start_offset> The start position of reading
+<byte_size> The length of data to read
+<data_len> The actual length of read data
+<data> Response content from HTTP server
+<len> Total size of data saved in buffer.
+Examples
+AT+HTTPREAD?
++HTTPREAD: LEN,22505
+OK
+AT+HTTPREAD=0,500
+OK
++HTTPREAD: 500
+\0\0\0\0\0\0\0\0\0\0\0\0\0\0<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=GB2312"/>
+<meta http-equiv="Content-Language" content="utf-8" />
+<meta content="all" name="robots" />
+<title>人民日报钟声:牢记历史是为了更好开创未来--观点--人民网 </title>
+<meta name="keywords" content="" />
+<meta name="description" content=" 日方应在正确对待历史?
++HTTPREAD: 0
+--- PAGE 375 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 374 / 684
+The response content received from server will be saved in cache, and would not be cleaned up by
+AT+HTTPREAD.
+16.2.7 AT+HTTPDATA Input HTTP Data
+You can use AT+HTTPDATA to input data to post when you send a HTTP/HTTPS POST request.
+AT+HTTPDATA Input HTTP Data
+Test Command
+AT+HTTPDATA=?
+Response
+OK
+Write Command
+AT+HTTPDATA=<size>,<time>
+Response
+1)if parameter format is right:
+DOWNLOAD
+<input data here>
+When the total size of the inputted data reaches <size>, TA will
+report the following code. Otherwise, the serial port will be
+blocked.
+OK
+2)If parameter format is wrong or other errors occur:
+ERROR
+Parameter Saving Mode
+Max Response Time
+Reference
+Defined Values
+<size> Size in bytes of the data to post. range is 1- 153600 (bytes)
+<time> Maximum time in seconds to input data.range is 10-65535
+Examples
+AT+HTTPDATA=18,1000
+DOWNLOAD
+Message=helloworld
+NOTE
+--- PAGE 376 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 375 / 684
+OK
+16.2.8 AT+HTTPPOSTFILE Send HTTP Request to HTTP(S)server by File
+You also can send HTTP request in a file via AT+HTTPPOSTFILE command. The URL must be set by
+AT+HTTPPARA before executing AT+HTTPPOSTFILE command. The parameter <path> can be used to
+set the file directory. When modem has received response from HTTP server, it will report the following
+URC:
++HTTPPOSTFILE: <statuscode>,<datalen>
+AT+HTTPPOSTFILE Send HTTP Request to HTTP(S)server by File
+Test Command
+AT+HTTPPOSTFILE=?
+Response
++HTTPPOSTFILE: <filename>[,(1-2)[,(0-4)[,(0-1)]]]
+OK
+Write Command
+AT+HTTPPOSTFILE=<filename>
+[,<path>[,<method>[,<send_hea
+der>]]]
+Response
+1)if parameter format is right and server connected successfully:
+a)if parameter <method> is valid:
+OK
++HTTPPOSTFILE: <method>,<statuscode>,<datalen>
+b)if parameter <method> is ignored:
+OK
++HTTPPOSTFILE: <statuscode>,<datalen>
+2)if parameter format is right but server connected unsuccessfully:
+a)if parameter <method> is valid:
+OK
++HTTPPOSTFILE: <method>,<errcode>,0
+b)if parameter <method> is ignored:
+OK
++HTTPPOSTFILE: <errcode>,0
+3)if parameter format is not right or any other error occurs:
+ERROR
+Parameter Saving Mode
+Max Response Time
+Reference
+Defined Values
+--- PAGE 377 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 376 / 684
+<filename> String type, filename, the max length is 112.unit:byte.
+<path> The directory where the sent file saved. Numeric type, range is 1-2
+1 C:/ (local storage)
+2 D:/(sd card)
+<method> HTTP method specification:
+0 GET
+1 POST
+2 HEAD
+3 DELETE
+4 PUT
+If this value is not provided, it is same to the value described in the
+post file.
+<send_header> Send file as HTTP header and Body or Only as Body. Numeric type,
+the range is 0-1, the default is 0.
+0 Send file as Body
+1 Send file as HTTP header and body
+<statuscode> Please refer to the end of this chapter
+<datalen> The length of data received
+Examples
+AT+HTTPPOSTFILE=?
++HTTPPOSTFILE: <filename>[,(1-2)[,(0-4)[,(0-1)]]]
+OK
+AT+HTTPPOSTFILE="getbaidu.txt",1
+OK
++HTTPPOSTFILE: 200,14615
+AT+HTTPPOSTFILE="getbaidu.txt",1,1,1
+OK
++HTTPPOSTFILE: 1,200,14615
+16.2.9 AT+HTTPREADFILE Receive HTTP Response Content to a file
+After execute AT+HTTPACTION/AT+HTTPOSTFILE command. You can receive the HTTP server response
+content to a file via AT+HTTPREADFILE.
+Before AT+HTTPREADFILE executed, "+HTTPACTION: <method>,<statuscode>,<datalen>" or
+"+HTTPPOSTFILE: <statuscode>,<datalen>" must be received. The parameter <path> can be used to set
+--- PAGE 378 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 377 / 684
+the directory where to save the file. If omit parameter <path>, the file will be save to local storage.
+AT+HTTPREADFILE Receive HTTP Response Content to a File
+Test Command
+AT+HTTPREADFILE=?
+Response
++HTTPREADFILE: <filename>[,(1-2)]
+OK
+Write Command
+AT+HTTPREADFILE=<filename
+>[,<path>]
+Response
+1)if parameter format is right:
+OK
++HTTPREADFILE: <errcode>
+2)if failed:
+OK
++HTTPREADFILE: <errcode>
+3)if parameter format is not right or any other error occurs:
+ERROR
+Parameter Saving Mode
+Max Response Time
+Reference
+Defined Values
+<filename> String type, filename, the max length is 112.unit:byte.
+<path> The directory where the read file saved. Numeric type, range is 1-2.
+1 C:/(local storage)
+2 D:/(sd card)
+Examples
+AT+HTTPREADFILE=?
++HTTPREADFILE: <filename>[,(1-2)]
+OK
+AT+HTTPREADFILE="readbaidu.dat"
+OK
++HTTPREADFILE: 0
+--- PAGE 379 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 378 / 684
+16.3 Command Result Codes
+16.3.1 Description of <statuscode>
+<statuscode> Description
+100 Continue
+101 Switching Protocols
+200 OK
+201 Created
+202 Accepted
+203 Non-Authoritative Information
+204 No Content
+205 Reset Content
+206 Partial Content
+300 Multiple Choices
+301 Moved Permanently
+302 Found
+303 See Other
+304 Not Modified
+305 Use Proxy
+307 Temporary Redirect
+400 Bad Request
+401 Unauthorized
+402 Payment Required
+403 Forbidden
+404 Not Found
+405 Method Not Allowed
+406 Not Acceptable
+407 Proxy Authentication Required
+408 Request Timeout
+409 Conflict
+410 Gone
+411 Length Required
+412 Precondition Failed
+413 Request Entity Too Large
+414 Request-URI Too Large
+415 Unsupported Media Type
+416 Requested range not satisfiable
+--- PAGE 380 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 379 / 684
+417 Expectation Failed
+500 Internal Server Error
+501 Not Implemented
+502 Bad Gateway
+503 Service Unavailable
+504 Gateway timeout
+505 HTTP Version not supported
+600 Not HTTP PDU
+601 Network Error
+602 No memory
+603 DNS Error
+604 Stack Busy
+16.3.2 Description of <errcode>
+<errcode> Meaning
+0 Success
+701 Alert state
+702 Unknown error
+703 Busy
+704 Connection closed error
+705 Timeout
+706 Receive/send socket data failed
+707 File not exists or other memory error
+708 Invalid parameter
+709 Network error
+710 start a new ssl session failed
+711 Wrong state
+712 Failed to create socket
+713 Get DNS failed
+714 Connect socket failed
+715 Handshake failed
+716 Close socket failed
+717 No network error
+718 Send data timeout
+719 CA missed
