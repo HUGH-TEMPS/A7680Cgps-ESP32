@@ -1,0 +1,430 @@
+--- PAGE 628 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 627 / 684
+29.3 Command Result Codes
+29.3.1 Description of <err>
+<err> Description
+0 operation succeeded
+1 failed
+2 Send handshake fail
+3 parsehandshake fail
+4 Read write socket fail
+5 Connect to host fail
+6 invalid parameter
+7 Network have opened
+8 Network no open
+29.4 Unsolicited Result Codes
+URC Description
++WSDISC: <cause>
+When client disconnect passively,
+URC "+WSDISC" will be reported,
+then user need to connect MQTT
+server again.
++WSRECEIVE: <datalen>
+<data> While client receive message,URC
+"+WSRECEIVE" will be reported.
+--- PAGE 629 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 628 / 684
+AT Commands for LWM2M
+30.1 Overview of AT Commands for LWM2M
+Command Description
+AT+LWSTART Start LWM2M service
+AT+LWSTOP Stop LWM2M Service
+AT+LWCNF Config the LWM2M
+AT+LWOPEN Register to a LWM2M server
+AT+LWCLOSE Deregister to LWM2M server
+AT+LWADDOBJ Add a LWM2M object
+AT+LWDELOBJ Delete a LWM2M object
+AT+LWREADRSP Send read response to LWM2M server
+AT+LWWRITERSP Send write response to LWM2M server
+AT+LWEXECUTERSP Send execute response to LWM2M server
+30.2 Detailed Description of AT Commands for LWM2M
+30.2.1 AT+LWSTART Start LWM2M service
+AT+LWSTART is used to start LWM2M service by activating PDP context. You must execute AT+LWSTART
+before any other LWM2M related operations except AT+LWCNF.
+AT+LWSTART Start LWM2M service
+Test Command
+AT+LWSTART=?
+Response
+OK
+Execute Command
+AT+LWSTART
+Response
+1)
+OK
+--- PAGE 630 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 629 / 684
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Examples
+AT+LWSTART
+OK
+30.2.2 AT+LWSTOP Stop LWM2M Service
+AT+LWSTOP is used to stop LWM2M service by deactivating PDP context When you are no longer using
+the LWM2M service, use this command.
+AT+LWSTOP Stop LWM2M Service
+Test Command
+AT+LWSTOP=?
+Response
+OK
+Execute Command
+AT+LWSTOP
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Examples
+AT+LWSTOP
+OK
+--- PAGE 631 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 630 / 684
+30.2.3 AT+LWCNF Config the LWM2M
+AT+LWCNF is used to config the LWM2M.
+AT+LWCNF Config the LWM2M
+Test Command
+AT+LWCNF=?
+Response
++LWCNF: "server",<ipaddress>
++LWCNF: "serverport",<serverport>
++LWCNF: "endpointname",<endpointname>
++LWCNF: "connecttype",(4,6)
++LWCNF: "lifetime",<lifetime>
++LWCNF: "localport",<localport>
+OK
+Write Command
+AT+LWCNF=<server>,<ipaddress>
+AT+LWCNF=<serverport>,<serverport>
+AT+LWCNF=<endpointname>,< endpointname>
+AT+LWCNF=< connecttype>,4 or 6
+AT+LWCNF=<lifetime>,<lifetime>
+AT+LWCNF=<localport>,<localport>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<server> The LWM2M server address URL or ipaddress.
+<serverport> The LWM2M server port,the range is from 0 to 65535.
+<enpointname> The LWM2M client device name.
+<connecttype> The type of LWM2M server address IPV4 or IPV6.
+<lifetime> The connection life time.the max value is 65535.
+<localport> The LWM2M client device local port. The range is from 0 to 65535.
+Examples
+AT+LWCNF="server","leshan.eclipseprojects.io"
+OK
+--- PAGE 632 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 631 / 684
+AT+LWCNF="serverport","5683"
+OK
+AT+LWCNF="endpointname","simcom"
+OK
+AT+LWCNF="connectiontype","4"
+OK
+AT+LWCNF="lifetime","800"
+OK
+AT+LWCNF="localport","56833"
+OK
+30.2.4 AT+LWOPEN Register to a LWM2M server
+AT+LWOPEN is used to register to a LWM2M sever, make sure you register to a LWM2M sever before you
+execute AT+LWCLOSE command.
+AT+LWOPEN Register to a LWM2M server
+Test Command
+AT+LWOPEN=?
+Response
+OK
+Execute Command
+AT+LWOPEN
+Response
+1)
+OK
++LMOPEN:<lwm2mId>
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> The LWM2M session ID.the range is from 0 to 1.
+--- PAGE 633 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 632 / 684
+Examples
+AT+LWOPEN=?
+OK
+AT+LWOPEN
+OK
++LMOPEN:0
+30.2.5 AT+LWCLOSE Deregister to a LWM2M server
+This command is used to Deregister to a LWM2M server.
+AT+LWCLOSE Deregister to a LWM2M server
+Test Command
+AT+LWCLOSE=?
+Response
+OK
+Write Command
+AT+LWCLOSE=<lwm2mId>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> AT+LWOPEN return the LWM2M session ID.the range is from 0 to 1.
+Examples
+AT+LWCLOSE=0
+OK
+--- PAGE 634 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 633 / 684
+30.2.6 AT+LWADDOBJ Add a LWM2M object
+AT+LWADDOBJ is used to add a LWM2M object.
+AT+LWADDOBJ Add a LWM2M object
+Test Command
+AT+LWADDOBJ=?
+Response
+OK
+Write Command
+AT+LWADDOBJ=<lwm2mId>,<o
+bjectId>,<instanceId>,<resourc
+eCnt>,<resourceId>,<resouceId
+>….
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> AT+LWOPEN return the LWM2M session ID.the range is from 0 to 1.
+<objectId> The LWM2M object ID you want to add.the range is from 0 to 65535,
+But 0-7 has already used.
+<instanceId> The LWM2M object instance ID. The range is from 0 to 65535.
+<resourceCnt> The LWM2M resource count. The range is from 1 to 15.
+<resourceId> The LWM2M resource ID. The range is from 0 to 65535.
+Examples
+AT+LWADDOBJ=?
+OK
+AT+LWADDOBJ=0,3303,0,6,5518,5601,5602,5603,5604,5605
+OK
+--- PAGE 635 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 634 / 684
+30.2.7 AT+LWDELOBJ Delete a LWM2M object
+AT+LWDELOBJ is used to delete a LWM2M object.
+AT+LWDELOBJ Delete a LWM2M object
+Test Command
+AT+LWDELOBJ=?
+Response
+OK
+Write Command
+AT+LWDELOBJ=<lwm2mId>,<o
+bjectId>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> AT+LWOPEN return the LWM2M session ID.the range is from 0 to 1.
+<objectId> The LWM2M object ID you want to delete.the range is from 0 to
+65535.
+Examples
+AT+LWDELOBJ=?
+OK
+AT+LWDELOBJ=0,3303
+OK
+30.2.8 AT+LWREADRSP Send read response to LWM2M server
+You can use this command to send read response to LWM2M server.
+AT+LWREADRSP Send read response to LWM2M server
+Test Command
+AT+LWREADRSP=?
+Response
+OK
+--- PAGE 636 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 635 / 684
+Write Command
+AT+LWREADRSP=<lwm2mId>,<
+objectId>,<instanceId>,<resour
+ceCnt>,<resourceId>,<valuetyp
+e>,<valuelen>,<value>,<
+resourceId >,<valuetype>…
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> The LWM2M session ID,according to “+LWREAD” returned.
+<objectId> The LWM2M object ID,according to “+LWREAD” returned.
+<instanceId> The LWM2M object instance ID,according to “+LWREAD” returned.
+<resourceCnt> The LWM2M resource count,according to “+LWREAD” returned.
+<resourceId> The LWM2M resource ID,according to “+LWREAD” returned.
+<valuetype> The type of value of reponse.
+ I Integer
+ F Float
+ B Boolean
+ D UINT8 array data
+ S String
+<valuelen> The length of value.
+<value> The reponse value.
+Examples
+AT+LWREADRSP=?
+OK
++LWREAD:0,3303,0,1,5602
+AT+LWREADRSP= 0,3303,0,1,5602,"F",5,"15623"
+OK
+Must execute the this command after URC “+LWREAD” returned.“+LWREAD” see 30.2.11
+NOTE
+--- PAGE 637 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 636 / 684
+30.2.9 AT+LWWRITERSP Send response to a LWM2M server
+This command is used to send a response to LWM2M server.
+AT+LWWRITERSP Send reponse to a LWM2M server
+Test Command
+AT+LWWRITERSP=?
+Response
++LWWRITERSP: <lwm2mId>,<result>
+OK
+Write Command
+AT+LWWRITERSP=<lwm2mId>,
+<result>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> The LWM2M session ID,according to “+LWWRITE” returned.
+<result> According to “+LWWRITE”,return the result, see 30.3
+Examples
++LMWRITE: 0,3335,0,1,5750,S,1,"p"
+AT+LWWRITERSP =0,0
+OK
+Must execute the this command after URC “+LWWRITE” returned.“+LWWRITE” see 30.2.12
+NOTE
+--- PAGE 638 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 637 / 684
+30.2.10 AT+LWEXECUTERSP Send response to LWM2M server
+You can use AT+LWEXECUTERSP send response to LWM2M server.
+AT+LWEXECUTERSP Send response to LWM2M server
+Test Command
+AT+LWEXECUTERSP=?
+Response
+OK
+Write Command
+AT+LWEXECUTERSP=<lwm2mI
+d>,<result>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> The LWM2M session ID,according to “+LWEXECUTE” returned.
+<result> According to “+LWEXECUTE”,return the result, see 30.3
+Examples
+AT+LWEXECUTERSP=?
+OK
++LWEXECUTE: 0,3303,0,5605,1,"0"
+AT+LWEXECUTERSP=0,0
+OK
+Must execute the this command after URC “+LWEXECUTE” returned.“+LWEXECUTE” see 30.2.13
+NOTE
+--- PAGE 639 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 638 / 684
+30.2.11 +LWREAD LWM2M client response of LWM2M server operate read
+LWM2M client response of LWM2M server operate read.
++LWREAD LWM2M client response of LWM2M server operate read
+Response
++LWREAD:<lwm2mId>,<objectId>,<instanceId>,<resourceCnt>,
+<resourceId>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> The LWM2M session ID.the range is from 0 to 1.
+<objectId> The LWM2M object ID you want to add.the range is from 8 to 65535.
+<instanceId> The LWM2M object instance ID. The range is from 0 to 65535.
+<resourceCnt> The LWM2M resource count. The range is from 1 to 15.
+<resourceId> The LWM2M resource ID. The range is from 0 to 65535.
+30.2.12 +LWWRITE LWM2M client response of LWM2M server operate write
+LWM2M client response of LWM2M server operate write.
++LWWRITE LWM2M client response of LWM2M server operate read
+Response
++LWWRITE:
+<lwm2mId>,<objectId>,<instanceId>,<resourceCnt>,<resourceId>
+,<valuetype>,<valuelen>,<value>,< resourceId >,<valuetype>…
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> The LWM2M session ID.the range is from 0 to 1.
+--- PAGE 640 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 639 / 684
+<objectId> The LWM2M object ID you want to add.the range is from 8 to 65535.
+<instanceId> The LWM2M object instance ID. The range is from 0 to 65535.
+<resourceCnt> The LWM2M resource count. The range is from 1 to 15.
+<resourceId> The LWM2M resource ID. The range is from 0 to 65535.
+<valuetype> The type of value of reponse.
+ I Integer
+ F Float
+ B Boolean
+ D UINT8 array data
+S String
+<valuelen> The length of value.
+<value> The reponse value.
+30.2.13 +LWEXECUTE LWM2M client response of LWM2M server operate
+execute
+LWM2M client response of LWM2M server operate execute.
++LWEXECUTE LWM2M client response of LWM2M server operate execute
+Response
+1)
++LWEXECUTE: <lwm2mId>,<objectId>,<instanceId>,
+<resourceId>,<len>,<buffer>
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<lwm2mId> The LWM2M session ID.the range is from 0 to 1.
+<objectId> The LWM2M object ID.the range is from 8 to 65535.
+<instanceId> The LWM2M object instance ID. The range is from 0 to 65535.
+<resourceId> The LWM2M resource count. The range is from 1 to 15.
+<len> The response buffer len.
+<buffer> The response buffer.

@@ -1,0 +1,272 @@
+--- PAGE 641 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 640 / 684
+30.3 Command Result Codes
+<result> Description
+0 No error
+1 Ignore
+65 Created
+66 Deleted
+68 Changed
+69 Content
+95 Continue
+128 Bad request
+129 Unauthorized
+130 Bad option
+132 Not found
+133 Method no allowed
+134 Not acceptable
+136 Req entity incomplete
+140 Precondition failed
+141 Entity too large
+160 Internal server error
+161 Not implemented
+163 Service unavailable
+--- PAGE 642 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 641 / 684
+AT Commands for COAP
+31.1 Overview of AT Commands for COAP
+Command Description
+AT+COAPSTART Active PDP
+AT+COAPSTOP Deactive PDP
+AT+COAPOPEN Open a COAP server
+AT+COAPCLOSE Close a COAP server
+AT+COAPHEAD Config the head of COAP
+AT+COAPOPTION Config the option of COAP
+AT+COAPSEND Send COAP message to the server
+AT+COAPSENDTX Send COAP message to the server by transparent transmission
+31.2 Detailed Description of AT Commands for COAP
+31.2.1 AT+COAPSTART Active PDP
+AT+COAPSTART is used to active PDP context. You must execute AT+COAPSTART before any other
+COAP related operations.
+AT+COAPSTART Active PDP
+Test Command
+AT+COAPSTART=?
+Response
+OK
+Execute Command
+AT+COAPSTART
+Response
+1)
+OK
+2)
+ERROR
+--- PAGE 643 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 642 / 684
+Write Command
+AT+COAPSTART=<cid>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+Examples
+AT+COAPSTART
+OK
+AT+COAPSTART=1
+OK
+31.2.2 AT+COAPSTOP Deactive PDP
+AT+LWSTOP is used to deactive PDP context When you are no longer using the COAP service, use this
+command.
+AT+COAPSTOP Deactive PDP
+Test Command
+AT+COAPSTOP=?
+Response
+OK
+Execute Command
+AT+COAPSTOP
+Response
+1)
+OK
+2)
+ERROR
+Write Command
+AT+COAPSTOP=<cid>
+Response
+1)
+OK
+2)
+ERROR
+--- PAGE 644 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 643 / 684
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+Examples
+AT+COAPSTOP
+OK
+AT+COAPSTOP=1
+OK
+31.2.3 AT+COAPOPEN Open a COAP server
+AT+COAPOPEN is used to open a COAP sever, make sure you open a COAP sever before you execute
+AT+COAPCLOSE command.
+AT+COAPOPEN Open a COAP server
+Test Command
+AT+COAPOPEN=?
+Response
+OK
+Write Command
+AT+COAPOPEN=<server>,<ser
+verport>
+Response
+1)
+OK
++COAPOPEN:<coapId>
+--- PAGE 645 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 644 / 684
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<server> The COAP server address URL or ipaddress
+<serverport> The COAP server port,the range is from 0 to 65535.
+<coap_sessionId> The COAP session ID.the range is from 0 to 1.
+Examples
+AT+COAPOPEN=?
+OK
+AT+COAPOPEN="47.108.134.22",5683
+OK
+COAPOPEN:0
+31.2.4 AT+COAPCLOSE Close a COAP server
+This command is used to Deregister to a COAP server.
+AT+COAPCLOSE Close a COAP server
+Test Command
+AT+COAPCLOSE=?
+Response
+OK
+Write Command
+AT+COAPCLOSE=<
+coap_sessionId >
+Response
+1)
+OK
+2)
+ERROR
+--- PAGE 646 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 645 / 684
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<coap_sessionId> AT+COAPOPEN return the COAP session ID.the range is from 0 to 1.
+Examples
+AT+COAPCLOSE=0
+OK
+31.2.5 AT+COAPHEAD Config the head of COAP
+AT+COAPHEAD is used to config the head of COAP
+AT+COAPHEAD Config the head of COAP
+Test Command
+AT+COAPHEAD=?
+Response
+OK
+Write Command
+AT+COAPHEAD=<coap_sessio
+nId>,<msgId>,<tkl>,<token>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<coap_sessionId> AT+COAPOPEN return the COAP session ID.the range is from 0 to 1.
+<msgId> The COAP message ID,the range is 0 to 65535.
+<tkl> The length of token,the range is 0 to 8.
+<token> The token of COAP message.
+--- PAGE 647 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 646 / 684
+Examples
+AT+COAPHEAD=?
+OK
+AT+COAPHEAD=0,35691,1,"1"
+OK
+31.2.6 AT+COAPOPTION Config the option of COAP
+AT+COAPOPTION is used to config the option of COAP.
+AT+COAPOPTION Config the option of COAP
+Test Command
+AT+COAPOPTION=?
+Response
+OK
+Write Command
+AT+COAPOPTION=<
+coap_sessionId>,<
+opt_count>,<optNum>,<optValu
+e>,<opt_count>…..
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<coap_sessionId> AT+COAPOPEN return the COAP session ID.the range is from 0 to 1.
+<opt_count> The num of option you want to config.the range is 0 to 10.
+<optNum> The type of option.
+<optValue> The value of the option
+Examples
+AT+COAPOPTION=?
+OK
+AT+COAPOPTION=0,1,7,"5683"
+OK
+--- PAGE 648 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 647 / 684
+31.2.7 AT+COAPSEND Send COAP message to the server
+You can use this command to Send COAP message to the server
+AT+COAPSEND Send COAP message to the server
+Test Command
+AT+COAPSEND=?
+Response
+OK
+Write Command
+AT+COAPSEND=<
+coap_sessionId>,<
+type>,<method>,<data_len>,<d
+ata>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<coap_sessionId> AT+COAPOPEN return the COAP session ID.the range is from 0 to 1.
+<type> The message type of COAP,it can set “con”,“non”,“ack”,“rst”.
+<method> The message method of COAP,it can set
+“get”,“post”,“put”,“delete”,“fetch”,“patch”,“ipatch”.
+<data_len> The data length of COAP message.the range is 0 to 2000.
+<data> The data of COAP message
+Examples
+AT+COAPSEND=?
+OK
+AT+COAPSEND=0,"con","get",5,"12345"
+OK
+31.2.8 AT+COAPSENDTX Send COAP message to the server by transparent
+transmission
+This command is used to Send COAP message to the server by transparent transmission.
+AT+COAPSENDTX Send COAP message to the server by transparent transmission

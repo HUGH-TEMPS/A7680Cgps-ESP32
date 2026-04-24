@@ -1,0 +1,57 @@
+--- PAGE 666 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 665 / 684
+AT+CSMTPSCLEAN OK
+or
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Example
+AT+CSMTPSCLEAN
+OK
+32.3 Summary of result codes for SMTPS
+Code of <errcode> Meaning
+0 SMTPS operation succeeded
+600 Busy
+601 Network error
+602 Socket error
+603 Over size
+604 Duplicate file
+605 Time out
+606 Transfer failed
+607 Memory error
+608 Invalid parameter
+609 EFS error
+610 SMTP server error
+611 Authentication failure
+612 User cancel
+655 Unknown error
+--- PAGE 667 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 666 / 684
+AT Commands for Telecom
+self-registration
+33.1 Overview of AT Commands for Telecom self-registration
+Command Description
+AT+HWVER Hardware version number query
+AT+AUTOREGCFG Data domain self-registration status query
+33.2 Detailed Description of AT Commands for Telecom self-registration
+33.2.1 AT+HWVER Hardware version number query
+AT+HWVER Hardware version number query
+Test Command
+AT+HWVER=?
+Response
+OK
+Execution Command
+AT+HWVER
+Response
+1)
++HWVER: <ver>
+OK
+2)
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values

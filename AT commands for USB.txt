@@ -1,0 +1,153 @@
+--- PAGE 676 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 675 / 684
+AT+CEDRXS?
++CEDRXS: 4,""
+OK
+34.2.5 AT+CEDRXRDP eDRX Read Dynamic Parameters
+AT+CEDRXRDP eDRX Read Dynamic Parameters
+Action Command
+AT+CEDRXRDP
+Response
++CEDRXRDP:
+<eDrxAct>,[ "<requestedEdrxValue>"][,"<nwProvidedEdrxval
+ue>"][,"<pagingTimerWindow>"]
+OK
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+< eDrxAct > integer type. indicates the type of access technology
+0 AcT is not using eDRX
+1 EC- GSM-IoT(A/Gb mode)
+8 GSM(A/Gb mode)
+9 UTRAN(Iu mode)
+10 E-UTRAN(WB-S1 mode)
+E-UTRAN(NB-S1 mode)
+< requestedEdrxValue > requested eDRX value, half a byte in a 4 bit format
+<nwProvidedEdrxvalue> NW-provided eDRX value, half a byte in a 4 bit format
+<pagingTimerWindow> NW-provided paing time window, half a byte in a 4 bit format
+Examples
+AT+CEDRXRDP
++CEDRXRDP: 4,"","",""
+OK
+--- PAGE 677 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 676 / 684
+AT Commands for USB
+35.1 Overview of AT Commands for USB
+Command Description
+AT+DIALMODE Config USBNET network
+AT$MYCONFIG Config USBNET mode
+AT+USBNETIP Config USBNET ip
+AT+USBNETMAC Config USBNET mac
+35.2 Detailed Description of AT Commands for usb
+35.2.1 AT+DIALMODE Config USBNET network
+AT+DIALMODE Config USBNET network
+AT+DIALMODE Config USBNET network
+Test Command
+AT+DIALMODE=?
+Response
++DIALMODE: (0-1)
+OK
+Read Command
+AT+DIALMODE?
+Response
++DIALMODE:<mode>
+OK
+Write Command
+AT+DIALMODE=<mode>
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference
+--- PAGE 678 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 677 / 684
+Defined Values
+<mode> The Auto Dial status Enable/Disable, the default value is 1.
+0 –Enable USBNET network
+1 –Disable USBNET network
+The function will take effect immediately.
+Examples
+AT+DIALMODE=1
+OK Disable USBNET network
+35.2.2 AT$MYCONFIG Set RNDIS/ECM Mode
+AT$MYCONFIG Set RNDIS/ECM Mode
+AT$MYCONFIG Set RNDIS/ECM Mode
+Test Command
+AT$MYCONFIG=?
+Response for 1803
+$MYCONFIG: "usbnetmode",(0-2),(0,1),<macName>
+OK
+Response for 1603 and 1606
+$MYCONFIG: "usbnetmode",(0-1),(0,1)
+OK
+Read Command
+AT$MYCONFIG?
+Response
+$MYCONFIG: "usbnetmode",<netmode>,<netport>
+OK
+Write Command
+AT$MYCONFIG="USBNETMOD
+E"[,<netmode>[,<netport>][,<m
+acName>]]
+Response
+1)
+OK
+2)
+ERROR
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference
+Defined Values
+<netmode> The RNDIS/ECM mode, the default value is 0.
+0 –RNDIS
+1 –ECM
+2 –AUTO adapt system
+--- PAGE 679 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 678 / 684
+The function will reset modem then take effect.
+<netport> The name of Netcard, the default value is 1
+0 –ETH
+1 –USB
+<macName> Set usbnet name under mac pc
+Examples
+AT$MYCONFIG="USBNETMODE",1,1
+OK Change to ECM
+35.2.3 AT+USBNETIP Change RNDIS/ECM Private IP to Public IP
+AT+USBNETIP Change RNDIS/ECM Private IP to Public IP
+AT+USBNETIP Change RNDIS/ECM Private IP to Public IP
+Test Command
+AT+USBNETIP=?
+Response
++USBNETIP: (0-1)[,(0-255)[,(0-255)[,(1-254) [,(0-2147483647)]]]]
+OK
+Read Command
+AT+USBNETIP?
+Response
+a)If successfully mode=0:
++USBNETIP:0,tpos,dhcps,dhcpe,leasetime
+OK
+a)If successfully mode=1:
++USBNETIP:1,,,,leasetime
+OK
+b)If failed:
+ERROR
+Write Command
+AT+USBNETIP=<mode>[,<tpos
+>[,<dhcps>[,<dhcpe>[,leasetim
+e]]]]
+Response
+1)
+OK
+2)
++CME ERROR: Incorrect parameters
+Parameter Saving Mode AUTO_SAVE
+Max Response Time 9000ms
+Reference

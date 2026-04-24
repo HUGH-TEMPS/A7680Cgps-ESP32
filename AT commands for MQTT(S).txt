@@ -1,0 +1,1042 @@
+--- PAGE 407 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 406 / 684
+PEER CLOSED" will be reported, then user need to
+execute AT+CFTPSLOGOUT and log in again.
++CFTPSNOTIFY: FTPS DISCONNECT During the FTP client and FTP server is connecting,the net
+disconnect will report "+CFTPSNOTIFY: FTPS
+DISCONNECT" to URC,then user need excute
+AT+CFTPSTART and login again
+--- PAGE 408 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 407 / 684
+AT Commands for MQTT(S)
+18.1 Overview of AT Commands for MQTT(S)
+Command Description
+AT+CMQTTSTART Start MQTT service
+AT+CMQTTSTOP Stop MQTT service
+AT+CMQTTACCQ Acquire a client
+AT+CMQTTREL Release a client
+AT+CMQTTSSLCFG Set the SSL context (only for SSL/TLS MQTT)
+AT+CMQTTWILLTOPIC Input the topic of will message
+AT+CMQTTWILLMSG Input the will message
+AT+CMQTTCONNECT Connect to MQTT server
+AT+CMQTTDISC Disconnect from server
+AT+CMQTTTOPIC Input the topic of publish message
+AT+CMQTTPAYLOAD Input the publish message
+AT+CMQTTPUB Publish a message to server
+AT+CMQTTSUBTOPIC Input the topic of subscribe message
+AT+CMQTTSUB Subscribe a message to server
+AT+CMQTTUNSUBTOPIC Input the topic of unsubscribe message
+AT+CMQTTUNSUB Unsubscribe a message to server
+AT+CMQTTCFG Configure the MQTT Context
+18.2 Detailed Description of AT Commands for MQTT(S)
+18.2.1 AT+CMQTTSTART Start MQTT service
+AT+CMQTTSTART is used to start MQTT service by activating PDP context. You must execute this
+command before any other MQTT related operations.
+--- PAGE 409 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 408 / 684
+AT+CMQTTSTART Start MQTT service
+Test Command
+AT+CMQTTSTART=?
+Response
++CMQTTSTART: (1-n)
+OK
+Execute Command
+AT+CMQTTSTART
+Response
+1)If start MQTT service successfully:
+OK
++CMQTTSTART: 0
+2)If failed:
+OK
++CMQTTSTART: <err>
+3)If MQTT service have started successfully and you executed
+AT+CMQTTSTART again:
+ERROR
+Write Command
+AT+CMQTTSTART=<cid>
+Response
+1)
+OK
++CMQTTSTART: <err>,<cid>
+2)
+ERROR
+Max Response Time 12000ms
+Parameter Saving Mode -
+Reference
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<err> The result code, please refer to Chapter 18.3
+Examples
+AT+CMQTTSTART
+OK
++CMQTTSTART: 0
+NOTE
+--- PAGE 410 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 409 / 684
+AT+CMQTTSTART is used to start MQTT service by activating PDP context. You must execute this
+command before any other MQTT related operations.
+If you don’t execute AT+CMQTTSTART, the Write/Read Command of any other MQTT will return
+ERROR immediately.
+18.2.2 AT+CMQTTSTOP Stop MQTT service
+AT+CMQTTSTOP is used to stop MQTT service.
+AT+CMQTTSTOP Stop MQTT service
+Test Command
+AT+CMQTTSTOP=?
+Response
++CMQTTSTOP: (1-n)
+OK
+Execute Command
+AT+CMQTTSTOP
+Response
+1)If stop MQTT service successfully:
+OK
++CMQTTSTOP: 0
+2)If failed:
++CMQTTSTOP: <err>
+ERROR
+3)If MQTT service have stopped successfully and you executed
+AT+CMQTTSTOP again:
+ERROR
+Write Command
+AT+CMQTTSTOP=<cid>
+Response
+1)
+OK
++CMQTTSTOP: <err>,<cid>
+2)
+ERROR
+Max Response Time 12000ms
+Parameter Saving Mode -
+Reference
+--- PAGE 411 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 410 / 684
+Defined Values
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+<err> The result code, please refer to chapter 18.3
+Examples
+AT+CMQTTSTOP
+OK
++CMQTTSTOP: 0
+AT+CMQTTSTOP is used to stop MQTT service. You can execute this command after
+AT+CMQTTDISC and AT+CMQTTREL.
+18.2.3 AT+CMQTTACCQ Acquire a client
+AT+CMQTTACCQ is used to acquire a MQTT client. It must be called before all commands about MQTT
+connect and after AT+CMQTTSTART.
+AT+CMQTTACCQ Acquire a client
+Test Command
+AT+CMQTTACCQ=?
+Response
++CMQTTACCQ: (0-1),(1-128)[,(0-1)]
+OK
+Read Command
+AT+CMQTTACCQ?
+Response
++CMQTTACCQ: <client_index>,<clientID>,<server_type>
++CMQTTACCQ: <client_index>,<clientID>,<server_type>
+OK
+Write Command
+AT+CMQTTACCQ=<client_in
+dex>,<clientID>[<server_type
+>]
+Response
+1)If successfully:
+OK
+2)If failed:
++CMQTTACCQ: <client_index>,<err>
+NOTE
+--- PAGE 412 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 411 / 684
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<clientID> The UTF-encoded string. It specifies a unique identifier for the client.
+The string length is from 1 to 128 bytes.
+<server_type> A numeric parameter that identifies the server type. The default value
+is 0.
+0 MQTT server with TCP
+1 MQTT server with SSL/TLS
+<err> The result code, please refer to chapter 18.3
+Examples
+AT+CMQTTACCQ=0,"a12mmmm",0
+OK
+AT+CMQTTACCQ?
++CMQTTACCQ: 0,"a12mmmm",0
++CMQTTACCQ: 1,"",0
+OK
+AT+CMQTTACCQ=?
++CMQTTACCQ: (0-1),(1-128)[,(0-1)]
+OK
+18.2.4 AT+CMQTTREL Release a client
+AT+CMQTTREL is used to release a MQTT client. It must be called after AT+CMQTTDISC and before
+--- PAGE 413 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 412 / 684
+AT+CMQTTSTOP.
+AT+CMQTTREL Release a client
+Test Command
+AT+CMQTTREL=?
+Response
++CMQTTREL: (0-1)
+OK
+Read Command
+AT+CMQTTREL?
+Response
+1)If successfully:
+OK
+2)if MQTT not start
+ERROR
+Write Command
+AT+CMQTTREL=<client_inde
+x>
+Response
+1)If successfully:
+OK
+2)If failed:
++CMQTTREL: <client_index>,<err>
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<err> The result code, please refer to chapter 18.3
+Examples
+AT+CMQTTREL=?
++CMQTTREL: (0-1)
+OK
+AT+CMQTTREL=0
+OK
+AT+CMQTTREL?
+OK
+--- PAGE 414 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 413 / 684
+18.2.5 AT+CMQTTSSLCFG Set the SSL context (only for SSL/TLS MQTT)
+AT+CMQTTSSLCFG is used to set the SSL context which to be used in the SSL connection when it will
+connect to a SSL/TLS MQTT server. It must be called before AT+CMQTTCONNECT and after
+AT+CMQTTSTART. The setting will be cleared after AT+CMQTTCONNECT failed or AT+CMQTTDISC.
+AT+CMQTTSSLCFG Set the SSL context (only for SSL/TLS MQTT)
+Test Command
+AT+CMQTTSSLCFG=?
+Response
++CMQTTSSLCFG: (0,1),(0-9)
+OK
+Read Command
+AT+CMQTTSSLCFG?
+Response
++CMQTTSSLCFG: <session_id>,[<ssl_ctx_index>]
++CMQTTSSLCFG: <session_id>,[<ssl_ctx_index>]
+OK
+Write Command
+AT+CMQTTSSLCFG=<sessio
+n_id>,<ssl_ctx_index>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<session_id> The session_id to operate. It’s from 0 to 1
+<ssl_ctx_index> The SSL context ID which will be used in the SSL connection. Refer to
+the <ssl_ctx_index> of AT+CSSLCFG
+Examples
+AT+CMQTTSSLCFG?
++CMQTTSSLCFG: 0,0
++CMQTTSSLCFG: 1,0
+--- PAGE 415 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 414 / 684
+OK
+AT+CMQTTSSLCFG=?
++CMQTTSSLCFG: (0,1),(0-9)
+OK
+AT+CMQTTSSLCFG=0,1
+OK
+18.2.6 AT+CMQTTWILLTOPIC Input the topic of will message
+AT+CMQTTWILLTOPIC is used to input the topic of will message.
+AT+CMQTTWILLTOPIC Input the topic of will message
+Test Command
+AT+CMQTTWILLTOPIC=?
+Response
++CMQTTWILLTOPIC: (0-1),(1-1024)
+OK
+Write Command
+AT+CMQTTWILLTOPIC=<clie
+nt_index>,<req_length>
+Response
+1)If successfully:
+>
+<input data here>
+OK
+2)If failed:
++CMQTTWILLTOPIC: <client_index>,<err>
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<req_length> The length of input topic. The will topic should be UTF-encoded string.
+The range is from 1 to 1024 bytes.
+<err> The result code, please refer to chapter 18.3
+--- PAGE 416 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 415 / 684
+Examples
+AT+CMQTTWILLTOPIC=0,10
+>
+OK
+18.2.7 AT+CMQTTWILLMSG Input the will message
+AT+CMQTTWILLMSG is used to input the message body of will message.
+AT+CMQTTWILLMSG Input the will message
+Test Command
+AT+CMQTTWILLMSG=?
+Response
++CMQTTWILLMSG: (0-1),(1-1024),(0-2)
+OK
+Write Command
+AT+CMQTTWILLMSG=<clien
+t_index>,<req_length>,<qos>
+Response
+1)If successfully:
+>
+<input data here>
+OK
+2)If failed:
++CMQTTWILLMSG: <client_index>,<err>
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<req_length> The length of input data. The will message should be UTF-encoded
+string. The range is from 1 to 1024 bytes.
+<qos> The qos value of the will message. The range is from 0 to 2.
+--- PAGE 417 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 416 / 684
+Examples
+AT+CMQTTWILLMSG=0,6,1
+>
+OK
+18.2.8 AT+CMQTTCONNECT Connect to MQTT server
+AT+CMQTTCONNECT is used to connect to a MQTT server.
+AT+CMQTTCONNECT Connect to MQTT server
+Test Command
+AT+CMQTTCONNECT=?
+Response
++CMQTTCONNECT:
+(0-1),(9-256),(1-64800),(0-1)[,<user_name>,<pass_word>]
+OK
+Read Command
+AT+CMQTTCONNECT?
+Response
++CMQTTCONNECT:
+0[,<server_addr>,<keepalive_time>,<clean_session>[,<user_na
+me>[,<pass_word>]]]
++CMQTTCONNECT:
+1[,<server_addr>,<keepalive_time>,<clean_session>[,<user_na
+me>[,<pass_word>]]]
+OK
+Write Command
+AT+CMQTTCONNECT=<clien
+t_index>,<server_addr>,<kee
+palive_time>,<clean_session
+>[,<user_name>[,<pass_word
+>]]
+Response
+1)If successfully:
+OK
++CMQTTCONNECT: <client_index>,0
+2)If failed:
+OK
++CMQTTCONNECT: <client_index>,<err>
+3)If failed:
+ERROR
++CMQTTCONNECT: <client_index>,<err>
+4)If failed:
++CMQTTCONNECT: <client_index>,<err>
+ERROR
+--- PAGE 418 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 417 / 684
+5)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<server_addr>
+The string that described the server address and port. The range of
+the string length is 9 to 256 bytes. The string should be like this
+"tcp://116.247.119.165:5141", must begin with "tcp://". If the
+<server_addr> not include the port, the default port is 1883.
+<keepalive_time>
+The time interval between two messages received from a client. The
+client will send a keep-alive packet when there is no message sent to
+server after song long time. The range is from 1s to 64800s (18
+hours).
+<clean_session>
+The clean session flag. The value range is from 0 to 1, and default
+value is 0.
+0 the server must store the subscriptions of the client after it
+disconnected. This includes continuing to store QoS 1 and
+QoS 2 messages for the subscribed topics so that they can be
+delivered when the client reconnects. The server must also
+maintain the state of in-flight messages being delivered at the
+point the connection is lost. This information must be kept until
+the client reconnects.
+1 the server must discard any previously maintained information
+about the client and treat the connection as "clean". The server
+must also discard any state when the client disconnects.
+<user_name>
+The user name identifies the name of the user which can be used for
+authentication when connecting to server. The string length is from 1
+to 256 bytes.
+<pass_word>
+The password corresponding to the user which can be used for
+authentication when connecting to server. The string length is from 1
+to 256 bytes.
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTCONNECT=0,"tcp://120.27.2.154:1883",20,1
+OK
+--- PAGE 419 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 418 / 684
++CMQTTCONNECT: 0,0
+AT+CMQTTCONNECT?
++CMQTTCONNECT: 0,"tcp://120.27.2.154:1883",20,1
++CMQTTCONNECT: 1
+OK
+AT+CMQTTCONNECT is used to connect to a MQTT server.
+If you don’t set the SSL context by AT+CMQTTSSLCFG before connecting a SSL/TLS MQTT server by
+AT+CMQTTCONNECT, it will use the <client_index> (the 1st parameter of
+AT+CMQTTCONNNECT)SSL context when connecting to the server.
+18.2.9 AT+CMQTTDISC Disconnect from server
+AT+CMQTTDISC is used to disconnect from the server.
+AT+CMQTTDISC Disconnect from server
+Test Command
+AT+CMQTTDISC=?
+Response:
++CMQTTDISC: (0-1),(0,1-180)
+OK
+Read Command
+AT+CMQTTDISC?
+Response:
++CMQTTDISC: 0,<disc_state>
++CMQTTDISC: 1,<disc_state>
+OK
+Write Command
+AT+CMQTTDISC=<client_in
+dex>,<timeout>
+Response
+1)If disconnect successfully:
++CMQTTDISC: <client_index>,0
+OK
+2)If disconnect successfully:
+OK
++CMQTTDISC: <client_index>,0
+3)If failed:
+OK
+NOTE
+--- PAGE 420 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 419 / 684
++CMQTTDISC: <client_index>,<err>
+4)If failed:
+ERROR
+5)If failed:
++CMQTTDISC: <client_index>,<err>
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<timeout> The timeout value for disconnection. The unit is second. The range is
+1s to 180s. The default value is 0s (not set the timeout value).
+<disc_state> 1 disconnection
+0 connection
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTDISC=0,120
+OK
++CMQTTDISC: 0,0
+18.2.10 AT+CMQTTTOPIC Input the topic of publish message
+AT+CMQTTTOPIC is used to input the topic of a publish message.
+AT+CMQTTTOPIC Input the topic of publish message
+Test Command
+AT+CMQTTTOPIC=?
+Response
++CMQTTTOPIC: (0-1),(1-1024)
+OK
+Write Command Response
+--- PAGE 421 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 420 / 684
+AT+CMQTTTOPIC=<client_i
+ndex>,<req_length>
+1)If successfully:
+>
+<input data here>
+OK
+2)If failed:
++CMQTTTOPIC: <client_index>,<err>
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<req_length> The length of input topic data. The publish message topic should be
+UTF-encoded string. The range is from 1 to 1024 bytes.
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTTOPIC=0,9
+>
+OK
+The topic will be clean after execute AT+CMQTTPUB.
+18.2.11 AT+CMQTTPAYLOAD Input the publish message
+AT+CMQTTPAYLOAD is used to input the message body of a publish message.
+NOTE
+--- PAGE 422 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 421 / 684
+AT+CMQTTPAYLOAD Input the publish message
+Test Command
+AT+CMQTTPAYLOAD=?
+Response
++CMQTTPAYLOAD: (0-1),(1-10240)
+OK
+Write Command
+AT+CMQTTPAYLOAD=<clien
+t_index>,<req_length>
+Response
+1)If successfully:
+>
+<input data here>
+OK
+2)If failed:
++CMQTTPAYLOAD: <client_index>,<err>
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<req_length> The length of input message data. The publish message should be
+UTF-encoded string. The range is from 1 to 10240 bytes.
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTPAYLOAD=0,6
+>
+OK
+The topic will be clean after execute AT+CMQTTPUB.
+NOTE
+--- PAGE 423 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 422 / 684
+18.2.12 AT+CMQTTPUB Publish a message to server
+AT+CMQTTPUB is used to publish a message to MQTT server.
+AT+CMQTTPUB Publish a message to server
+Test Command
+AT+CMQTTPUB=?
+Response
++CMQTTPUB: (0-1),(0-2),(1-180),(0-1),(0-1)
+OK
+Write Command
+AT+CMQTTPUB=<client_ind
+ex>,<qos>,<pub_timeout>[,<
+ratained>[,<dup>]]
+Response
+1)If successfully:
+OK
++CMQTTPUB: <client_index>,0
+2)If failed:
+OK
++CMQTTPUB: <client_index>,<err>
+3)If failed:
++CMQTTPUB: <client_index>,<err>
+ERROR
+4)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<qos> The publish message’s qos. The range is from 0 to 2.
+0 at most once
+1 at least once
+2 exactly once
+<pub_timeout> The publishing timeout interval value. Since the client publish a
+message to server, it will report failed if the client receive no response
+from server after the timeout value seconds. The range is from 1s to
+180s.
+<ratained> The retain flag of the publish message. The value is 0 or 1. The default
+value is 0.
+When a client sends a PUBLISH to a server, if the retain flag is set to
+--- PAGE 424 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 423 / 684
+1, the server should hold on to the message after it has been delivered
+to the current subscribers.
+<dup> The dup flag to the message. The value is 0 or 1. The default value is
+0. The flag is set when the client or server attempts to re-deliver a
+message.
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTPUB=0,1,60
+OK
++CMQTTPUB: 0,0
+The topic and payload will be clean after execute AT+CMQTTPUB.
+18.2.13 AT+CMQTTSUBTOPIC Input the topic of subscribe message
+AT+CMQTTSUBTOPIC is used to input the topic of a subscribe message.
+AT+CMQTTSUBTOPIC Input the topic of subscribe message
+Test Command
+AT+CMQTTSUBTOPIC=?
+Response
++CMQTTSUBTOPIC: (0-1),(1-1024),(0-2)
+OK
+Write Command
+AT+CMQTTSUBTOPIC=<clie
+nt_index>,<req_length>,<qo
+s>
+Response
+1)If successfully:
+>
+<input data here>
+OK
+2)If failed:
++CMQTTSUBTOPIC: <client_index>,<err>
+ERROR
+3)If failed:
+ERROR
+NOTE
+--- PAGE 425 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 424 / 684
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<req_length> The length of input topic data. The publish message topic should be
+UTF-encoded string. The range is from 1 to 1024 bytes.
+<qos> The publish message’s qos. The range is from 0 to 2.
+0 at most once
+1 at least once
+2 exactly once
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTSUBTOPIC=0,9,1
+>
+OK
+The topic will be clean after execute AT+CMQTTSUB.
+18.2.14 AT+CMQTTSUB Subscribe a message to server
+AT+CMQTTSUB is used to subscribe a message to MQTT server.
+AT+CMQTTSUB Subscribe a message to server
+Test Command
+AT+CMQTTSUB=?
+Response
++CMQTTSUB: (0-1),(1-1024),(0-2),(0-1)
+OK
+NOTE
+--- PAGE 426 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 425 / 684
+Read Command
+AT+CMQTTSUB?
+Response
++CMQTTSUB:
+[<topic>]
+OK
+Write Command
+/* subscribe one or more topics
+which input by
+AT+CMQTTSUBTOPIC*/
+AT+CMQTTSUB=<client_ind
+ex>[,<dup>]
+Response
+1)If successfully:
+OK
++CMQTTSUB: <client_index>,0
+2)If failed:
+OK
++CMQTTSUB: <client_index>,<err>
+3)If failed:
++CMQTTSUB: <client_index>,<err>
+ERROR
+4)If failed:
+ERROR
+Write Command
+/* subcribe one topic*/
+AT+CMQTTSUB=<client_ind
+ex>,<reqLength>,<qos>[,<d
+up>]
+Response
+1)If successfully:
+>
+<input data here>
+OK
++CMQTTSUB: <client_index>,0
+2)If failed:
+OK
++CMQTTSUB: <client_index>,<err>
+3)If failed:
++CMQTTSUB: <client_index>,<err>
+ERROR
+4)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+--- PAGE 427 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 426 / 684
+<req_length> The length of input topic data. The message topic should be
+UTF-encoded string. The range is from 1 to 1024 bytes.
+<qos> The publish message’s qos. The range is from 0 to 2.
+0 at most once
+1 at least once
+2 exactly once
+<dup> The dup flag to the message. The value is 0 or 1. The default value is
+0. The flag is set when the client or server attempts to re-deliver a
+message.
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+<topic> Topics to which you have subscribed
+Examples
+AT+CMQTTSUB=0,9,1
+>
+OK
++CMQTTSUB: 0,0
+AT+CMQTTSUB=0,1
+OK
++CMQTTSUB: 0,0
+The topic will be clean after execute AT+CMQTTSUB.
+18.2.15 AT+CMQTTUNSUBTOPIC Input the topic of unsubscribe message
+AT+CMQTTUNSUBTOPIC is used to input the topic of a unsubscribe message.
+AT+CMQTTUNSUBTOPIC Input the topic of unsubscribe message
+Test Command
+AT+CMQTTUNSUBTOPIC=?
+Response
++CMQTTUNSUBTOPIC: (0-1),(1-1024)
+OK
+NOTE
+--- PAGE 428 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 427 / 684
+Write Command
+AT+CMQTTUNSUBTOPIC=<
+client_index>,<req_length>
+Response
+1)If successfully:
+>
+<input data here>
+OK
+2)If failed:
++CMQTTUNSUBTOPIC: <client_index>,<err>
+ERROR
+3)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference
+Defined Values
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<req_length> The length of input topic data. The publish message topic should be
+UTF-encoded string. The range is from 1 to 1024 bytes.
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTUNSUBTOPIC=0,9
+>
+OK
+The topic will be clean after execute AT+CMQTTUNSUB.
+18.2.16 AT+CMQTTUNSUB Unsubscribe a message to server
+AT+CMQTTUNSUB is used to unsubscribe a message to MQTT server.
+NOTE
+--- PAGE 429 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 428 / 684
+AT+CMQTTUNSUB Unsubscribe a message to server
+Test Command
+AT+CMQTTUNSUB=?
+Response
++CMQTTUNSUB: (0-1),(1-1024),(0-1)
+OK
+Write Command
+/*unsubscribe one or more
+topics which input by
+AT+CMQTTUNSUBTOPIC*/
+AT+CMQTTUNSUB=<client_i
+ndex>,<dup>
+Response
+1)If successfully:
+OK
++CMQTTUNSUB: <client_index>,0
+2)If failed:
+OK
++CMQTTUNSUB: <client_index>,<err>
+3)If failed:
++CMQTTUNSUB: <client_index>,<err>
+ERROR
+4)If failed:
+ERROR
+Write Command
+/* unsubscribe one topic*/
+AT+CMQTTUNSUB=<client_i
+ndex>,<reqLength>,<dup>
+Response
+1)If successfully:
+>
+<input data here>
+OK
++CMQTTUNSUB: <client_index>,0
+2)If failed:
+OK
++CMQTTUNSUB: <client_index>,<err>
+3)If failed:
++CMQTTUNSUB: <client_index>,<err>
+ERROR
+4)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+Defined Values
+--- PAGE 430 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 429 / 684
+<client_index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<req_length> The length of input topic data. The message topic should be
+UTF-encoded string. The range is from 1 to 1024 bytes.
+<dup> The dup flag to the message. The value is 0 or 1. The default value is
+0. The flag is set when the client or server attempts to re-deliver a
+message.
+<err> The result code: 0 is success. Other values are failure. Please refer to
+chapter 18.3.
+Examples
+AT+CMQTTUNSUBTOPIC=0,9
+>
+OK
+AT+CMQTTUNSUB=0,1
+OK
++CMQTTUNSUB: 0,0
+The topic will be clean after execute AT+CMQTTUNSUB.
+18.2.17 AT+CMQTTCFG Configure the MQTT Context
+AT+CMQTTCFG is used to configure the MQTT context. It must be called before AT+CMQTTCONNECT
+and after AT+CMQTTACCQ. The setting will be cleared after AT+CMQTTREL.
+AT+CMQTTCFG Configure the MQTT Context
+Test Command
+AT+CMQTTCFG=?
+Response
++CMQTTCFG: "checkUTF8",(0-1),(0-1)
++CMQTTCFG: "optimeout ",(0-1),(20-120)
++CMQTTCFG:
+"aliauth",(0-1),"productkey","devicename","devicesecret"
++CMQTTCFG: "version",(0-1),(3-4)
++CMQTTCFG: "argtopic",(0-1),(0-1),(0-1)
+NOTE
+--- PAGE 431 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 430 / 684
+OK
+Read Command
+AT+CMQTTCFG?
+Response
++CMQTTCFG: 0,<checkUTF8_flag>,<optimeout_val>
++CMQTTCFG: 1,<checkUTF8_flag>,<optimeout_val>
+OK
+Write Command
+/*Configure the check UTF8
+flag of the specified MQTT
+client context*/
+AT+CMQTTCFG="checkUTF
+8",<index>,<checkUTF8_flag
+>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the max timeout
+interval of the send or receive
+data operation */
+AT+CMQTTCFG="optimeout
+",<index>,<optimeout_val>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the cid values of all
+clients when a connection is
+created*/
+AT+CMQTTCFG="CID"[,<cid
+>]
+Response
+1) When <cid> is omitted:
++CMQTTCFG: "CID",<cid>
+OK
+2) If the <cid> set successfully:
+OK
+2)If failed:
+ERROR
+Write Command
+/*Configure the cid value of the
+specified client when creating
+a connection*/
+AT+CMQTTCFG="SCID"[,<in
+dex>][,<cid>]
+Response
+1) When both the <index> and <cid> are omitted:
++CMQTTCFG: "SCID",0,<cid>
++CMQTTCFG: "SCID",1,<cid>
+OK
+2) When <cid> is omitted:
++ CMQTTCFG: "SCID",<index>,<cid>
+OK
+3)If successfully:
+OK
+4)If failed:
+ERROR
+Parameter Saving Mode -
+Max Response Time -
+Reference -
+--- PAGE 432 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 431 / 684
+Defined Values
+<index> A numeric parameter that identifies a client. The range of permitted
+values is 0 to 1.
+<checkUTF8_flag> The flag to indicate whether to check the string is UTF8 coding or not,
+the default value is 1.
+0 Not check UTF8 coding.
+1 Check UTF8 coding.
+<optimeout_val> The max timeout interval of sending or receiving data operation. The
+range is from 20 seconds to 120 seconds, the default value is 120
+seconds.
++CMQTTCFG:
+"aliauth",(0-1),"productkey"
+,"devicename","devicesecr
+et"
+(0-1): A numeric parameter that identifies a client. The range of
+permitted values is 0 to 1.
+"productkey": The string is productkey of Alibaba Cloud platform.
+"devicename": The string is devicename of Alibaba Cloud platform.
+"devicesecret": The string is devicesecret of Alibaba Cloud platform.
++CMQTTCFG:
+"version",(0-1),(3-4)
+(0-1): A numeric parameter that identifies a client. The range of
+permitted values is 0 to 1.
+(3-4): Version of MQTT.
+3: MQTT 3.1. The default value is 3.
+4: MQTT 3.1.1.
++CMQTTCFG:
+"argtopic",(0-1),(0-1),(0-1)
+The command is used to configure MQTT AT of extension, please
+refer to “A76XX Series MQTT EX_Application Note_XXXX.docx”.
+(0-1): A numeric parameter that identifies a client. The range of
+permitted values is 0 to 1.
+(0-1):The flag to enable whether to show length of received.
+0: Not show length of received.
+1: Show length of received.
+(0-1):A numeric parameter that identifies report payload length.
+0: Notify PUB message without payload length.
+1: Notify PUB message with payload length.
+<cid> A numeric parameter which specifies a particular PDP context .The
+range is 1-n,The maximum value n is related to the pdp command of
+the modem.
+If neither <session_id> nor <cid> is set, the cid of all sessions are
+queried, If <cid> is not set, the cid of the current session is queried,
+and the default value of cid is 1.
+Examples
+AT+CMQTTCFG?
++CMQTTCFG: 0,1,120
+--- PAGE 433 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 432 / 684
++CMQTTCFG: 1,1,120
+OK
+AT+CMQTTCFG="optimeout",0,24
+OK
+AT+CMQTTCFG="checkUTF8",0,0
+OK
+AT+CMQTTCFG?
++CMQTTCFG: 0,0,24
++CMQTTCFG: 1,1,120
+OK
+The setting will be cleared after AT+CMQTTREL.
+18.3 Command Result Codes
+18.3.1 Description of <err>
+<err> Description
+0 operation succeeded
+1 failed
+2 bad UTF-8 string
+3 sock connect fail
+4 sock create fail
+5 sock close fail
+6 message receive fail
+7 network open fail
+8 network close fail
+9 network not opened
+10 client index error
+11 no connection
+12 invalid parameter
+NOTE

@@ -1,0 +1,108 @@
+--- PAGE 494 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 493 / 684
++CFOTA: 1012 Fota parameter size error
+--- PAGE 495 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 494 / 684
+AT Commands for SCFOTA
+23.1 Overview of AT Commands for SCFOTA
+Command Description
+AT+CAPFOTA Start / Close FOTA service
+AT+CSCFOTA Configure parameters and download upgrade package
+Currently, only CAT4 modules support at commands for SCFOTA
+23.2 Detailed Description of AT Commands for SCFOTA
+23.2.1 AT+CAPFOTA Start / Close FOTA service
+AT+CAPFOTA Start / Close FOTA service
+Test Command
+AT+CAPFOTA=?
+Response
++CAPFOTA: (0-1)
+OK
+Read Command
+AT+CAPFOTA?
+Response
+1)
++CAPFOTA: 0
+OK
+2)
++CAPFOTA: 1
+NOTE
+--- PAGE 496 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 495 / 684
+OK
+Write Command
+/*Setting FOTA service status*/
+AT+CAPFOTA=<on/off>
+Response
+1)If successfully:
+OK
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<on/off> The service status on/off, the default value is 0.
+0 Close FOTA program
+1 Active FOTA program
+The function will take effect immediately.
+Examples
+AT+CAPFOTA=?
++CAPFOTA: (0-1)
+OK
+AT+CAPFOTA?
++CAPFOTA: 0
+OK
+AT+CAPFOTA=1
+OK
+23.2.2 AT+CSCFOTA Configure parameters and download upgrade package
+AT+CSCFOTA Configure parameters and download upgrade package
+Write Command
+AT+CSCFOTA=<OEM>,<models
+>,<product ID>,<product
+Secret>,<target version>
+Response
+1)If successfully:
+OK
+If it can be downloaded:
++CSCFOTA: 2
++CSCFOTA: 3
+If download partial is finished:
+--- PAGE 497 ---
+A76XX Series_AT Command Manual_V1.12
+www.simcom.com 496 / 684
++CSCFOTA: 0
+If there is no new version detected:
++CSCFOTA: 5
+If detect version failed:
++CSCFOTA: <err>
+If it cannot be downloaded:
++CSCFOTA: <err>
+2)If failed:
+ERROR
+Parameter Saving Mode NO_SAVE
+Max Response Time 9000ms
+Reference -
+Defined Values
+<OEM> The name of project design company. This name must be the same as
+the OEM created on the cloud platform. Otherwise, it will cause
+upgrade failed.
+<models> The name of the device model. This name must be the same as the
+device model created on the cloud platform. Otherwise, it will cause
+upgrade failed.
+<productID> The product ID that must be the same as the product ID generated on
+the cloud platform.
+<productSecret> The product secret is used to confirm the identity and usage rights of
+the user. It must be the same as the product secret generated on the
+cloud platform.
+<target version> The version that needs to be upgraded to. This version is published by
+the cloud platform.
+Examples
+AT+CSCFOTA="SIMCom","A7600C","1540907004","f9bbb0d76f894da090b6b69253616561","A760
+0C_A39_190327_V1.00"
+OK
++CSCFOTA: 2
++CSCFOTA: 3
++CSCFOTA: 0
