@@ -30,7 +30,15 @@
 #define MPU_SDA 21
 #define MPU_SCL 22
 
-#define PHONE_NUMBER "+639816325910"
+// ── Recipients — SMS is sent to ALL numbers in this list ──
+const char* PHONE_NUMBERS[] = {
+  "+639563024122",  // Kyle
+  "+639102026730",  // Rolf
+  "+639305701573",  // Dave
+  "+639817227215",  // Francis
+  "+639617331211"   // Neil
+};
+const int PHONE_COUNT = sizeof(PHONE_NUMBERS) / sizeof(PHONE_NUMBERS[0]);
 
 #define BUZZER_PIN 4
 #define TRIG_PIN 33
@@ -48,6 +56,7 @@
 //  007.mp3  →  "Warning: Location unavailable"
 //  008.mp3  →  "GPS fix acquired"
 //  009.mp3  →  "Searching for satellites"
+//  010.mp3  →  "Obstacle ahead 1 meter"
 // ═══════════════════════════════════════════════════════════════
 
 #define SOUND_INTERNET_OK 1
@@ -59,6 +68,7 @@
 #define SOUND_NO_LOCATION 7
 #define SOUND_GPS_FIX 8
 #define SOUND_SEARCHING_SATS 9
+#define SOUND_OBSTACLE_1METER 10  // 010.mp3 — "Obstacle ahead 1 meter"
 
 #define FALL_THRESHOLD 2.5
 #define FALL_COOLDOWN 30000
@@ -588,6 +598,19 @@ bool sendSMS(String number, String message) {
   }
   Serial.println(">>> SMS failed: " + resp);
   return false;
+}
+
+// Send the same SMS to all numbers in PHONE_NUMBERS[].
+// Returns true if at least one send succeeded.
+bool sendSMSToAll(String message) {
+  bool anyOk = false;
+  for (int i = 0; i < PHONE_COUNT; i++) {
+    Serial.println("[SMS] Sending to " + String(PHONE_NUMBERS[i]));
+    bool ok = sendSMS(String(PHONE_NUMBERS[i]), message);
+    if (ok) anyOk = true;
+    delay(500); // brief gap between sends
+  }
+  return anyOk;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1376,12 +1399,25 @@ float getDistance() {
 }
 
 void ultrasonicTask(void * pvParameters) {
+  unsigned long lastObstacleSoundTime = 0;
+  const unsigned long OBSTACLE_SOUND_COOLDOWN = 5000; // Play voice alert max once per 5s
+
   for (;;) {
     float currentDistance = getDistance();
 
     // Max reliable distance for typical HC-SR04 is ~400 cm
     // Beep faster when close, slower when far. No beep if out of range.
     if (currentDistance > 0 && currentDistance <= 400.0) {
+
+      // ── 1-meter voice alert ──────────────────────────────────
+      if (currentDistance <= 100.0) {
+        unsigned long now = millis();
+        if (now - lastObstacleSoundTime >= OBSTACLE_SOUND_COOLDOWN) {
+          lastObstacleSoundTime = now;
+          playSound(SOUND_OBSTACLE_1METER); // 010.mp3 — "Obstacle ahead 1 meter"
+        }
+      }
+
       // Map distance (0 to 400cm) to beep interval (150ms for near, 1500ms for far)
       long beepInterval = map((long)currentDistance, 0, 400, 150, 1500);
       beepInterval = constrain(beepInterval, 150, 1500); // Ensure interval bounds
@@ -1566,7 +1602,7 @@ void setup() {
 
     if (sats > 0 && !smsSentSats) {
       Serial.println(">> Satellites detected! Sending initial SMS...");
-      sendSMS(PHONE_NUMBER, "GPS: " + String(sats) + " satellites found. Searching for location fix...");
+      sendSMSToAll("GPS: " + String(sats) + " satellites found. Searching for location fix...");
       smsSentSats = true;
     }
 
@@ -1600,7 +1636,7 @@ void setup() {
     playSound(SOUND_NO_LOCATION); // 007.mp3
   }
   Serial.println(">> Sending boot SMS: " + bootMsg);
-  bool bootSmsSent = sendSMS(PHONE_NUMBER, bootMsg);
+  bool bootSmsSent = sendSMSToAll(bootMsg);
   Serial.println(bootSmsSent ? ">> Boot SMS sent" : ">> Boot SMS failed");
   smsSentBoot = true;
 
@@ -1635,7 +1671,7 @@ void loop() {
       fallMsg = "FALL:No location";
     }
     Serial.println(">> Sending fall SMS: " + fallMsg);
-    bool fallSmsSent = sendSMS(PHONE_NUMBER, fallMsg);
+    bool fallSmsSent = sendSMSToAll(fallMsg);
     Serial.println(fallSmsSent ? ">> Fall SMS sent" : ">> Fall SMS failed");
     Serial.println("[HTTP] Pre-send check:");
       sendAT("AT+CSQ", 3000);
@@ -1677,7 +1713,7 @@ void loop() {
       }
 
       Serial.println(">> Sending SMS: " + msg);
-      bool success = sendSMS(PHONE_NUMBER, msg);
+      bool success = sendSMSToAll(msg);
 
       if (success) {
         playSound(SOUND_SMS_SENT);
@@ -1775,7 +1811,7 @@ void loop() {
 
       if (sats > 0 && !smsSentSats) {
         Serial.println(">> Satellites detected! Sending SMS...");
-        sendSMS(PHONE_NUMBER, "GPS: " + String(sats) + " satellites found. Searching for location fix...");
+        sendSMSToAll("GPS: " + String(sats) + " satellites found. Searching for location fix...");
         smsSentSats = true;
       }
 
